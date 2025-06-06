@@ -7,7 +7,7 @@ import javax.mail.MessagingException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,8 +48,7 @@ public class AccountController {
 	@Autowired
 	MailService mailer;
 
-	@Autowired
-	HttpServletRequest request;
+
 
 	@GetMapping("/account/login")
 	public String login(Model model) {
@@ -77,9 +76,7 @@ public class AccountController {
 			model.addAttribute("message", "Sai mật khẩu!"); 
 
 			
-		} else if (!user.getActivated()) {
-			model.addAttribute("message", "Tài khoản chưa được kích hoạt!");
-		}else if (user.getAdmin()) {
+		} else if (user.getAdmin()) {
 			model.addAttribute("message", "Bạn không có quyền!");
 		} else {
 			model.addAttribute("message", "Đăng nhập thành công!");
@@ -139,31 +136,15 @@ public class AccountController {
 			file.transferTo(f);
 			user.setPhoto(f.getName());
 		}
-		user.setActivated(false);
+		user.setActivated(true);
 		user.setAdmin(false);
 		dao.create(user); 
-		model.addAttribute("message", "Đăng ký thành công. Vui lòng kiểm tra mail để kích hoạt tài khoản!");
-
-
-		String from = "happyshopsuport2022@gmail.com";
-		String to = user.getEmail();
-		String subject = "Welcome!";
-		String url = request.getRequestURL().toString().replace("register", "activate/" + user.getId());
-		String body = "Happy shop xin chào! Vui lòng nhấn vào <a href='" + url + "'>Activate</a> để kích hoạt tài khoản.";
-		MailInfo mail = new MailInfo(from, to, subject, body);
-		mailer.send(mail);
+		model.addAttribute("message", "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.");
 
 		return "account/register";
 	}
 
-	@GetMapping("/account/activate/{id}")
-	public String activate(Model model, @PathVariable("id") String id) {
-		User user = dao.findById(id);
-		user.setActivated(true);
-		dao.update(user);
 
-		return "redirect:/account/login";
-	}
 
 	@GetMapping("/account/forgot")
 	public String forgot(Model model) {
