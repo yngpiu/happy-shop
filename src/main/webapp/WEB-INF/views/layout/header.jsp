@@ -5,12 +5,7 @@
 
 <c:set var="cart" value="${sessionScope['scopedTarget.cartService']}" />
 
-
-<header>
-	<img src="https://hoanghamobile.com/Uploads/Originals/2020/12/03/202012031548027973_xonggggg.gif" alt="" width="100%">
-</header>
-
-<nav id="navbar" class="navbar navbar-expand-sm navbar-dark sticky-top" style="background-color: #F8F8FF; border-bottom: 1px solid gainsboro;">
+<nav id="navbar" class="navbar navbar-expand-sm navbar-dark fixed-top" style="background-color: #F8F8FF; border-bottom: 1px solid gainsboro;">
 	<div class="container ">
 		<div class="row" style="padding: 20px 15px 12px;">
 			<div class="col-sm-4" style="margin-top: -10px; padding-left: 30px;">
@@ -122,16 +117,6 @@
 </style>
 
 <style>
-.sticky {
-	position: fixed;
-	top: 0;
-	width: 100%;
-}
-
-/* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
-.sticky+.content {
-	padding-top: 60px;
-}
 
 .splike {
 	text-decoration: none;
@@ -183,26 +168,3 @@
 }
 </style>
 
-<script>
-	//When the user scrolls the page, execute myFunction
-	window.onscroll = function() {
-		myFunction()
-	};
-
-	// Get the navbar
-	var navbar = document.getElementById("navbar");
-
-	// Get the offset position of the navbar
-	var sticky = navbar.offsetTop;
-
-	// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
-	function myFunction() {
-		if (window.pageYOffset >= sticky) {
-			navbar.classList.add("sticky")
-		} else {
-			navbar.classList.remove("sticky");
-		}
-	}
-
-	
-</script>
