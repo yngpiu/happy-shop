@@ -110,7 +110,7 @@ public class CategoryManger {
 				dao.update(existing);
 			}
 			model.addAttribute("message", "Cập nhật loại sản phẩm thành công!");
-			return "redirect:/admin/category/edit/" + entity.getId();
+			return "redirect:/admin/category/index";
 		} catch (Exception e) {
 			model.addAttribute("error", "Có lỗi xảy ra khi cập nhật loại sản phẩm. Vui lòng thử lại!");
 			return "redirect:/admin/category/edit/" + entity.getId();
