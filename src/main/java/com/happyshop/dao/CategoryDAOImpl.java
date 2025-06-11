@@ -1,5 +1,6 @@
 package com.happyshop.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -28,12 +29,31 @@ public class CategoryDAOImpl implements CategoryDAO{
 
 	@Override
 	public List<Category> findAll() {
-		String hql="FROM Category";
+		String hql="FROM Category ORDER BY id ASC";
 		Session session=factory.getCurrentSession();
 		TypedQuery<Category> query=session.createQuery(hql,Category.class);
 		List<Category> list=query.getResultList();
 		return list;
 	}
+	
+	@Override
+	public List<Category> findAllActive() {
+		String hql="FROM Category WHERE deletedAt IS NULL ORDER BY id ASC";
+		Session session=factory.getCurrentSession();
+		TypedQuery<Category> query=session.createQuery(hql,Category.class);
+		List<Category> list=query.getResultList();
+		return list;
+	}
+	
+	@Override
+	public List<Category> findAllDeleted() {
+		String hql="FROM Category WHERE deletedAt IS NOT NULL ORDER BY deletedAt DESC";
+		Session session=factory.getCurrentSession();
+		TypedQuery<Category> query=session.createQuery(hql,Category.class);
+		List<Category> list=query.getResultList();
+		return list;
+	}
+	
 	@Override
 	public Category create(Category entity) {
 		Session session=factory.getCurrentSession();
@@ -45,7 +65,6 @@ public class CategoryDAOImpl implements CategoryDAO{
 	public void update(Category entity) {
 		Session session=factory.getCurrentSession();
 		session.update(entity);
-		
 	}
 
 	@Override
@@ -57,11 +76,72 @@ public class CategoryDAOImpl implements CategoryDAO{
 	}
 
 	@Override
+	public void softDelete(Integer id) {
+		Session session=factory.getCurrentSession();
+		Category entity=session.find(Category.class, id);
+		if (entity != null) {
+			entity.setDeletedAt(new Date());
+			session.update(entity);
+		}
+	}
+
+	@Override
+	public void restore(Integer id) {
+		Session session=factory.getCurrentSession();
+		Category entity=session.find(Category.class, id);
+		if (entity != null) {
+			entity.setDeletedAt(null);
+			session.update(entity);
+		}
+	}
+
+	@Override
+	public void permanentDelete(Integer id) {
+		Session session=factory.getCurrentSession();
+		Category entity=session.find(Category.class, id);
+		if (entity != null) {
+			session.delete(entity);
+		}
+	}
+
+	@Override
 	public Long countProductsByCategory(Integer categoryId) {
 		String hql = "SELECT COUNT(p) FROM Product p WHERE p.category.id = :categoryId";
 		Session session = factory.getCurrentSession();
 		TypedQuery<Long> query = session.createQuery(hql, Long.class);
 		query.setParameter("categoryId", categoryId);
+		return query.getSingleResult();
+	}
+
+	@Override
+	public Long countAll() {
+		String hql = "SELECT COUNT(c) FROM Category c";
+		Session session = factory.getCurrentSession();
+		TypedQuery<Long> query = session.createQuery(hql, Long.class);
+		return query.getSingleResult();
+	}
+
+	@Override
+	public Long countActive() {
+		String hql = "SELECT COUNT(c) FROM Category c WHERE c.deletedAt IS NULL";
+		Session session = factory.getCurrentSession();
+		TypedQuery<Long> query = session.createQuery(hql, Long.class);
+		return query.getSingleResult();
+	}
+
+	@Override
+	public Long countDeleted() {
+		String hql = "SELECT COUNT(c) FROM Category c WHERE c.deletedAt IS NOT NULL";
+		Session session = factory.getCurrentSession();
+		TypedQuery<Long> query = session.createQuery(hql, Long.class);
+		return query.getSingleResult();
+	}
+
+	@Override
+	public Long countWithProducts() {
+		String hql = "SELECT COUNT(DISTINCT c) FROM Category c JOIN c.products p WHERE c.deletedAt IS NULL";
+		Session session = factory.getCurrentSession();
+		TypedQuery<Long> query = session.createQuery(hql, Long.class);
 		return query.getSingleResult();
 	}
 }

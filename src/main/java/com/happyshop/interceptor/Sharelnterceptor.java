@@ -28,7 +28,8 @@ public class Sharelnterceptor extends HandlerInterceptorAdapter{
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		if (modelAndView != null) {
-			List<Category> list=dao.findAll();
+			// Only load active categories for frontend display
+			List<Category> list=dao.findAllActive();
 			modelAndView.addObject("cates", list);
 			
 			List<User> listUser = userDAO.findAll();

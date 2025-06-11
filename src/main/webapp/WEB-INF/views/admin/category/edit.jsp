@@ -1,6 +1,7 @@
 <%@ page pageEncoding="utf-8"%> <%@ taglib
 uri="http://www.springframework.org/tags/form" prefix="form"%> <%@ taglib
 uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
 
 <c:set var="base" value="/admin/category" scope="request" />
 
@@ -88,7 +89,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           <form:hidden path="id" />
 
           <div class="row">
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-4">
               <label for="name" class="form-label fw-semibold">
                 <i class="bi bi-tag me-1"></i>
                 Tên loại sản phẩm <span class="text-danger">*</span>
@@ -107,23 +108,6 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
               </div>
               <div class="form-text">
                 Sử dụng tên rõ ràng và dễ hiểu để phân loại sản phẩm
-              </div>
-            </div>
-
-            <div class="col-12 mb-4">
-              <label for="nameVN" class="form-label fw-semibold">
-                <i class="bi bi-building me-1"></i>
-                Tên hãng/Thương hiệu
-              </label>
-              <form:input
-                path="nameVN"
-                class="form-control form-control-lg"
-                id="nameVN"
-                placeholder="Nhập tên hãng hoặc thương hiệu (ví dụ: Apple, Samsung...)"
-                maxlength="100"
-              />
-              <div class="form-text">
-                Thông tin này có thể để trống nếu không có thương hiệu cụ thể
               </div>
             </div>
           </div>
@@ -146,9 +130,9 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                     Cập nhật thông tin
                   </button>
                   <c:if test="${empty productCounts[entity.id] || productCounts[entity.id] == 0}">
-                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                    <button type="button" class="btn btn-warning" onclick="moveToTrash()">
                       <i class="bi bi-trash me-2"></i>
-                      Xóa loại sản phẩm
+                      Chuyển vào thùng rác
                     </button>
                   </c:if>
                 </c:otherwise>
@@ -192,10 +176,17 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
             <strong>${entity.name}</strong>
           </div>
           
-          <c:if test="${not empty entity.nameVN}">
+          <c:if test="${not empty entity.createdAt}">
             <div class="mb-3">
-              <small class="text-muted d-block">Thương hiệu</small>
-              <strong>${entity.nameVN}</strong>
+              <small class="text-muted d-block">Ngày tạo</small>
+              <strong><fmt:formatDate value="${entity.createdAt}" pattern="dd/MM/yyyy HH:mm"/></strong>
+            </div>
+          </c:if>
+          
+          <c:if test="${not empty entity.updatedAt}">
+            <div class="mb-3">
+              <small class="text-muted d-block">Cập nhật lần cuối</small>
+              <strong><fmt:formatDate value="${entity.updatedAt}" pattern="dd/MM/yyyy HH:mm"/></strong>
             </div>
           </c:if>
           
@@ -207,7 +198,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                 <div class="mt-2">
                   <small class="text-warning">
                     <i class="bi bi-exclamation-triangle me-1"></i>
-                    Không thể xóa do có sản phẩm
+                    Không thể xóa vĩnh viễn do có sản phẩm
                   </small>
                 </div>
               </c:when>
@@ -216,7 +207,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                 <div class="mt-2">
                   <small class="text-success">
                     <i class="bi bi-check-circle me-1"></i>
-                    Có thể xóa loại này
+                    Có thể chuyển vào thùng rác
                   </small>
                 </div>
               </c:otherwise>
@@ -243,11 +234,12 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           <li>Nên viết hoa chữ cái đầu</li>
         </ul>
         
-        <h6 class="text-primary">Về thương hiệu:</h6>
+        <h6 class="text-primary">Về việc xóa:</h6>
         <ul class="small mb-3">
-          <li>Có thể để trống nếu không có</li>
-          <li>Giúp phân loại chi tiết hơn</li>
-          <li>Hỗ trợ tìm kiếm và lọc sản phẩm</li>
+          <li>Xóa sẽ chuyển vào thùng rác 30 ngày</li>
+          <li>Có thể khôi phục trong 30 ngày</li>
+          <li>Sau 30 ngày sẽ xóa vĩnh viễn tự động</li>
+          <li>Loại có sản phẩm không thể xóa</li>
         </ul>
 
         <div class="alert alert-info mb-0">
@@ -261,29 +253,29 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
   </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Move to Trash Confirmation Modal -->
 <c:if test="${not empty entity.id}">
-  <div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal fade" id="trashModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header bg-danger text-white">
+        <div class="modal-header bg-warning text-dark">
           <h5 class="modal-title">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            Xác nhận xóa loại sản phẩm
+            <i class="bi bi-trash me-2"></i>
+            Chuyển vào thùng rác
           </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="text-center mb-3">
-            <i class="bi bi-trash display-1 text-danger"></i>
+            <i class="bi bi-trash display-1 text-warning"></i>
           </div>
           <p class="text-center">
-            Bạn có chắc chắn muốn xóa loại sản phẩm<br>
-            <strong class="text-danger">"${entity.name}"</strong>?
+            Bạn có muốn chuyển loại sản phẩm<br>
+            <strong class="text-warning">"${entity.name}"</strong> vào thùng rác?
           </p>
-          <div class="alert alert-warning">
+          <div class="alert alert-info">
             <i class="bi bi-info-circle me-1"></i>
-            <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác và sẽ xóa vĩnh viễn loại sản phẩm này khỏi hệ thống.
+            <strong>Lưu ý:</strong> Loại sản phẩm sẽ được lưu trong thùng rác 30 ngày và có thể khôi phục. Sau 30 ngày sẽ bị xóa vĩnh viễn tự động.
           </div>
         </div>
         <div class="modal-footer">
@@ -291,9 +283,9 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
             <i class="bi bi-x-circle me-2"></i>
             Hủy bỏ
           </button>
-          <a href="${base}/delete/${entity.id}" class="btn btn-danger">
+          <a href="${base}/trash/${entity.id}" class="btn btn-warning">
             <i class="bi bi-trash me-2"></i>
-            Xóa vĩnh viễn
+            Chuyển vào thùng rác
           </a>
         </div>
       </div>
@@ -333,10 +325,9 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
     }, false);
   })();
 
-  // Delete confirmation with enhanced UX
-  function confirmDelete() {
-    var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    modal.show();
+  // Move to trash confirmation
+  function moveToTrash() {
+    new bootstrap.Modal(document.getElementById('trashModal')).show();
   }
 
   // Auto-focus and enhanced UX
@@ -365,14 +356,20 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
       }
     });
     
-    // Auto-save draft (optional enhancement)
-    var saveTimer;
-    $('#name, #nameVN').on('input', function() {
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(function() {
-        // You could implement auto-save to localStorage here
-        console.log('Auto-saving draft...');
-      }, 2000);
+    // Prevent accidental navigation
+    var formChanged = false;
+    $('#name').on('input', function() {
+      formChanged = true;
+    });
+    
+    $(window).on('beforeunload', function() {
+      if (formChanged) {
+        return 'Bạn có những thay đổi chưa được lưu. Bạn có chắc chắn muốn rời khỏi trang?';
+      }
+    });
+    
+    $('#categoryForm').on('submit', function() {
+      formChanged = false;
     });
   });
 </script>

@@ -78,7 +78,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           <form:hidden path="id" />
 
           <div class="row">
-            <div class="col-12 mb-3">
+            <div class="col-12 mb-4">
               <label for="name" class="form-label fw-semibold">
                 <i class="bi bi-tag me-1"></i>
                 Tên loại sản phẩm <span class="text-danger">*</span>
@@ -99,26 +99,6 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
               <div class="form-text">
                 <i class="bi bi-lightbulb me-1"></i>
                 Sử dụng tên rõ ràng và dễ hiểu để phân loại sản phẩm hiệu quả
-              </div>
-            </div>
-
-            <div class="col-12 mb-4">
-              <label for="nameVN" class="form-label fw-semibold">
-                <i class="bi bi-building me-1"></i>
-                Tên hãng/Thương hiệu
-                <span class="badge bg-light text-muted ms-2">Tùy chọn</span>
-              </label>
-              <form:input
-                path="nameVN"
-                class="form-control form-control-lg"
-                id="nameVN"
-                placeholder="Nhập tên hãng hoặc thương hiệu (ví dụ: Apple, Samsung, Dell...)"
-                maxlength="100"
-              />
-              <div class="form-text">
-                <i class="bi bi-info-circle me-1"></i>
-                Thông tin này giúp phân loại chi tiết hơn, có thể để trống nếu
-                không có thương hiệu cụ thể
               </div>
             </div>
           </div>
@@ -179,8 +159,8 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
             </div>
           </div>
           <div class="col-6">
-            <h4 class="text-success mb-1">${categoriesWithProducts}</h4>
-            <small class="text-muted">Có sản phẩm</small>
+            <h4 class="text-success mb-1">${activeCategories}</h4>
+            <small class="text-muted">Đang hoạt động</small>
           </div>
         </div>
         <hr />
@@ -208,16 +188,14 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           <strong id="previewName" class="text-primary">--</strong>
         </div>
         <div class="mb-2">
-          <small class="text-muted d-block">Thương hiệu:</small>
-          <span id="previewBrand" class="text-muted fst-italic"
-            >Chưa có thông tin</span
-          >
+          <small class="text-muted d-block">Trạng thái:</small>
+          <span class="badge bg-success">
+            <i class="bi bi-check-circle me-1"></i>Hoạt động
+          </span>
         </div>
         <div class="mb-0">
-          <small class="text-muted d-block">Trạng thái:</small>
-          <span class="badge bg-warning">
-            <i class="bi bi-exclamation-triangle me-1"></i>Mới tạo
-          </span>
+          <small class="text-muted d-block">Số sản phẩm:</small>
+          <span class="badge bg-light text-muted">0 sản phẩm</span>
         </div>
       </div>
     </div>
@@ -232,20 +210,22 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
       </div>
       <div class="card-body">
         <div class="mb-3">
-          <h6 class="text-primary">Bước 1: Đặt tên loại</h6>
+          <h6 class="text-primary">Quy tắc đặt tên:</h6>
           <ul class="small mb-0">
             <li>Tên phải từ 2-100 ký tự</li>
             <li>Sử dụng tên rõ ràng, dễ hiểu</li>
             <li>Ví dụ: "Smartphone", "Laptop Gaming"</li>
+            <li>Nên viết hoa chữ cái đầu</li>
           </ul>
         </div>
 
         <div class="mb-3">
-          <h6 class="text-primary">Bước 2: Thêm thương hiệu (tùy chọn)</h6>
+          <h6 class="text-primary">Sau khi tạo:</h6>
           <ul class="small mb-0">
-            <li>Giúp phân loại chi tiết hơn</li>
-            <li>Hỗ trợ tìm kiếm sản phẩm</li>
-            <li>Có thể để trống</li>
+            <li>Loại sản phẩm sẽ hoạt động ngay</li>
+            <li>Có thể thêm sản phẩm vào loại này</li>
+            <li>Có thể chỉnh sửa tên bất cứ lúc nào</li>
+            <li>Xóa sẽ chuyển vào thùng rác 30 ngày</li>
           </ul>
         </div>
 
@@ -262,24 +242,32 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
       <div class="card-header bg-light">
         <h6 class="card-title mb-0">
           <i class="bi bi-lightbulb text-warning me-2"></i>
-          Ví dụ loại sản phẩm
+          Ví dụ loại sản phẩm phổ biến
         </h6>
       </div>
       <div class="card-body">
         <div class="mb-2">
-          <strong class="text-primary">Điện tử:</strong>
+          <strong class="text-primary">Công nghệ:</strong>
           <small class="text-muted d-block"
-            >Smartphone, Laptop, Tablet, Tai nghe</small
+            >Smartphone, Laptop, Tablet, Tai nghe, Smartwatch</small
           >
         </div>
         <div class="mb-2">
           <strong class="text-primary">Thời trang:</strong>
-          <small class="text-muted d-block">Áo, Quần, Giày dép, Phụ kiện</small>
+          <small class="text-muted d-block"
+            >Áo thun, Quần jeans, Giày sneaker, Túi xách</small
+          >
         </div>
-        <div class="mb-0">
+        <div class="mb-2">
           <strong class="text-primary">Gia dụng:</strong>
           <small class="text-muted d-block"
-            >Tủ lạnh, Máy giặt, Lò vi sóng</small
+            >Tủ lạnh, Máy giặt, Lò vi sóng, Nồi cơm điện</small
+          >
+        </div>
+        <div class="mb-0">
+          <strong class="text-primary">Sách & Văn phòng phẩm:</strong>
+          <small class="text-muted d-block"
+            >Sách giáo khoa, Tiểu thuyết, Bút bi, Vở ghi chú</small
           >
         </div>
       </div>
@@ -341,24 +329,11 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
     // Real-time preview functionality
     function updatePreview() {
       var name = $('#name').val().trim();
-      var brand = $('#nameVN').val().trim();
-
       $('#previewName').text(name || '--');
-      $('#previewBrand').text(brand || 'Chưa có thông tin');
-
-      if (brand) {
-        $('#previewBrand')
-          .removeClass('fst-italic')
-          .addClass('fw-semibold text-info');
-      } else {
-        $('#previewBrand')
-          .addClass('fst-italic')
-          .removeClass('fw-semibold text-info');
-      }
     }
 
     // Live preview updates
-    $('#name, #nameVN').on('input', updatePreview);
+    $('#name').on('input', updatePreview);
 
     // Preview toggle
     $('#previewBtn').on('click', function () {
@@ -409,12 +384,11 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 
     // Auto-save to localStorage for recovery
     var saveTimer;
-    $('#name, #nameVN').on('input', function () {
+    $('#name').on('input', function () {
       clearTimeout(saveTimer);
       saveTimer = setTimeout(function () {
         var formData = {
           name: $('#name').val(),
-          nameVN: $('#nameVN').val(),
           timestamp: new Date().getTime(),
         };
         localStorage.setItem('categoryFormDraft', JSON.stringify(formData));
@@ -429,12 +403,11 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
         var timeDiff = new Date().getTime() - data.timestamp;
 
         // Only restore if draft is less than 1 hour old
-        if (timeDiff < 3600000 && (data.name || data.nameVN)) {
+        if (timeDiff < 3600000 && data.name) {
           if (
             confirm('Phát hiện bản nháp đã lưu. Bạn có muốn khôi phục không?')
           ) {
             $('#name').val(data.name || '');
-            $('#nameVN').val(data.nameVN || '');
             updatePreview();
           }
         }
@@ -448,6 +421,22 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
       if (this.checkValidity()) {
         localStorage.removeItem('categoryFormDraft');
       }
+    });
+
+    // Prevent accidental navigation
+    var formChanged = false;
+    $('#name').on('input', function () {
+      formChanged = true;
+    });
+
+    $(window).on('beforeunload', function () {
+      if (formChanged) {
+        return 'Bạn có những thay đổi chưa được lưu. Bạn có chắc chắn muốn rời khỏi trang?';
+      }
+    });
+
+    $('#categoryForm').on('submit', function () {
+      formChanged = false;
     });
 
     // Simple toast notification function
