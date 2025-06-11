@@ -15,9 +15,9 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 		DataSourceTransactionManagerAutoConfiguration.class,
 		HibernateJpaAutoConfiguration.class	
 })
-public class CuoiKyTKPMHDTApplication {
+public class JavaWebApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CuoiKyTKPMHDTApplication.class, args);
+		SpringApplication.run(JavaWebApplication.class, args);
 	}
 }
