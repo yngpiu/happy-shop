@@ -56,5 +56,12 @@ public class CategoryDAOImpl implements CategoryDAO{
 		return entity;
 	}
 
-
+	@Override
+	public Long countProductsByCategory(Integer categoryId) {
+		String hql = "SELECT COUNT(p) FROM Product p WHERE p.category.id = :categoryId";
+		Session session = factory.getCurrentSession();
+		TypedQuery<Long> query = session.createQuery(hql, Long.class);
+		query.setParameter("categoryId", categoryId);
+		return query.getSingleResult();
+	}
 }

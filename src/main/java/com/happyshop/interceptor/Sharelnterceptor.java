@@ -27,10 +27,12 @@ public class Sharelnterceptor extends HandlerInterceptorAdapter{
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		List<Category> list=dao.findAll();
-		modelAndView.addObject("cates", list);
-		
-		List<User> listUser = userDAO.findAll();
-		modelAndView.addObject("users", list);
+		if (modelAndView != null) {
+			List<Category> list=dao.findAll();
+			modelAndView.addObject("cates", list);
+			
+			List<User> listUser = userDAO.findAll();
+			modelAndView.addObject("users", listUser);
+		}
 	}
 }

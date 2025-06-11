@@ -14,4 +14,6 @@ public interface CategoryDAO {
 	void update(Category entity);
 
 	Category delete(Integer id);
+	
+	Long countProductsByCategory(Integer categoryId);
 }

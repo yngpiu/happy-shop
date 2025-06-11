@@ -1,123 +1,145 @@
 <%@ page pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 
-<c:set var="base" value="/admin/customer" scope="request" />
-
-<!-- Navigation -->
-<nav class="navbar navbar-default navbar-static-top" role="navigation"
-	style="margin-bottom: 0">
-	<div class="navbar-header">
-		<button type="button" class="navbar-toggle" data-toggle="collapse"
-			data-target=".navbar-collapse">
-			<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
-			<span class="icon-bar"></span> <span class="icon-bar"></span>
-		</button>
-		<a class="navbar-brand" href="/admin/home/index"><img style="z-index: 0;margin-top: -10px;padding: 0px 0px 0px 20px" src="/static/images/logo_small.png" width="18%"/></a>
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+	<!-- Brand -->
+	<div class="text-center py-3 border-bottom border-secondary">
+		<h5 class="text-white fw-bold mb-0">
+			<i class="bi bi-shop"></i> HappyShop Admin
+		</h5>
 	</div>
-	<!-- /.navbar-header -->
-
-	<ul class="nav navbar-top-links navbar-right">
-		<li class="dropdown">
-		
-			<c:choose>
-				<c:when test="${empty sessionScope.user }">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"> 
-						<i class="fa fa-user fa-fw"></i>
-						<i class="fa fa-caret-down"></i>
-					</a>
-				</c:when>			
-				<c:otherwise>
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#"> 
-						<i class="fa fa-user fa-fw"></i>
-						<i>Xin chào: ${sessionScope.user.id}</i>					
-					</a>
-				</c:otherwise>	
-			</c:choose>
-			
-			<ul class="dropdown-menu dropdown-user">
-				<li><a href="/admin/profile"><i class="fa fa-user fa-fw"></i> Thông tin cá nhân</a></li>
-				<li><a href="/admin/change"><i class="fa fa-key fa-fw"></i> Thay đổi mật khẩu</a></li>
+	
+	<!-- User Info -->
+	<div class="p-3 border-bottom border-secondary">
+		<div class="d-flex align-items-center">
+			<div class="bg-secondary rounded-circle p-2 me-3">
+				<i class="bi bi-person-fill text-white"></i>
+			</div>
+			<div>
 				<c:choose>
-					<c:when test="${empty sessionScope.user }">
-						<li><a href="/admin/account/login"><i class="fa fa-sign-out fa-fw"></i> Login</a></li>
+					<c:when test="${empty sessionScope.user}">
+						<small class="text-light">Chưa đăng nhập</small>
 					</c:when>
 					<c:otherwise>
-							<li><a href="/admin/logout"><i class="fa fa-sign-out fa-fw"></i> Đăng xuất</a></li>
-
+						<div class="text-white fw-semibold">${sessionScope.user.id}</div>
+						<small class="text-light">Administrator</small>
 					</c:otherwise>
 				</c:choose>
-			</ul> <!-- /.dropdown-user --></li>
-		<!-- /.dropdown -->
-	</ul>
-	<!-- /.navbar-top-links -->
-
-	<div class="navbar-default sidebar" role="navigation">
-		<div class="sidebar-nav navbar-collapse">
-			<ul class="nav" id="side-menu">
-				<li class="sidebar-search">
-					<div class="input-group custom-search-form">
-						<input type="text" class="form-control" placeholder="Search...">
-						<span class="input-group-btn">
-							<button class="btn btn-default" type="button">
-								<i class="fa fa-search"></i>
-							</button>
-						</span>
-					</div> <!-- /input-group -->
-				</li>				
-				<c:choose>
-					<c:when test="${empty sessionScope.user }"> </c:when>
-					<c:otherwise>
-						<li>
-							<a href="/admin/category/index"><i class="fa fa-tags fa-fw"></i> Quản lý loại sản phẩm</a>
-						</li>
-					</c:otherwise>
-				</c:choose>
-				
-				<c:choose>
-					<c:when test="${empty sessionScope.user }"> </c:when>
-					<c:otherwise>
-						<li>
-							<a href="/admin/product/index"><i class="fa fa-inbox fa-fw"></i> Quản lý sản phẩm</a>
-						</li>
-					</c:otherwise>
-				</c:choose>
-				<c:choose>
-					<c:when test="${empty sessionScope.user }"> </c:when>
-					<c:otherwise>
-						<li>
-							<a href="/admin/customer/index"><i class="fa fa-users fa-fw"></i> Quản lý người dùng</a>
-						</li>
-					</c:otherwise>
-				</c:choose>
-				<c:choose>
-					<c:when test="${empty sessionScope.user }"> </c:when>
-					<c:otherwise>
-						<li>
-							<a href="/admin/order/index"><i class="fa fa-shopping-cart fa-fw"></i> Quản lý đơn hàng</a>
-						</li>
-					</c:otherwise>
-				</c:choose>
-				<c:choose>
-					<c:when test="${empty sessionScope.user }"> </c:when>
-					<c:otherwise>
-						<li><a href="#"><i class="fa fa-dashboard fa-fw"></i> Quản lý thống kê<span class="fa arrow"></span></a>
-							<ul class="nav nav-second-level">
-								<li><a href="/admin/inventory/index">Tồn kho theo loại</a></li>
-								<li><a href="/admin/revenue/category">Doanh thu theo loại</a></li>
-								<li><a href="/admin/revenue/customer">Doanh thu theo khách hàng</a></li>
-								<li><a href="/admin/revenue/month">Doanh thu theo tháng</a></li>
-								<li><a href="/admin/revenue/quarter">Doanh thu theo quý</a></li>
-								<li><a href="/admin/revenue/year">Doanh thu theo năm</a></li>
-							</ul> <!-- /.nav-second-level -->
-						</li>
-					</c:otherwise>
-				</c:choose>
-			</ul>
+			</div>
 		</div>
-		<!-- /.sidebar-collapse -->
 	</div>
-	<!-- /.navbar-static-side -->
-</nav>
+	
+	<!-- Navigation Menu -->
+	<nav class="nav flex-column py-2">
+		<c:choose>
+			<c:when test="${empty sessionScope.user}">
+				<a class="nav-link" href="/admin/account/login">
+					<i class="bi bi-box-arrow-in-right me-2"></i>
+					Đăng nhập
+				</a>
+			</c:when>
+			<c:otherwise>
+				<!-- Dashboard -->
+				<a class="nav-link" href="/admin/home/index">
+					<i class="bi bi-house-door me-2"></i>
+					Dashboard
+				</a>
+				
+				<!-- Category Management -->
+				<a class="nav-link" href="/admin/category/index">
+					<i class="bi bi-tags me-2"></i>
+					Quản lý loại sản phẩm
+				</a>
+				
+				<!-- Product Management -->
+				<a class="nav-link" href="/admin/product/index">
+					<i class="bi bi-box me-2"></i>
+					Quản lý sản phẩm
+				</a>
+				
+				<!-- Customer Management -->
+				<a class="nav-link" href="/admin/customer/index">
+					<i class="bi bi-people me-2"></i>
+					Quản lý người dùng
+				</a>
+				
+				<!-- Order Management -->
+				<a class="nav-link" href="/admin/order/index">
+					<i class="bi bi-cart me-2"></i>
+					Quản lý đơn hàng
+				</a>
+				
+				<!-- Reports -->
+				<div class="nav-item">
+					<a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#reportsSubmenu" aria-expanded="false">
+						<i class="bi bi-bar-chart me-2"></i>
+						Báo cáo thống kê
+						<i class="bi bi-chevron-down ms-auto"></i>
+					</a>
+					<div class="collapse" id="reportsSubmenu">
+						<div class="ps-4">
+							<a class="nav-link py-2" href="/admin/inventory/index">
+								<i class="bi bi-boxes me-2"></i>
+								Tồn kho theo loại
+							</a>
+							<a class="nav-link py-2" href="/admin/revenue/category">
+								<i class="bi bi-currency-dollar me-2"></i>
+								Doanh thu theo loại
+							</a>
+							<a class="nav-link py-2" href="/admin/revenue/customer">
+								<i class="bi bi-person-check me-2"></i>
+								Doanh thu theo khách hàng
+							</a>
+							<a class="nav-link py-2" href="/admin/revenue/month">
+								<i class="bi bi-calendar-month me-2"></i>
+								Doanh thu theo tháng
+							</a>
+							<a class="nav-link py-2" href="/admin/revenue/quarter">
+								<i class="bi bi-calendar3 me-2"></i>
+								Doanh thu theo quý
+							</a>
+							<a class="nav-link py-2" href="/admin/revenue/year">
+								<i class="bi bi-calendar-year me-2"></i>
+								Doanh thu theo năm
+							</a>
+						</div>
+					</div>
+				</div>
+				
+				<hr class="border-secondary my-3">
+				
+				<!-- User Menu -->
+				<a class="nav-link" href="/admin/profile">
+					<i class="bi bi-person-gear me-2"></i>
+					Thông tin cá nhân
+				</a>
+				
+				<a class="nav-link" href="/admin/change">
+					<i class="bi bi-key me-2"></i>
+					Thay đổi mật khẩu
+				</a>
+				
+				<a class="nav-link" href="/admin/logout">
+					<i class="bi bi-box-arrow-right me-2"></i>
+					Đăng xuất
+				</a>
+			</c:otherwise>
+		</c:choose>
+	</nav>
+</div>
+
+<script>
+$(document).ready(function() {
+	// Highlight active menu item
+	var currentPath = window.location.pathname;
+	$('.sidebar .nav-link').each(function() {
+		if ($(this).attr('href') === currentPath) {
+			$(this).addClass('active');
+		}
+	});
+});
+</script>
 
 
 

@@ -24,7 +24,9 @@ public class InterceptorConfigAdmin implements WebMvcConfigurer {
 		registry.addInterceptor(auth).addPathPatterns(
 				"/admin/home/index", 
 				"/admin/product/index", 
-				"/admin/category/index", 
+				"/admin/category/index",
+				"/admin/category/add",
+				"/admin/category/edit/**",
 				"/admin/inventory/index",
 				"/admin/profile",
 				"/admin/customer/index",
