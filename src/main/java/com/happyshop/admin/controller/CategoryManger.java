@@ -101,7 +101,14 @@ public class CategoryManger {
 	@RequestMapping("/admin/category/update")
 	public String update(RedirectAttributes model, @ModelAttribute("entity") Category entity) {
 		try {
-			dao.update(entity);
+			// Get existing entity from database to preserve timestamps
+			Category existing = dao.findById(entity.getId());
+			if (existing != null) {
+				// Copy only the editable fields
+				existing.setName(entity.getName());
+				// createdAt and updatedAt will be handled by @PreUpdate
+				dao.update(existing);
+			}
 			model.addAttribute("message", "Cập nhật loại sản phẩm thành công!");
 			return "redirect:/admin/category/edit/" + entity.getId();
 		} catch (Exception e) {
