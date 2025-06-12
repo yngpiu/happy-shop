@@ -55,13 +55,16 @@ public class ProductController {
 
 	@RequestMapping("/product/list-by-special/{id}")
 	public String listBySpecial(Model model, @PathVariable("id") Integer id) {
-		List<Product> list = pdao.findBySpecial(id);
+		// Lấy sản phẩm đặc biệt với số lượng theo ID (limit)
+		List<Product> list = pdao.findSpecialProducts(id);
 		model.addAttribute("list", list);
 		return "product/list_special_full";
 	}
+	
 	@RequestMapping("/product/list-by-new/{id}")
 	public String listByNews(Model model, @PathVariable("id") Integer id) {
-		List<Product> list = pdao.findBySpecial(id);
+		// Lấy sản phẩm mới nhất với số lượng theo ID (limit)
+		List<Product> list = pdao.findActiveProducts(id);
 		model.addAttribute("list1", list);
 		return "product/list-by-new_full";
 	}

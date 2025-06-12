@@ -1,0 +1,514 @@
+<%@ page pageEncoding="utf-8"%> <%@ taglib
+uri="http://java.sun.com/jstl/core_rt" prefix="c"%> <%@ taglib
+uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
+
+<c:set var="base" value="/admin/product" scope="request" />
+
+<!-- Page Header -->
+<div
+  class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4"
+>
+  <div class="mb-3 mb-md-0">
+    <h2 class="fw-bold mb-1">
+      <i class="bi bi-trash me-2"></i>
+      Thùng rác - Sản phẩm
+    </h2>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/admin/home/index">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/admin/product/index">Sản phẩm</a>
+        </li>
+        <li class="breadcrumb-item active">Thùng rác</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/admin/product/index" class="btn btn-secondary">
+      <i class="bi bi-arrow-left me-2"></i>
+      Quay lại danh sách
+    </a>
+    <c:if test="${not empty trashedList}">
+      <button class="btn btn-warning" onclick="emptyTrash()">
+        <i class="bi bi-trash3 me-2"></i>
+        Dọn sạch thùng rác
+      </button>
+    </c:if>
+  </div>
+</div>
+
+<!-- Success/Error Messages -->
+<c:if test="${not empty message}">
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle me-2"></i>
+    ${message}${param.message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+</c:if>
+
+<c:if test="${not empty error}">
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    ${error}${param.error}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+</c:if>
+
+<!-- Info Banner -->
+<div class="alert alert-info mb-4">
+  <div class="d-flex align-items-center">
+    <i class="bi bi-info-circle me-2 fs-4"></i>
+    <div>
+      <h6 class="alert-heading mb-1">Thông tin về thùng rác</h6>
+      <p class="mb-0">
+        Các sản phẩm trong thùng rác sẽ được
+        <strong>tự động xóa vĩnh viễn sau 30 ngày</strong> (hệ thống tự động
+        chạy lúc 2:30 AM hàng ngày). Bạn có thể khôi phục hoặc xóa vĩnh viễn thủ
+        công bất cứ lúc nào.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+  <div class="col-12 col-md-4 mb-3">
+    <div class="card bg-warning text-white h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="card-title text-white mb-1">Trong thùng rác</h6>
+            <h3 class="mb-0">${trashedList.size()}</h3>
+            <small class="text-white">sản phẩm đã xóa</small>
+          </div>
+          <div class="text-white">
+            <i class="bi bi-trash display-6"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-4 mb-3">
+    <div class="card bg-danger text-white h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="card-title text-white mb-1">Sắp hết hạn</h6>
+            <h3 class="mb-0">${expiringSoonCount}</h3>
+            <small class="text-white">còn < 7 ngày</small>
+          </div>
+          <div class="text-white">
+            <i class="bi bi-clock display-6"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-4 mb-3">
+    <div class="card bg-info text-white h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="card-title text-white mb-1">Có thể khôi phục</h6>
+            <h3 class="mb-0">${recoverableCount}</h3>
+            <small class="text-white">còn thời gian</small>
+          </div>
+          <div class="text-white">
+            <i class="bi bi-arrow-clockwise display-6"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Trash Content -->
+<div class="card shadow-sm">
+  <div class="card-header bg-light">
+    <div
+      class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center"
+    >
+      <h5 class="card-title mb-2 mb-sm-0">
+        <i class="bi bi-trash text-warning me-2"></i>
+        Danh sách sản phẩm đã xóa
+      </h5>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-warning">${trashedList.size()} sản phẩm</span>
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          onclick="refreshTrash()"
+        >
+          <i class="bi bi-arrow-clockwise"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <c:choose>
+      <c:when test="${empty trashedList}">
+        <div class="text-center py-5">
+          <i class="bi bi-trash display-1 text-muted"></i>
+          <h4 class="text-muted mt-3">Thùng rác trống</h4>
+          <p class="text-muted">Chưa có sản phẩm nào bị xóa</p>
+          <a href="${base}/index" class="btn btn-primary">
+            <i class="bi bi-arrow-left me-2"></i>
+            Quay lại danh sách
+          </a>
+        </div>
+      </c:when>
+      <c:otherwise>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0" id="trashTable">
+            <thead class="table-light">
+              <tr>
+                <th width="8%" class="text-center">ID</th>
+                <th width="15%">Tên sản phẩm</th>
+                <th width="10%" class="text-center">Hình ảnh</th>
+                <th width="12%" class="text-center">Giá bán</th>
+                <th width="10%" class="text-center">Loại</th>
+                <th width="12%" class="text-center">Ngày xóa</th>
+                <th width="10%" class="text-center">Còn lại</th>
+                <th width="8%" class="text-center">Trạng thái</th>
+                <th width="15%" class="text-center">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <c:forEach var="product" items="${trashedList}">
+                <c:set
+                  var="daysLeft"
+                  value="${30 - product.daysSinceDeleted}"
+                />
+                <tr class="${daysLeft <= 7 ? 'table-warning' : ''}">
+                  <td class="text-center">
+                    <span class="badge bg-light text-dark fw-semibold">#${product.id}</span>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <i class="bi bi-trash text-muted me-2"></i>
+                      <div>
+                        <div class="fw-semibold text-muted text-decoration-line-through">
+                          ${product.name}
+                        </div>
+                        <c:if test="${product.special}">
+                          <span class="badge bg-warning text-dark">
+                            <i class="bi bi-star me-1"></i>Đặc biệt
+                          </span>
+                        </c:if>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <c:choose>
+                      <c:when test="${not empty product.image}">
+                        <img src="/static/images/products/${product.image}" 
+                             alt="${product.name}" 
+                             class="img-thumbnail" 
+                             style="width: 50px; height: 50px; object-fit: cover;">
+                      </c:when>
+                      <c:otherwise>
+                        <div class="bg-light border rounded d-flex align-items-center justify-content-center" 
+                             style="width: 50px; height: 50px;">
+                          <i class="bi bi-image text-muted"></i>
+                        </div>
+                      </c:otherwise>
+                    </c:choose>
+                  </td>
+                  <td class="text-center">
+                    <div class="text-muted">
+                      <fmt:formatNumber value="${product.unitPrice}" type="currency" currencySymbol="₫" groupingUsed="true"/>
+                    </div>
+                    <c:if test="${product.discount > 0}">
+                      <small class="text-danger">
+                        -${product.discount}%
+                      </small>
+                    </c:if>
+                  </td>
+                  <td class="text-center">
+                    <c:choose>
+                      <c:when test="${not empty product.category}">
+                        <span class="badge bg-secondary">${product.category.name}</span>
+                      </c:when>
+                      <c:otherwise>
+                        <span class="badge bg-light text-muted">Chưa phân loại</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </td>
+                  <td class="text-center">
+                    <small class="text-muted">
+                      <fmt:formatDate value="${product.deletedAt}" pattern="dd/MM/yyyy"/>
+                    </small>
+                  </td>
+                  <td class="text-center">
+                    <c:choose>
+                      <c:when test="${daysLeft > 7}">
+                        <span class="badge bg-success">${daysLeft} ngày</span>
+                      </c:when>
+                      <c:when test="${daysLeft > 0}">
+                        <span class="badge bg-warning text-dark">${daysLeft} ngày</span>
+                      </c:when>
+                      <c:otherwise>
+                        <span class="badge bg-danger">Hết hạn</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </td>
+                  <td class="text-center">
+                    <c:choose>
+                      <c:when test="${daysLeft <= 0}">
+                        <span class="badge bg-danger">
+                          <i class="bi bi-exclamation-triangle me-1"></i>Hết hạn
+                        </span>
+                      </c:when>
+                      <c:when test="${daysLeft <= 7}">
+                        <span class="badge bg-warning text-dark">
+                          <i class="bi bi-clock me-1"></i>Sắp hết hạn
+                        </span>
+                      </c:when>
+                      <c:otherwise>
+                        <span class="badge bg-info">
+                          <i class="bi bi-shield-check me-1"></i>Có thể khôi phục
+                        </span>
+                      </c:otherwise>
+                    </c:choose>
+                  </td>
+                  <td class="text-center">
+                    <div class="btn-group-vertical btn-group-sm">
+                      <button
+                        class="btn btn-sm btn-outline-success mb-1"
+                        onclick="restoreProduct('${product.id}', '${product.name}')"
+                      >
+                        <i class="bi bi-arrow-clockwise me-1"></i>Khôi phục
+                      </button>
+                      <button
+                        class="btn btn-sm btn-outline-danger"
+                        onclick="permanentDelete('${product.id}', '${product.name}')"
+                      >
+                        <i class="bi bi-x-circle me-1"></i>Xóa vĩnh viễn
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </c:forEach>
+            </tbody>
+          </table>
+        </div>
+      </c:otherwise>
+    </c:choose>
+  </div>
+</div>
+
+<!-- Restore Modal -->
+<div class="modal fade" id="restoreModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-arrow-clockwise me-2"></i>
+          Khôi phục sản phẩm
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <i class="bi bi-arrow-clockwise display-4 text-success"></i>
+        </div>
+        <p class="text-center">
+          Bạn có muốn khôi phục sản phẩm
+          <strong id="restoreProductName"></strong>?
+        </p>
+        <div class="alert alert-success">
+          <i class="bi bi-check-circle me-1"></i>
+          Sau khi khôi phục, sản phẩm sẽ trở lại hoạt động bình thường và
+          có thể được bán lại.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-2"></i>Hủy
+        </button>
+        <form id="restoreForm" method="post" style="display: inline">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-arrow-clockwise me-2"></i>Khôi phục
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Permanent Delete Modal -->
+<div class="modal fade" id="permanentDeleteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Xóa vĩnh viễn
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <i class="bi bi-x-circle display-4 text-danger"></i>
+        </div>
+        <p class="text-center">
+          Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm
+          <strong id="permanentDeleteProductName"></strong>?
+        </p>
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác! Sản phẩm
+          sẽ bị xóa khỏi hệ thống vĩnh viễn.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-2"></i>Hủy
+        </button>
+        <form id="permanentDeleteForm" method="post" style="display: inline">
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash me-2"></i>Xóa vĩnh viễn
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Empty Trash Modal -->
+<div class="modal fade" id="emptyTrashModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-trash3 me-2"></i>
+          Dọn sạch thùng rác
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <i class="bi bi-trash3 display-4 text-danger"></i>
+        </div>
+        <p class="text-center">
+          Bạn có chắc chắn muốn xóa vĩnh viễn
+          <strong>tất cả ${trashedList.size()} sản phẩm</strong> trong
+          thùng rác?
+        </p>
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác! Tất cả
+          sản phẩm trong thùng rác sẽ bị xóa vĩnh viễn.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-2"></i>Hủy
+        </button>
+        <form
+          action="/admin/product/empty-trash"
+          method="post"
+          style="display: inline"
+        >
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash3 me-2"></i>Dọn sạch thùng rác
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Define global functions immediately (no jQuery dependency)
+  console.log('Product trash page script loading...'); // Debug
+  console.log(
+    'Defining functions: restoreProduct, permanentDelete, emptyTrash, refreshTrash'
+  ); // Debug
+
+  function restoreProduct(id, name) {
+    console.log('restoreProduct called:', id, name); // Debug
+    document.getElementById('restoreProductName').textContent = name;
+    document.getElementById('restoreForm').action =
+      '/admin/product/restore/' + id;
+    new bootstrap.Modal(document.getElementById('restoreModal')).show();
+  }
+
+  function permanentDelete(id, name) {
+    console.log('permanentDelete called:', id, name); // Debug
+    document.getElementById('permanentDeleteProductName').textContent = name;
+    document.getElementById('permanentDeleteForm').action =
+      '/admin/product/permanent-delete/' + id;
+    new bootstrap.Modal(document.getElementById('permanentDeleteModal')).show();
+  }
+
+  function emptyTrash() {
+    new bootstrap.Modal(document.getElementById('emptyTrashModal')).show();
+  }
+
+  function refreshTrash() {
+    location.reload();
+  }
+
+  // Wait for jQuery to be available for DataTable only
+  $(document).ready(function () {
+    // Initialize DataTable
+    $('#trashTable').DataTable({
+      responsive: true,
+      language: {
+        sProcessing: 'Đang xử lý...',
+        sLengthMenu: 'Hiển thị _MENU_ mục',
+        sZeroRecords: 'Không tìm thấy dữ liệu',
+        sInfo: 'Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục',
+        sInfoEmpty: 'Hiển thị 0 đến 0 trong tổng số 0 mục',
+        sInfoFiltered: '(được lọc từ _MAX_ mục)',
+        sSearch: 'Tìm kiếm:',
+        oPaginate: {
+          sFirst: 'Đầu',
+          sPrevious: 'Trước',
+          sNext: 'Tiếp',
+          sLast: 'Cuối',
+        },
+      },
+      pageLength: 25,
+      lengthMenu: [
+        [10, 25, 50, -1],
+        [10, 25, 50, 'Tất cả'],
+      ],
+      order: [[5, 'desc']], // Sort by delete date descending
+      columnDefs: [
+        { orderable: false, targets: [2, 8] }, // Disable sorting for image and action columns
+        { className: 'text-center', targets: [0, 2, 3, 4, 5, 6, 7, 8] },
+      ],
+      dom:
+        '<"row px-3 py-2"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+        '<"row"<"col-sm-12"tr>>' +
+        '<"row px-3 py-2"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+      searching: true,
+      paging: true,
+      info: true,
+      autoWidth: false,
+    });
+
+    // Auto-refresh every 5 minutes to update remaining days
+    setInterval(function () {
+      location.reload();
+    }, 300000); // 5 minutes
+  });
+</script> 

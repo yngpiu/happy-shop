@@ -20,10 +20,14 @@ public class HomeController {
 	
 	@RequestMapping(value = {"", "/home"})
 	public String index(Model model) {
-		List<Product> list2 = pdao.findBySpecial(4);
-		model.addAttribute("list", list2);
-		List<Product> list3 = pdao.findBySpecial(0);
-		model.addAttribute("list1", list3);
+		// Lấy 4 sản phẩm đặc biệt (special = true)
+		List<Product> specialProducts = pdao.findSpecialProducts(4);
+		model.addAttribute("list", specialProducts);
+		
+		// Lấy sản phẩm mới nhất (active products)
+		List<Product> latestProducts = pdao.findActiveProducts(8);
+		model.addAttribute("list1", latestProducts);
+		
 		return "home/index";
 	}
 	@RequestMapping("/about")
