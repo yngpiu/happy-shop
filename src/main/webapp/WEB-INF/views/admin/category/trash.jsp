@@ -315,9 +315,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           <i class="bi bi-x-circle me-2"></i>Hủy
         </button>
-        <a href="#" id="restoreLink" class="btn btn-success">
-          <i class="bi bi-arrow-clockwise me-2"></i>Khôi phục
-        </a>
+        <form id="restoreForm" method="post" style="display: inline">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-arrow-clockwise me-2"></i>Khôi phục
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -356,9 +358,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           <i class="bi bi-x-circle me-2"></i>Hủy
         </button>
-        <a href="#" id="permanentDeleteLink" class="btn btn-danger">
-          <i class="bi bi-trash me-2"></i>Xóa vĩnh viễn
-        </a>
+        <form id="permanentDeleteForm" method="post" style="display: inline">
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash me-2"></i>Xóa vĩnh viễn
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -398,9 +402,15 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           <i class="bi bi-x-circle me-2"></i>Hủy
         </button>
-        <a href="/admin/category/empty-trash" class="btn btn-danger">
-          <i class="bi bi-trash3 me-2"></i>Dọn sạch thùng rác
-        </a>
+        <form
+          action="/admin/category/empty-trash"
+          method="post"
+          style="display: inline"
+        >
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash3 me-2"></i>Dọn sạch thùng rác
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -421,7 +431,7 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
   function restoreCategory(id, name) {
     console.log('restoreCategory called:', id, name); // Debug
     document.getElementById('restoreCategoryName').textContent = name;
-    document.getElementById('restoreLink').href =
+    document.getElementById('restoreForm').action =
       '/admin/category/restore/' + id;
     new bootstrap.Modal(document.getElementById('restoreModal')).show();
   }
@@ -429,8 +439,8 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
   function permanentDelete(id, name) {
     console.log('permanentDelete called:', id, name); // Debug
     document.getElementById('permanentDeleteCategoryName').textContent = name;
-    document.getElementById('permanentDeleteLink').href =
-      '/admin/category/delete-permanent/' + id;
+    document.getElementById('permanentDeleteForm').action =
+      '/admin/category/permanent-delete/' + id;
     new bootstrap.Modal(document.getElementById('permanentDeleteModal')).show();
   }
 

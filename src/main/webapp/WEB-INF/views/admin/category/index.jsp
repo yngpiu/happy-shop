@@ -412,88 +412,36 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           <i class="bi bi-x-circle me-2"></i>Hủy
         </button>
-        <a href="#" id="trashLink" class="btn btn-warning">
-          <i class="bi bi-trash me-2"></i>Chuyển vào thùng rác
-        </a>
+        <form id="trashForm" method="post" style="display: inline;">
+          <button type="submit" class="btn btn-warning">
+            <i class="bi bi-trash me-2"></i>Chuyển vào thùng rác
+          </button>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Restore Modal -->
-<div class="modal fade" id="restoreModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title">
-          <i class="bi bi-arrow-clockwise me-2"></i>
-          Khôi phục loại sản phẩm
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="text-center mb-3">
-          <i class="bi bi-arrow-clockwise display-4 text-success"></i>
-        </div>
-        <p class="text-center">Bạn có muốn khôi phục loại sản phẩm <strong id="restoreCategoryName"></strong>?</p>
-        <div class="alert alert-success">
-          <i class="bi bi-check-circle me-1"></i>
-          Sau khi khôi phục, loại sản phẩm sẽ trở lại hoạt động bình thường.
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <i class="bi bi-x-circle me-2"></i>Hủy
-        </button>
-        <a href="#" id="restoreLink" class="btn btn-success">
-          <i class="bi bi-arrow-clockwise me-2"></i>Khôi phục
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Permanent Delete Modal -->
-<div class="modal fade" id="permanentDeleteModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          Xóa vĩnh viễn
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="text-center mb-3">
-          <i class="bi bi-x-circle display-4 text-danger"></i>
-        </div>
-        <p class="text-center">Bạn có chắc chắn muốn xóa vĩnh viễn loại sản phẩm <strong id="permanentDeleteCategoryName"></strong>?</p>
-        <div class="alert alert-danger">
-          <i class="bi bi-exclamation-triangle me-1"></i>
-          <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác! Loại sản phẩm sẽ bị xóa khỏi hệ thống vĩnh viễn.
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <i class="bi bi-x-circle me-2"></i>Hủy
-        </button>
-        <a href="#" id="permanentDeleteLink" class="btn btn-danger">
-          <i class="bi bi-trash me-2"></i>Xóa vĩnh viễn
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script>
-  // Global functions for onclick handlers (no jQuery dependency)
+  // ========== GLOBAL FUNCTIONS - KHÔNG PHỤ THUỘC JQUERY ==========
+  
+  /**
+   * Hiển thị modal xác nhận chuyển category vào thùng rác
+   * @param {number} id - ID của category
+   * @param {string} name - Tên category
+   * @param {number} productCount - Số lượng sản phẩm của category
+   */
   function moveToTrash(id, name, productCount) {
-    console.log('Move to trash clicked:', id, name); // Debug
+    console.log('Chuyển vào thùng rác:', id, name); // Debug
     
+    // Cập nhật tên category vào modal
     document.getElementById('trashCategoryName').textContent = name;
-    document.getElementById('trashLink').href = '/admin/category/move-to-trash/' + id;
+    // Cập nhật form action với URL đúng
+    document.getElementById('trashForm').action = '/admin/category/delete/' + id;
     
+    // Hiển thị cảnh báo nếu category có sản phẩm
     const productWarning = document.getElementById('productWarning');
     if (productCount > 0) {
       document.getElementById('productCount').textContent = productCount;
@@ -502,42 +450,36 @@
       productWarning.style.display = 'none';
     }
     
+    // Hiển thị modal xác nhận
     new bootstrap.Modal(document.getElementById('trashModal')).show();
   }
 
-  function restoreCategory(id, name) {
-    console.log('Restore clicked:', id, name); // Debug
-    
-    document.getElementById('restoreCategoryName').textContent = name;
-    document.getElementById('restoreLink').href = '/admin/category/restore/' + id;
-    new bootstrap.Modal(document.getElementById('restoreModal')).show();
-  }
 
-  function permanentDeleteCategory(id, name) {
-    console.log('Permanent delete clicked:', id, name); // Debug
-    
-    document.getElementById('permanentDeleteCategoryName').textContent = name;
-    document.getElementById('permanentDeleteLink').href = '/admin/category/delete-permanent/' + id;
-    new bootstrap.Modal(document.getElementById('permanentDeleteModal')).show();
-  }
 
+  /**
+   * Làm mới dữ liệu trang
+   */
   function refreshData() {
     location.reload();
   }
 
-  // Wait for jQuery to be available for DataTable only
+  // ========== KHỞI TẠO KHI TRANG TẢI XONG ==========
   document.addEventListener('DOMContentLoaded', function() {
-    console.log('Page loaded, waiting for jQuery...'); // Debug
+    console.log('Trang đã tải, đang chờ jQuery...'); // Debug
     
-    // Simple function to wait for jQuery
+    /**
+     * Hàm khởi tạo DataTable - chờ jQuery load xong
+     * Sử dụng retry pattern để đảm bảo jQuery đã sẵn sàng
+     */
     function initializeDataTable() {
       if (typeof $ !== 'undefined') {
-        console.log('jQuery loaded, initializing DataTable...'); // Debug
+        console.log('jQuery đã tải, khởi tạo DataTable...'); // Debug
         
-        // Initialize DataTable
+        // ========== CẤU HÌNH DATATABLE ==========
         $('#dataTable').DataTable({
-          responsive: true,
+          responsive: true, // Responsive cho mobile
           language: {
+            // Ngôn ngữ tiếng Việt
             "sProcessing": "Đang xử lý...",
             "sLengthMenu": "Hiển thị _MENU_ mục",
             "sZeroRecords": "Không tìm thấy dữ liệu",
@@ -552,57 +494,63 @@
               "sLast": "Cuối"
             }
           },
-          pageLength: 25,
-          lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]],
-          order: [[0, 'asc']],
+          pageLength: 25, // Hiển thị 25 dòng mỗi trang
+          lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]], // Tùy chọn số dòng
+          order: [[0, 'asc']], // Sắp xếp theo ID tăng dần
           columnDefs: [
-            { orderable: false, targets: [5] },
-            { className: "text-center", targets: [0, 2, 3, 4, 5] }
+            { orderable: false, targets: [5] }, // Cột thao tác không sort được
+            { className: "text-center", targets: [0, 2, 3, 4, 5] } // Căn giữa các cột
           ],
+          // Layout của các control
           dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
                '<"row"<"col-sm-12"tr>>' +
                '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-          searching: true,
-          paging: true,
-          info: true,
-          autoWidth: false
+          searching: true, // Cho phép tìm kiếm
+          paging: true,    // Cho phép phân trang
+          info: true,      // Hiển thị thông tin
+          autoWidth: false // Không tự động điều chỉnh width
         });
 
-        // Status filter functionality  
+        // ========== BỘ LỌC TRẠNG THÁI ==========
         $('input[name="statusFilter"]').change(function() {
           const filterValue = $(this).val();
           
           if (filterValue === 'active') {
+            // Chỉ hiển thị category đang hoạt động
             $('tr[data-status="deleted"]').hide();
             $('div[data-status="deleted"]').hide();
             $('#categoryCount').text($('tr[data-status="active"]').length + ' loại');
           } else {
+            // Hiển thị tất cả category
             $('tr[data-status], div[data-status]').show();
             $('#categoryCount').text('${list.size()} loại');
           }
         });
 
-        // View toggle
+        // ========== CHUYỂN ĐỔI CHẾ ĐỘ HIỂN THỊ ==========
         $('input[name="viewType"]').change(function () {
           if ($(this).attr('id') === 'tableView') {
+            // Hiển thị dạng bảng
             $('#tableViewContainer').show();
             $('#cardViewContainer').hide();
           } else {
+            // Hiển thị dạng thẻ (card)
             $('#tableViewContainer').hide();
             $('#cardViewContainer').show();
           }
         });
 
-        // Initialize with active filter
+        // ========== KHỞI TẠO MẶC ĐỊNH ==========
+        // Mặc định hiển thị category đang hoạt động
         $('input[name="statusFilter"][value="active"]').trigger('change');
         
       } else {
-        // Retry after 100ms if jQuery not loaded yet
+        // jQuery chưa load xong, thử lại sau 100ms
         setTimeout(initializeDataTable, 100);
       }
     }
     
-    // Start trying to initialize
+    // Bắt đầu khởi tạo DataTable
     initializeDataTable();
   });
 </script>

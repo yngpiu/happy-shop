@@ -283,10 +283,12 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
             <i class="bi bi-x-circle me-2"></i>
             Hủy bỏ
           </button>
-          <a href="${base}/trash/${entity.id}" class="btn btn-warning">
-            <i class="bi bi-trash me-2"></i>
-            Chuyển vào thùng rác
-          </a>
+          <form action="${base}/delete/${entity.id}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-warning">
+              <i class="bi bi-trash me-2"></i>
+              Chuyển vào thùng rác
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -294,61 +296,72 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 </c:if>
 
 <script>
-  // Enhanced form validation
+  // ========== XÁC THỰC FORM NÂNG CAO ==========
   (function() {
     'use strict';
     
     window.addEventListener('load', function() {
+      // Lấy tất cả form cần validate
       var forms = document.getElementsByClassName('needs-validation');
+      
+      // Áp dụng validation cho từng form
       var validation = Array.prototype.filter.call(forms, function(form) {
         form.addEventListener('submit', function(event) {
           if (form.checkValidity() === false) {
+            // Form không hợp lệ - ngăn submit
             event.preventDefault();
             event.stopPropagation();
             
-            // Focus on first invalid field
+            // Focus vào field đầu tiên bị lỗi
             var firstInvalid = form.querySelector(':invalid');
             if (firstInvalid) {
               firstInvalid.focus();
             }
           } else {
-            // Show loading state
+            // Form hợp lệ - hiển thị trạng thái loading
             var submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
               submitBtn.disabled = true;
               submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Đang xử lý...';
             }
           }
+          // Thêm class để hiển thị validation feedback
           form.classList.add('was-validated');
         }, false);
       });
     }, false);
   })();
 
-  // Move to trash confirmation
+  // ========== XÁC NHẬN CHUYỂN VÀO THÙNG RÁC ==========
+  /**
+   * Hiển thị modal xác nhận chuyển category vào thùng rác
+   */
   function moveToTrash() {
     new bootstrap.Modal(document.getElementById('trashModal')).show();
   }
 
-  // Auto-focus and enhanced UX
+  // ========== TÍNH NĂNG UX NÂNG CAO ==========
   $(document).ready(function() {
-    // Auto-focus first input
+    // ========== TỰ ĐỘNG FOCUS INPUT ĐẦU TIÊN ==========
     $('#name').focus();
     
-    // Real-time character counter for name field
+    // ========== ĐẾM KÝ TỰ THỜI GIAN THỰC ==========
     $('#name').on('input', function() {
       var length = $(this).val().length;
       var maxLength = 100;
       var remaining = maxLength - length;
       
+      // Hiển thị cảnh báo khi còn ít ký tự
       if (remaining < 20) {
         $(this).next('.invalid-feedback').text(`Còn lại ${remaining} ký tự`);
       }
     });
     
-    // Smart form reset
+    // ========== XÁC NHẬN RESET FORM ==========
     $('button[type="reset"]').on('click', function(e) {
       e.preventDefault();
+      
+      // Xác nhận trước khi reset
       if (confirm('Bạn có chắc chắn muốn đặt lại tất cả thông tin?')) {
         document.getElementById('categoryForm').reset();
         $('.was-validated').removeClass('was-validated');
@@ -356,20 +369,27 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
       }
     });
     
-    // Prevent accidental navigation
+    // ========== NGĂN THOÁT TRANG KHI CÓ THAY ĐỔI ==========
     var formChanged = false;
+    
+    // Theo dõi thay đổi trong form
     $('#name').on('input', function() {
       formChanged = true;
     });
     
+    // Cảnh báo khi thoát trang có thay đổi chưa lưu
     $(window).on('beforeunload', function() {
       if (formChanged) {
         return 'Bạn có những thay đổi chưa được lưu. Bạn có chắc chắn muốn rời khỏi trang?';
       }
     });
     
+    // Reset trạng thái khi submit form thành công
     $('#categoryForm').on('submit', function() {
       formChanged = false;
     });
+    
+    // ========== DEBUG CONSOLE ==========
+    console.log('Category Edit Page - JavaScript initialized successfully');
   });
 </script>

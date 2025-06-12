@@ -13,6 +13,10 @@ import org.springframework.stereotype.Repository;
 
 import com.happyshop.entity.Category;
 
+/**
+ * Implementation của CategoryDAO
+ * Xử lý các thao tác database liên quan đến Category
+ */
 @Transactional
 @Repository
 public class CategoryDAOImpl implements CategoryDAO{
