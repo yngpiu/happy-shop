@@ -195,7 +195,7 @@ public class CategoryManger {
 			return "redirect:/admin/category/edit/" + entity.getId();
 		}
 	}
-
+	
 	// ================= XÓA MỀM (SOFT DELETE) =================
 	
 	/**
@@ -230,7 +230,7 @@ public class CategoryManger {
 		
 		return "redirect:/admin/category/index";
 	}
-
+	
 	// ================= QUẢN LÝ THÙNG RÁC =================
 	
 	/**
@@ -286,12 +286,12 @@ public class CategoryManger {
 	@RequestMapping(value = "/empty-trash", method = RequestMethod.POST)
 	public String emptyTrash(RedirectAttributes model) {
 		try {
-			List<Category> deletedList = dao.findAllDeleted();
+		List<Category> deletedList = dao.findAllDeleted();
 			int count = deletedList.size();
-			
-			for (Category category : deletedList) {
+		
+		for (Category category : deletedList) {
 				dao.permanentDelete(category.getId());
-			}
+		}
 			
 			model.addFlashAttribute("message", "Đã dọn sạch thùng rác! Xóa vĩnh viễn " + count + " loại sản phẩm.");
 			model.addFlashAttribute("messageType", "success");

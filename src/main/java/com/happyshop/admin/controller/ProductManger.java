@@ -51,7 +51,7 @@ public class ProductManger {
 	
 	@Autowired
 	private ServletContext servletContext;
-
+	
 	// ================= MAIN CRUD OPERATIONS =================
 	
 	/**
@@ -75,8 +75,8 @@ public class ProductManger {
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("error", "Có lỗi xảy ra khi tải danh sách sản phẩm: " + e.getMessage());
-			return "admin/product/index";
-		}
+		return "admin/product/index";
+	}
 	}
 	
 	/**
@@ -119,8 +119,8 @@ public class ProductManger {
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("error", "Có lỗi xảy ra khi tải form thêm sản phẩm: " + e.getMessage());
-			return "admin/product/index";
-		}
+		return "admin/product/index";
+	}
 	}
 	
 	/**
@@ -159,9 +159,9 @@ public class ProductManger {
 			Product product = productDAO.findById(id);
 			if (product == null || product.isDeleted()) {
 				model.addAttribute("error", "Không tìm thấy sản phẩm với ID: " + id);
-				return "redirect:/admin/product/index";
-			}
-			
+		return "redirect:/admin/product/index";
+	}
+	
 			model.addAttribute("product", product);
 			
 			// Lấy danh sách categories
@@ -247,7 +247,7 @@ public class ProductManger {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("error", 
 				"Có lỗi xảy ra khi xóa sản phẩm: " + e.getMessage());
-			return "redirect:/admin/product/index";
+		return "redirect:/admin/product/index";
 		}
 	}
 	

@@ -207,9 +207,9 @@
       </c:when>
       <c:otherwise>
         <!-- Table View -->
-        <div id="tableViewContent">
+        <div id="tableViewContainer">
           <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0" id="dataTable">
               <thead class="table-dark">
                 <tr>
                   <th scope="col" width="80px">
@@ -330,7 +330,7 @@
         </div>
         
         <!-- Card View -->
-        <div id="cardViewContent" style="display: none;">
+        <div id="cardViewContainer" style="display: none;">
           <div class="row p-3">
             <c:forEach var="user" items="${list}">
               <div class="col-12 col-md-6 col-lg-4 mb-3 user-card" data-status="${user.isBanned ? 'banned' : 'active'}" data-role="${user.admin ? 'admin' : 'user'}">
@@ -421,96 +421,220 @@
 </form>
 
 <script>
-// Auto-hide alerts
-setTimeout(function() {
-  $('.auto-hide-alert').fadeOut();
-}, 5000);
-
-// View toggle functionality
-document.getElementById('tableView').addEventListener('change', function() {
-  if (this.checked) {
-    document.getElementById('tableViewContent').style.display = 'block';
-    document.getElementById('cardViewContent').style.display = 'none';
-  }
-});
-
-document.getElementById('cardView').addEventListener('change', function() {
-  if (this.checked) {
-    document.getElementById('tableViewContent').style.display = 'none';
-    document.getElementById('cardViewContent').style.display = 'block';
-  }
-});
-
-// Filter functionality
-document.querySelectorAll('input[name="statusFilter"]').forEach(function(radio) {
-  radio.addEventListener('change', function() {
-    const filter = this.value;
-    let visibleCount = 0;
+  /**
+   * Xác nhận cấm người dùng
+   * @param {string} userId - ID của người dùng
+   * @param {string} userName - Tên của người dùng
+   */
+  function confirmBan(userId, userName) {
+    console.log('Cấm người dùng:', userId, userName); // Debug
     
-    document.querySelectorAll('.user-row, .user-card').forEach(function(element) {
-      const status = element.getAttribute('data-status');
-      let show = false;
-      
-      if (filter === 'all') {
-        show = true;
-      } else if (filter === 'active' && status === 'active') {
-        show = true;
-      } else if (filter === 'banned' && status === 'banned') {
-        show = true;
-      }
-      
-      if (show) {
-        element.style.display = '';
-        visibleCount++;
-      } else {
-        element.style.display = 'none';
-      }
-    });
-    
-    document.getElementById('userCount').textContent = visibleCount + ' người dùng';
-  });
-});
-
-// Select all functionality
-document.getElementById('selectAll').addEventListener('change', function() {
-  const checkboxes = document.querySelectorAll('.user-checkbox');
-  checkboxes.forEach(function(checkbox) {
-    checkbox.checked = this.checked;
-  }.bind(this));
-});
-
-// Confirm ban user
-function confirmBan(userId, userName) {
-  if (confirm('Bạn có chắc chắn muốn cấm người dùng "' + userName + '"?\n\nNgười dùng sẽ không thể đăng nhập vào hệ thống.')) {
-    document.getElementById('banUserId').value = userId;
-    document.getElementById('banUserForm').action = '${base}/ban/' + userId;
-    document.getElementById('banUserForm').submit();
-  }
-}
-
-// Confirm unban user  
-function confirmUnban(userId, userName) {
-  if (confirm('Bạn có chắc chắn muốn mở cấm cho người dùng "' + userName + '"?\n\nNgười dùng sẽ có thể đăng nhập trở lại.')) {
-    document.getElementById('unbanUserId').value = userId;
-    document.getElementById('unbanUserForm').action = '${base}/unban/' + userId;
-    document.getElementById('unbanUserForm').submit();
-  }
-}
-
-// Refresh data
-function refreshData() {
-  location.reload();
-}
-
-// CSS for responsive columns
-const style = document.createElement('style');
-style.textContent = `
-  @media (min-width: 768px) {
-    .col-md-2-4 {
-      flex: 0 0 auto;
-      width: 20%;
+    if (confirm('Bạn có chắc chắn muốn cấm người dùng "' + userName + '"?\n\nNgười dùng sẽ không thể đăng nhập vào hệ thống.')) {
+      document.getElementById('banUserId').value = userId;
+      document.getElementById('banUserForm').action = '${base}/ban/' + userId;
+      document.getElementById('banUserForm').submit();
     }
   }
-`;
-document.head.appendChild(style);
-</script> 
+
+  /**
+   * Xác nhận mở cấm người dùng
+   * @param {string} userId - ID của người dùng  
+   * @param {string} userName - Tên của người dùng
+   */
+  function confirmUnban(userId, userName) {
+    console.log('Mở cấm người dùng:', userId, userName); // Debug
+    
+    if (confirm('Bạn có chắc chắn muốn mở cấm cho người dùng "' + userName + '"?\n\nNgười dùng sẽ có thể đăng nhập trở lại.')) {
+      document.getElementById('unbanUserId').value = userId;
+      document.getElementById('unbanUserForm').action = '${base}/unban/' + userId;
+      document.getElementById('unbanUserForm').submit();
+    }
+  }
+
+  /**
+   * Làm mới dữ liệu trang
+   */
+  function refreshData() {
+    location.reload();
+  }
+
+  // ========== KHỞI TẠO KHI TRANG TẢI XONG ==========
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Trang đã tải, đang chờ jQuery...'); // Debug
+    
+    // ========== XỬ LÝ AUTO-HIDE ALERT MESSAGES ==========
+    const autoHideAlerts = document.querySelectorAll('.auto-hide-alert');
+    autoHideAlerts.forEach(function(alert) {
+      // Thêm hiệu ứng bounce nhẹ khi xuất hiện
+      alert.style.animation = 'fadeInBounce 0.5s ease-out';
+      
+      // Thêm hiệu ứng hover
+      alert.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.01)';
+        this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+      });
+      
+      alert.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+        this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+      });
+      
+      // Tự động ẩn sau 4 giây
+      setTimeout(function() {
+        if (alert && alert.parentNode) {
+          alert.style.transition = 'all 0.6s ease-out';
+          alert.style.opacity = '0';
+          alert.style.transform = 'translateY(-20px) scale(0.95)';
+          
+          setTimeout(function() {
+            if (alert && alert.parentNode) {
+              alert.remove();
+            }
+          }, 600);
+        }
+      }, 4000); // 4 giây
+    });
+    
+    /**
+     * Hàm khởi tạo DataTable - chờ jQuery load xong
+     * Sử dụng retry pattern để đảm bảo jQuery đã sẵn sàng
+     */
+    function initializeDataTable() {
+      if (typeof $ !== 'undefined') {
+        console.log('jQuery đã tải, khởi tạo DataTable...'); // Debug
+        
+        // ========== CẤU HÌNH DATATABLE ==========
+        $('#dataTable').DataTable({
+          responsive: true, // Responsive cho mobile
+          language: {
+            // Ngôn ngữ tiếng Việt
+            "sProcessing": "Đang xử lý...",
+            "sLengthMenu": "Hiển thị _MENU_ mục",
+            "sZeroRecords": "Không tìm thấy dữ liệu",
+            "sInfo": "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
+            "sInfoEmpty": "Hiển thị 0 đến 0 trong tổng số 0 mục",
+            "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+            "sSearch": "Tìm kiếm:",
+            "oPaginate": {
+              "sFirst": "Đầu",
+              "sPrevious": "Trước",
+              "sNext": "Tiếp",
+              "sLast": "Cuối"
+            }
+          },
+          pageLength: 25, // Hiển thị 25 dòng mỗi trang
+          lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]], // Tùy chọn số dòng
+          order: [[2, 'asc']], // Sắp xếp theo tên user tăng dần
+          columnDefs: [
+            { orderable: false, targets: [0, 1, 6] }, // Cột checkbox, avatar và hành động không sort được
+            { className: "text-center", targets: [0, 1, 4, 5, 6] } // Căn giữa các cột
+          ],
+          // Layout của các control với padding
+          dom: '<"row px-3 py-2"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+               '<"row"<"col-sm-12"tr>>' +
+               '<"row px-3 py-2"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+          searching: true, // Cho phép tìm kiếm
+          paging: true,    // Cho phép phân trang
+          info: true,      // Hiển thị thông tin
+          autoWidth: false // Không tự động điều chỉnh width
+        });
+
+        // ========== BỘ LỌC TRẠNG THÁI ==========
+        $('input[name="statusFilter"]').change(function() {
+          const filterValue = $(this).val();
+          
+          if (filterValue === 'active') {
+            // Chỉ hiển thị người dùng đang hoạt động
+            $('tr[data-status="banned"]').hide();
+            $('div[data-status="banned"]').hide();
+            $('#userCount').text($('tr[data-status="active"]').length + ' người dùng');
+          } else if (filterValue === 'banned') {
+            // Chỉ hiển thị người dùng bị cấm
+            $('tr[data-status="active"]').hide();
+            $('div[data-status="active"]').hide();
+            $('#userCount').text($('tr[data-status="banned"]').length + ' người dùng');
+          } else {
+            // Hiển thị tất cả người dùng
+            $('tr[data-status], div[data-status]').show();
+            $('#userCount').text('${list.size()} người dùng');
+          }
+        });
+
+        // ========== CHUYỂN ĐỔI CHẾ ĐỘ HIỂN THỊ ==========
+        $('input[name="viewType"]').change(function () {
+          if ($(this).attr('id') === 'tableView') {
+            // Hiển thị dạng bảng
+            $('#tableViewContainer').show();
+            $('#cardViewContainer').hide();
+          } else {
+            // Hiển thị dạng thẻ (card)
+            $('#tableViewContainer').hide();
+            $('#cardViewContainer').show();
+          }
+        });
+
+        // ========== SELECT ALL FUNCTIONALITY ==========
+        $('#selectAll').change(function() {
+          $('.user-checkbox').prop('checked', this.checked);
+        });
+
+        // ========== KHỞI TẠO MẶC ĐỊNH ==========
+        // Mặc định hiển thị người dùng đang hoạt động
+        $('input[name="statusFilter"][value="active"]').trigger('change');
+        
+      } else {
+        // jQuery chưa load xong, thử lại sau 100ms
+        setTimeout(initializeDataTable, 100);
+      }
+    }
+    
+    // Bắt đầu khởi tạo DataTable
+    initializeDataTable();
+  });
+</script>
+
+<!-- Custom CSS for 5 column layout & Alert Animations -->
+<style>
+  @media (min-width: 768px) {
+    .col-md-2-4 {
+      flex: 0 0 20%;
+      max-width: 20%;
+    }
+  }
+  
+  /* Alert Animations */
+  @keyframes fadeInBounce {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px) scale(0.95);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateY(5px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .auto-hide-alert {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: none;
+    border-left: 4px solid;
+    padding: 1rem 1.25rem;
+  }
+  
+  .auto-hide-alert.alert-success {
+    border-left-color: #28a745;
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+  }
+  
+  .auto-hide-alert.alert-danger {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+  }
+</style> 

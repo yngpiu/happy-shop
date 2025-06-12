@@ -119,13 +119,13 @@ public class User {
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
-
+	
 	public Boolean getIsBanned() {
 		return isBanned;
 	}
-
+	
 	public void setIsBanned(Boolean isBanned) {
 		this.isBanned = isBanned;
 	}
-	
+
 }

@@ -23,7 +23,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Autowired
 	SessionFactory factory;
-
+	
 	// ================= CRUD OPERATIONS =================
 
 	/**
@@ -129,7 +129,7 @@ public class ProductDAOImpl implements ProductDAO {
 		Session session = factory.getCurrentSession();
 		Product entity = session.find(Product.class, id);
 		if (entity != null) {
-			session.delete(entity);
+		session.delete(entity);
 		}
 	}
 

@@ -412,8 +412,8 @@
         </button>
         <form id="trashForm" method="post" style="display: inline;">
           <button type="submit" class="btn btn-warning">
-            <i class="bi bi-trash me-2"></i>Chuyển vào thùng rác
-          </button>
+          <i class="bi bi-trash me-2"></i>Chuyển vào thùng rác
+        </button>
         </form>
       </div>
     </div>
@@ -476,7 +476,7 @@
         // ========== CẤU HÌNH DATATABLE ==========
         $('#dataTable').DataTable({
           responsive: true, // Responsive cho mobile
-          language: {
+      language: {
             // Ngôn ngữ tiếng Việt
             "sProcessing": "Đang xử lý...",
             "sLengthMenu": "Hiển thị _MENU_ mục",
@@ -491,56 +491,56 @@
               "sNext": "Tiếp",
               "sLast": "Cuối"
             }
-          },
+      },
           pageLength: 25, // Hiển thị 25 dòng mỗi trang
           lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]], // Tùy chọn số dòng
           order: [[0, 'asc']], // Sắp xếp theo ID tăng dần
-          columnDefs: [
+      columnDefs: [
             { orderable: false, targets: [5] }, // Cột thao tác không sort được
             { className: "text-center", targets: [0, 2, 3, 4, 5] } // Căn giữa các cột
-          ],
+      ],
           // Layout của các control
-          dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
-               '<"row"<"col-sm-12"tr>>' +
-               '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+      dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+           '<"row"<"col-sm-12"tr>>' +
+           '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
           searching: true, // Cho phép tìm kiếm
           paging: true,    // Cho phép phân trang
           info: true,      // Hiển thị thông tin
           autoWidth: false // Không tự động điều chỉnh width
-        });
+    });
 
         // ========== BỘ LỌC TRẠNG THÁI ==========
-        $('input[name="statusFilter"]').change(function() {
-          const filterValue = $(this).val();
-          
-          if (filterValue === 'active') {
+    $('input[name="statusFilter"]').change(function() {
+      const filterValue = $(this).val();
+      
+      if (filterValue === 'active') {
             // Chỉ hiển thị category đang hoạt động
-            $('tr[data-status="deleted"]').hide();
-            $('div[data-status="deleted"]').hide();
-            $('#categoryCount').text($('tr[data-status="active"]').length + ' loại');
-          } else {
+        $('tr[data-status="deleted"]').hide();
+        $('div[data-status="deleted"]').hide();
+        $('#categoryCount').text($('tr[data-status="active"]').length + ' loại');
+      } else {
             // Hiển thị tất cả category
-            $('tr[data-status], div[data-status]').show();
-            $('#categoryCount').text('${list.size()} loại');
-          }
-        });
+        $('tr[data-status], div[data-status]').show();
+        $('#categoryCount').text('${list.size()} loại');
+      }
+    });
 
         // ========== CHUYỂN ĐỔI CHẾ ĐỘ HIỂN THỊ ==========
-        $('input[name="viewType"]').change(function () {
-          if ($(this).attr('id') === 'tableView') {
+    $('input[name="viewType"]').change(function () {
+      if ($(this).attr('id') === 'tableView') {
             // Hiển thị dạng bảng
-            $('#tableViewContainer').show();
-            $('#cardViewContainer').hide();
-          } else {
+        $('#tableViewContainer').show();
+        $('#cardViewContainer').hide();
+      } else {
             // Hiển thị dạng thẻ (card)
-            $('#tableViewContainer').hide();
-            $('#cardViewContainer').show();
-          }
-        });
+        $('#tableViewContainer').hide();
+        $('#cardViewContainer').show();
+      }
+    });
 
         // ========== KHỞI TẠO MẶC ĐỊNH ==========
         // Mặc định hiển thị category đang hoạt động
-        $('input[name="statusFilter"][value="active"]').trigger('change');
+    $('input[name="statusFilter"][value="active"]').trigger('change');
         
       } else {
         // jQuery chưa load xong, thử lại sau 100ms

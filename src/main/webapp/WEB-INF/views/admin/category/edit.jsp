@@ -283,8 +283,8 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           </button>
           <form action="${base}/delete/${entity.id}" method="post" style="display: inline;">
             <button type="submit" class="btn btn-warning">
-              <i class="bi bi-trash me-2"></i>
-              Chuyển vào thùng rác
+            <i class="bi bi-trash me-2"></i>
+            Chuyển vào thùng rác
             </button>
           </form>
         </div>

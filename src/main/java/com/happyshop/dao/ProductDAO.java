@@ -30,13 +30,13 @@ public interface ProductDAO {
 	 * @return Product tìm được hoặc null
 	 */
 	Product findById(Integer id);
-	
+
 	/**
 	 * Lấy tất cả sản phẩm (bao gồm cả đã xóa)
 	 * @return List<Product> danh sách tất cả sản phẩm
 	 */
 	List<Product> findAll();
-	
+
 	/**
 	 * Lấy danh sách sản phẩm đang hoạt động (chưa bị xóa)
 	 * @return List<Product> danh sách sản phẩm active
@@ -159,21 +159,21 @@ public interface ProductDAO {
 	 * @return List<Product> danh sách sản phẩm
 	 */
 	List<Product> findByCategoryId(Integer categoryId);
-	
+
 	/**
 	 * Tìm sản phẩm theo từ khóa
 	 * @param keywords từ khóa tìm kiếm
 	 * @return List<Product> danh sách sản phẩm
 	 */
 	List<Product> findByKeywords(String keywords);
-	
+
 	/**
 	 * Tìm sản phẩm theo danh sách ID (phân cách bởi dấu phẩy)
 	 * @param ids chuỗi ID phân cách bởi dấu phẩy
 	 * @return List<Product> danh sách sản phẩm
 	 */
 	List<Product> findByIds(String ids);
-	
+
 	// ================= AUTO CLEANUP =================
 	
 	/**

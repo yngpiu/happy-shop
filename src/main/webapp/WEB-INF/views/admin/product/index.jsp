@@ -398,7 +398,7 @@
                           </c:otherwise>
                         </c:choose>
                       </small>
-                    </div>
+	</div>
                     
                     <div class="mb-3">
                       <small class="text-muted">Số lượng: </small>
@@ -410,8 +410,8 @@
                           <span class="badge bg-danger">Hết hàng</span>
                         </c:otherwise>
                       </c:choose>
-                    </div>
-                    
+	</div>
+
                     <div class="d-flex gap-2">
                       <c:choose>
                         <c:when test="${product.deletedAt != null}">
