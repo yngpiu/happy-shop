@@ -225,7 +225,7 @@
                         </c:choose>
                       </td>
                       <td>
-                        <a href="/admin/order/detail/${order.id}" class="btn btn-sm btn-outline-primary">
+                        <a href="/admin/order/details/${order.id}" class="btn btn-sm btn-outline-primary">
                           <i class="bi bi-eye"></i>
                         </a>
                       </td>
