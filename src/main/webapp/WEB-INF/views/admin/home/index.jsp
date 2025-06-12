@@ -193,7 +193,36 @@
                         </strong>
                       </td>
                       <td>
-                        <span class="badge bg-secondary">${order.status}</span>
+                        <c:choose>
+                          <c:when test="${order.status == null || order.status == 0}">
+                            <span class="badge bg-warning text-dark">
+                              <i class="bi bi-clock me-1"></i>Chờ xử lý
+                            </span>
+                          </c:when>
+                          <c:when test="${order.status == 1}">
+                            <span class="badge bg-info">
+                              <i class="bi bi-gear me-1"></i>Đang xử lý
+                            </span>
+                          </c:when>
+                          <c:when test="${order.status == 2}">
+                            <span class="badge bg-primary">
+                              <i class="bi bi-truck me-1"></i>Đang giao
+                            </span>
+                          </c:when>
+                          <c:when test="${order.status == 3}">
+                            <span class="badge bg-success">
+                              <i class="bi bi-check-circle me-1"></i>Hoàn thành
+                            </span>
+                          </c:when>
+                          <c:when test="${order.status == -1}">
+                            <span class="badge bg-danger">
+                              <i class="bi bi-x-circle me-1"></i>Đã hủy
+                            </span>
+                          </c:when>
+                          <c:otherwise>
+                            <span class="badge bg-secondary">Không xác định</span>
+                          </c:otherwise>
+                        </c:choose>
                       </td>
                       <td>
                         <a href="/admin/order/detail/${order.id}" class="btn btn-sm btn-outline-primary">
