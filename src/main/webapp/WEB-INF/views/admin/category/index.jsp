@@ -24,7 +24,7 @@
     </nav>
   </div>
   <div class="d-flex gap-2">
-    <a href="${base}/add" class="btn btn-success">
+    <a href="${base}/insert" class="btn btn-success">
       <i class="bi bi-plus-circle me-2"></i>
       Thêm loại sản phẩm
     </a>
@@ -184,7 +184,7 @@
           <i class="bi bi-inbox display-1 text-muted"></i>
           <h4 class="text-muted mt-3">Chưa có loại sản phẩm nào</h4>
           <p class="text-muted">Hãy thêm loại sản phẩm đầu tiên của bạn</p>
-          <a href="${base}/add" class="btn btn-primary">
+          <a href="${base}/insert" class="btn btn-primary">
             <i class="bi bi-plus-circle me-2"></i>
             Thêm loại sản phẩm
           </a>

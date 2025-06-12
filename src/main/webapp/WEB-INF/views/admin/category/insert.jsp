@@ -67,7 +67,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
       </div>
       <div class="card-body">
         <form:form
-          action="${base}/create"
+          action="${base}/insert"
           modelAttribute="entity"
           method="post"
           class="needs-validation"
@@ -104,36 +104,24 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           </div>
 
           <!-- Action Buttons -->
-          <div
-            class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3"
-          >
-            <div class="d-flex flex-wrap gap-2">
-              <button type="submit" class="btn btn-success btn-lg">
-                <i class="bi bi-plus-circle me-2"></i>
-                Thêm loại sản phẩm
-              </button>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success btn-lg">
+              <i class="bi bi-plus-circle me-2"></i>
+              Thêm loại sản phẩm
+            </button>
 
-              <a href="${base}/index" class="btn btn-secondary">
-                <i class="bi bi-x-circle me-2"></i>
-                Hủy bỏ
-              </a>
-            </div>
+            <a
+              href="${base}/index"
+              class="btn btn-secondary d-flex align-items-center"
+            >
+              <i class="bi bi-x-circle me-2"></i>
+              Hủy bỏ
+            </a>
 
-            <div class="d-flex gap-2">
-              <button type="reset" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-clockwise me-2"></i>
-                Đặt lại form
-              </button>
-
-              <button
-                type="button"
-                class="btn btn-outline-info"
-                id="previewBtn"
-              >
-                <i class="bi bi-eye me-2"></i>
-                Xem trước
-              </button>
-            </div>
+            <button type="reset" class="btn btn-outline-secondary">
+              <i class="bi bi-arrow-clockwise me-2"></i>
+              Đặt lại form
+            </button>
           </div>
         </form:form>
       </div>
@@ -174,32 +162,6 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
       </div>
     </div>
 
-    <!-- Preview Card -->
-    <div class="card shadow-sm mb-4" id="previewCard" style="display: none">
-      <div class="card-header bg-info text-white">
-        <h6 class="card-title mb-0">
-          <i class="bi bi-eye me-2"></i>
-          Xem trước
-        </h6>
-      </div>
-      <div class="card-body">
-        <div class="mb-2">
-          <small class="text-muted d-block">Tên loại sẽ hiển thị:</small>
-          <strong id="previewName" class="text-primary">--</strong>
-        </div>
-        <div class="mb-2">
-          <small class="text-muted d-block">Trạng thái:</small>
-          <span class="badge bg-success">
-            <i class="bi bi-check-circle me-1"></i>Hoạt động
-          </span>
-        </div>
-        <div class="mb-0">
-          <small class="text-muted d-block">Số sản phẩm:</small>
-          <span class="badge bg-light text-muted">0 sản phẩm</span>
-        </div>
-      </div>
-    </div>
-
     <!-- Help Card -->
     <div class="card shadow-sm">
       <div class="card-header bg-light">
@@ -233,42 +195,6 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           <i class="bi bi-check-circle me-1"></i>
           <strong>Mẹo:</strong> Sau khi thêm thành công, bạn sẽ được chuyển về
           trang danh sách để xem kết quả.
-        </div>
-      </div>
-    </div>
-
-    <!-- Examples Card -->
-    <div class="card shadow-sm mt-4">
-      <div class="card-header bg-light">
-        <h6 class="card-title mb-0">
-          <i class="bi bi-lightbulb text-warning me-2"></i>
-          Ví dụ loại sản phẩm phổ biến
-        </h6>
-      </div>
-      <div class="card-body">
-        <div class="mb-2">
-          <strong class="text-primary">Công nghệ:</strong>
-          <small class="text-muted d-block"
-            >Smartphone, Laptop, Tablet, Tai nghe, Smartwatch</small
-          >
-        </div>
-        <div class="mb-2">
-          <strong class="text-primary">Thời trang:</strong>
-          <small class="text-muted d-block"
-            >Áo thun, Quần jeans, Giày sneaker, Túi xách</small
-          >
-        </div>
-        <div class="mb-2">
-          <strong class="text-primary">Gia dụng:</strong>
-          <small class="text-muted d-block"
-            >Tủ lạnh, Máy giặt, Lò vi sóng, Nồi cơm điện</small
-          >
-        </div>
-        <div class="mb-0">
-          <strong class="text-primary">Sách & Văn phòng phẩm:</strong>
-          <small class="text-muted d-block"
-            >Sách giáo khoa, Tiểu thuyết, Bút bi, Vở ghi chú</small
-          >
         </div>
       </div>
     </div>

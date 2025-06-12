@@ -40,7 +40,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
       Quay lại danh sách
     </a>
     <c:if test="${not empty entity.id}">
-      <a href="/admin/category/add" class="btn btn-success">
+      <a href="/admin/category/insert" class="btn btn-success">
         <i class="bi bi-plus-circle me-2"></i>
         Thêm mới
       </a>
@@ -138,7 +138,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                 </c:otherwise>
               </c:choose>
               
-              <a href="${base}/index" class="btn btn-secondary">
+              <a href="${base}/index" class="btn btn-secondary d-flex align-items-center">
                 <i class="bi bi-x-circle me-2"></i>
                 Hủy bỏ
               </a>
@@ -279,7 +279,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal">
             <i class="bi bi-x-circle me-2"></i>
             Hủy bỏ
           </button>
