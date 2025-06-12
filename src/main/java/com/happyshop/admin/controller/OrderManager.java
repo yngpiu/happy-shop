@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.happyshop.dao.OrderDAO;
@@ -204,6 +208,69 @@ public class OrderManager {
 				"Có lỗi xảy ra khi hủy đơn hàng: " + e.getMessage());
 			return "redirect:/admin/order/index";
 		}
+	}
+
+	/**
+	 * Cập nhật trạng thái đơn hàng qua AJAX
+	 * Endpoint mới để xử lý dropdown status change
+	 */
+	@PostMapping("/update-status")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> updateStatus(@RequestBody Map<String, Object> request) {
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			// Lấy dữ liệu từ request
+			Integer orderId = Integer.parseInt(request.get("orderId").toString());
+			Integer newStatus = Integer.parseInt(request.get("newStatus").toString());
+			
+			// Tìm đơn hàng
+			Order order = orderDAO.findById(orderId);
+			if (order == null) {
+				response.put("success", false);
+				response.put("message", "Không tìm thấy đơn hàng với ID: " + orderId);
+				return ResponseEntity.badRequest().body(response);
+			}
+			
+			// Validate trạng thái hợp lệ
+			if (!isValidStatus(newStatus)) {
+				response.put("success", false);
+				response.put("message", "Trạng thái không hợp lệ: " + newStatus);
+				return ResponseEntity.badRequest().body(response);
+			}
+			
+			// Cập nhật trạng thái
+			Integer oldStatus = order.getStatus();
+			order.setStatus(newStatus);
+			orderDAO.update(order);
+			
+			// Phản hồi thành công
+			response.put("success", true);
+			response.put("message", "Đã cập nhật trạng thái đơn hàng thành công");
+			response.put("orderId", orderId);
+			response.put("oldStatus", oldStatus);
+			response.put("newStatus", newStatus);
+			response.put("statusName", getStatusName(newStatus));
+			
+			return ResponseEntity.ok(response);
+			
+		} catch (NumberFormatException e) {
+			response.put("success", false);
+			response.put("message", "Dữ liệu không hợp lệ");
+			return ResponseEntity.badRequest().body(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("success", false);
+			response.put("message", "Có lỗi xảy ra khi cập nhật trạng thái: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+	}
+	
+	/**
+	 * Kiểm tra trạng thái có hợp lệ không
+	 */
+	private boolean isValidStatus(Integer status) {
+		return status != null && (status == -1 || status == 0 || status == 1 || status == 2 || status == 3);
 	}
 
 	// ================= UTILITY METHODS =================

@@ -22,6 +22,10 @@
         <li class="breadcrumb-item active">Đơn hàng</li>
       </ol>
     </nav>
+    <div class="alert alert-info alert-sm mt-2 mb-0 py-2" style="font-size: 0.875rem;">
+      <i class="bi bi-info-circle me-1"></i>
+      <strong>Mẹo:</strong> Bạn có thể thay đổi trạng thái đơn hàng theo bất kỳ hướng nào (tiến hoặc lùi) bằng cách chọn trạng thái mới từ dropdown.
+    </div>
   </div>
 </div>
 
@@ -246,36 +250,23 @@
                       <span class="badge bg-info">${itemCounts[order.id]}</span>
                     </td>
                     <td class="text-center">
-                      <c:choose>
-                        <c:when test="${order.status == null || order.status == 0}">
-                          <span class="badge bg-warning text-dark">
-                            <i class="bi bi-clock me-1"></i>Chờ xử lý
-                          </span>
-                        </c:when>
-                        <c:when test="${order.status == 1}">
-                          <span class="badge bg-info">
-                            <i class="bi bi-gear me-1"></i>Đang xử lý
-                          </span>
-                        </c:when>
-                        <c:when test="${order.status == 2}">
-                          <span class="badge bg-primary">
-                            <i class="bi bi-truck me-1"></i>Đang giao
-                          </span>
-                        </c:when>
-                        <c:when test="${order.status == 3}">
-                          <span class="badge bg-success">
-                            <i class="bi bi-check-circle me-1"></i>Hoàn thành
-                          </span>
-                        </c:when>
-                        <c:when test="${order.status == -1}">
-                          <span class="badge bg-danger">
-                            <i class="bi bi-x-circle me-1"></i>Đã hủy
-                          </span>
-                        </c:when>
-                        <c:otherwise>
-                          <span class="badge bg-secondary">Không xác định</span>
-                        </c:otherwise>
-                      </c:choose>
+                      <div class="status-container">
+                        <select class="form-select form-select-sm status-select" 
+                                data-order-id="${order.id}" 
+                                data-current-status="${order.status != null ? order.status : 0}"
+                                onchange="changeStatusDirect(this)">
+                          <option value="0" ${(order.status == null || order.status == 0) ? 'selected' : ''} 
+                                  class="text-warning">⏳ Chờ xử lý</option>
+                          <option value="1" ${order.status == 1 ? 'selected' : ''} 
+                                  class="text-info">⚙️ Đang xử lý</option>
+                          <option value="2" ${order.status == 2 ? 'selected' : ''} 
+                                  class="text-primary">🚛 Đang giao</option>
+                          <option value="3" ${order.status == 3 ? 'selected' : ''} 
+                                  class="text-success">✅ Hoàn thành</option>
+                          <option value="-1" ${order.status == -1 ? 'selected' : ''} 
+                                  class="text-danger">❌ Đã hủy</option>
+                        </select>
+                      </div>
                     </td>
                     <td class="text-center">
                       <div class="btn-group btn-group-sm" role="group">
@@ -412,7 +403,157 @@
 
 <script>
   /**
-   * Thay đổi trạng thái đơn hàng
+   * Thay đổi trạng thái đơn hàng trực tiếp từ dropdown
+   * @param {HTMLElement} selectElement - Element dropdown vừa được thay đổi
+   */
+  function changeStatusDirect(selectElement) {
+    const orderId = selectElement.dataset.orderId;
+    const currentStatus = selectElement.dataset.currentStatus;
+    const newStatus = selectElement.value;
+    
+    // Nếu không thay đổi gì thì return
+    if (currentStatus === newStatus) {
+      return;
+    }
+    
+    // Lấy thông tin chi tiết về sự thay đổi
+    const changeInfo = getStatusChangeInfo(currentStatus, newStatus);
+    
+    // Tạo thông báo xác nhận phù hợp
+    let confirmMessage;
+    if (changeInfo.isDowngrade) {
+      confirmMessage = `${changeInfo.icon} CẢNH BÁO: BẠN ĐANG LÙI TRẠNG THÁI!\n\n` +
+        `Từ: "${changeInfo.currentName}" → "${changeInfo.newName}"\n\n` +
+        `⚠️ Điều này có thể ảnh hưởng đến quy trình xử lý đơn hàng.\n` +
+        `📋 Hãy đảm bảo bạn có lý do chính đáng để thực hiện thay đổi này.\n\n` +
+        `Bạn có chắc chắn muốn tiếp tục không?`;
+    } else {
+      confirmMessage = `${changeInfo.icon} ${changeInfo.explanation}\n\n` +
+        `Đơn hàng #${orderId}: "${changeInfo.currentName}" → "${changeInfo.newName}"\n\n` +
+        `Bạn có xác nhận thay đổi này không?`;
+    }
+    
+    // Xác nhận thay đổi
+    if (confirm(confirmMessage)) {
+      // Disable dropdown trong khi xử lý
+      selectElement.disabled = true;
+      selectElement.style.opacity = '0.5';
+      
+      // Gửi request AJAX để cập nhật trạng thái
+      fetch('/admin/order/update-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId: orderId,
+          newStatus: newStatus
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Lỗi khi cập nhật trạng thái');
+        }
+      })
+      .then(data => {
+        if (data.success) {
+          // Cập nhật thành công
+          selectElement.dataset.currentStatus = newStatus;
+          selectElement.disabled = false;
+          selectElement.style.opacity = '1';
+          
+          // Hiển thị thông báo thành công
+          const successMessage = changeInfo.isDowngrade 
+            ? `${changeInfo.icon} Đã lùi trạng thái: "${changeInfo.currentName}" → "${changeInfo.newName}"`
+            : `${changeInfo.icon} Đã cập nhật: "${changeInfo.currentName}" → "${changeInfo.newName}"`;
+          
+          showNotification('success', successMessage);
+          
+          // Cập nhật màu sắc của select theo trạng thái mới
+          updateSelectColor(selectElement, newStatus);
+          
+        } else {
+          throw new Error(data.message || 'Có lỗi xảy ra');
+        }
+      })
+      .catch(error => {
+        console.error('Lỗi:', error);
+        // Khôi phục trạng thái cũ
+        selectElement.value = currentStatus;
+        selectElement.disabled = false;
+        selectElement.style.opacity = '1';
+        
+        // Hiển thị thông báo lỗi
+        showNotification('error', 'Lỗi khi cập nhật trạng thái: ' + error.message);
+      });
+    } else {
+      // Người dùng hủy, khôi phục giá trị cũ
+      selectElement.value = currentStatus;
+    }
+  }
+  
+  /**
+   * Cập nhật màu sắc của select theo trạng thái
+   */
+  function updateSelectColor(selectElement, status) {
+    // Xóa các class màu cũ
+    selectElement.classList.remove('text-warning', 'text-info', 'text-primary', 'text-success', 'text-danger');
+    
+    // Thêm class màu mới
+    switch(status) {
+      case '0':
+        selectElement.classList.add('text-warning');
+        break;
+      case '1':
+        selectElement.classList.add('text-info');
+        break;
+      case '2':
+        selectElement.classList.add('text-primary');
+        break;
+      case '3':
+        selectElement.classList.add('text-success');
+        break;
+      case '-1':
+        selectElement.classList.add('text-danger');
+        break;
+    }
+  }
+  
+  /**
+   * Hiển thị thông báo toast
+   */
+  function showNotification(type, message) {
+    // Tạo element thông báo
+    const toast = document.createElement('div');
+    toast.className = 'alert alert-' + (type === 'success' ? 'success' : 'danger') + ' alert-dismissible fade show position-fixed';
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
+    
+    // Xử lý message: chuyển \n thành <br> và escape HTML
+    const processedMessage = message
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\n/g, '<br>');
+    
+    toast.innerHTML = '<i class="bi bi-' + (type === 'success' ? 'check-circle' : 'exclamation-triangle') + ' me-2"></i>' +
+      '<span>' + processedMessage + '</span>' +
+      '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+    
+    // Thêm vào trang
+    document.body.appendChild(toast);
+    
+    // Tự động xóa sau 4 giây (tăng thời gian vì message dài hơn)
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.remove();
+      }
+    }, 4000);
+  }
+
+  /**
+   * Thay đổi trạng thái đơn hàng (function cũ cho các nút action)
    * @param {string} orderId - ID của đơn hàng
    * @param {string} action - Hành động cần thực hiện (process, ship, complete, cancel)
    * @param {string} actionName - Tên hành động để hiển thị
@@ -535,7 +676,7 @@
           } else {
             // Hiển thị tất cả đơn hàng
             $('tr[data-status], div[data-status]').show();
-            $('#orderCount').text('${list.size()} đơn hàng');
+            $('#orderCount').text($('tr[data-status]').length + ' đơn hàng');
           }
         });
 
@@ -564,7 +705,64 @@
     
     // Bắt đầu khởi tạo DataTable
     initializeDataTable();
+    
+    // ========== KHỞI TẠO MÀU SẮC CHO DROPDOWN STATUS ==========
+    initializeStatusDropdowns();
   });
+  
+  /**
+   * Khởi tạo màu sắc cho tất cả dropdown status
+   */
+  function initializeStatusDropdowns() {
+    document.querySelectorAll('.status-select').forEach(function(select) {
+      const currentStatus = select.dataset.currentStatus;
+      updateSelectColor(select, currentStatus);
+    });
+  }
+
+  /**
+   * Lấy thông tin về loại thay đổi trạng thái
+   */
+  function getStatusChangeInfo(currentStatus, newStatus) {
+    const statusOrder = {'-1': -1, '0': 0, '1': 1, '2': 2, '3': 3};
+    const statusNames = {
+      '0': 'Chờ xử lý',
+      '1': 'Đang xử lý', 
+      '2': 'Đang giao',
+      '3': 'Hoàn thành',
+      '-1': 'Đã hủy'
+    };
+    
+    const currentOrder = statusOrder[currentStatus];
+    const newOrder = statusOrder[newStatus];
+    const currentName = statusNames[currentStatus] || 'Không xác định';
+    const newName = statusNames[newStatus] || 'Không xác định';
+    
+    let changeType, icon, explanation;
+    
+    if (newOrder > currentOrder) {
+      changeType = 'progress';
+      icon = '🔄';
+      explanation = 'Tiến trình đơn hàng';
+    } else if (newOrder < currentOrder) {
+      changeType = 'downgrade';
+      icon = '↩️';
+      explanation = 'Lùi trạng thái đơn hàng';
+    } else {
+      changeType = 'same';
+      icon = '=';
+      explanation = 'Không thay đổi';
+    }
+    
+    return {
+      changeType,
+      icon,
+      explanation,
+      currentName,
+      newName,
+      isDowngrade: changeType === 'downgrade'
+    };
+  }
 </script>
 
 <!-- Custom CSS for 5 column layout & Alert Animations -->
@@ -610,5 +808,84 @@
     border-left-color: #dc3545;
     background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
     color: #721c24;
+  }
+  
+  /* Status Select Dropdown Styling */
+  .status-select {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    min-width: 140px;
+    cursor: pointer;
+  }
+  
+  .status-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  .status-select:hover {
+    border-color: #007bff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .status-select.text-warning {
+    border-color: #ffc107;
+    background-color: #fff3cd;
+  }
+  
+  .status-select.text-info {
+    border-color: #17a2b8;
+    background-color: #d1ecf1;
+  }
+  
+  .status-select.text-primary {
+    border-color: #007bff;
+    background-color: #d4edff;
+  }
+  
+  .status-select.text-success {
+    border-color: #28a745;
+    background-color: #d4edda;
+  }
+  
+  .status-select.text-danger {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+  }
+  
+  /* Option styling */
+  .status-select option {
+    padding: 8px 12px;
+    font-weight: 600;
+  }
+  
+  /* Tooltip for status selection */
+  .status-container {
+    position: relative;
+  }
+  
+  .status-container::after {
+    content: "💡 Có thể thay đổi về bất kỳ trạng thái nào";
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .status-container:hover::after {
+    opacity: 1;
   }
 </style>
