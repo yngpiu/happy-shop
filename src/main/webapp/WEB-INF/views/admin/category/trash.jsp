@@ -36,6 +36,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         Dọn sạch thùng rác
       </button>
     </c:if>
+    <!-- Debug button to test JavaScript -->
+    <button class="btn btn-info" onclick="testJavaScript()">
+      <i class="bi bi-bug me-2"></i>
+      Test JS
+    </button>
   </div>
 </div>
 
@@ -393,7 +398,7 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           <i class="bi bi-x-circle me-2"></i>Hủy
         </button>
-        <a href="${base}/empty-trash" class="btn btn-danger">
+        <a href="/admin/category/empty-trash" class="btn btn-danger">
           <i class="bi bi-trash3 me-2"></i>Dọn sạch thùng rác
         </a>
       </div>
@@ -402,16 +407,30 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
 </div>
 
 <script>
+  // Define global functions immediately (no jQuery dependency)
+  console.log('Trash page script loading...'); // Debug
+  console.log(
+    'Defining functions: restoreCategory, permanentDelete, emptyTrash, refreshTrash'
+  ); // Debug
+
+  // Test function to verify JavaScript is working
+  function testJavaScript() {
+    alert('JavaScript is working! Functions are defined.');
+  }
+
   function restoreCategory(id, name) {
+    console.log('restoreCategory called:', id, name); // Debug
     document.getElementById('restoreCategoryName').textContent = name;
-    document.getElementById('restoreLink').href = '${base}/restore/' + id;
+    document.getElementById('restoreLink').href =
+      '/admin/category/restore/' + id;
     new bootstrap.Modal(document.getElementById('restoreModal')).show();
   }
 
   function permanentDelete(id, name) {
+    console.log('permanentDelete called:', id, name); // Debug
     document.getElementById('permanentDeleteCategoryName').textContent = name;
     document.getElementById('permanentDeleteLink').href =
-      '${base}/delete-permanent/' + id;
+      '/admin/category/delete-permanent/' + id;
     new bootstrap.Modal(document.getElementById('permanentDeleteModal')).show();
   }
 
@@ -423,12 +442,25 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
     location.reload();
   }
 
-  // Initialize DataTable
+  // Wait for jQuery to be available for DataTable only
   $(document).ready(function () {
+    // Initialize DataTable
     $('#trashTable').DataTable({
       responsive: true,
       language: {
-        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json',
+        sProcessing: 'Đang xử lý...',
+        sLengthMenu: 'Hiển thị _MENU_ mục',
+        sZeroRecords: 'Không tìm thấy dữ liệu',
+        sInfo: 'Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục',
+        sInfoEmpty: 'Hiển thị 0 đến 0 trong tổng số 0 mục',
+        sInfoFiltered: '(được lọc từ _MAX_ mục)',
+        sSearch: 'Tìm kiếm:',
+        oPaginate: {
+          sFirst: 'Đầu',
+          sPrevious: 'Trước',
+          sNext: 'Tiếp',
+          sLast: 'Cuối',
+        },
       },
       pageLength: 25,
       lengthMenu: [

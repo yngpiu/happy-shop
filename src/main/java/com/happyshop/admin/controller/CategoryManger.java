@@ -159,7 +159,7 @@ public class CategoryManger {
 			model.addAttribute("error", "Có lỗi xảy ra khi khôi phục loại sản phẩm. Vui lòng thử lại!");
 		}
 		
-		return "redirect:/admin/category/index";
+		return "redirect:/admin/category/trash";
 	}
 	
 	// Permanent delete
@@ -175,7 +175,7 @@ public class CategoryManger {
 			model.addAttribute("error", "Có lỗi xảy ra khi xóa vĩnh viễn loại sản phẩm. Vui lòng thử lại!");
 		}
 		
-		return "redirect:/admin/category/index";
+		return "redirect:/admin/category/trash";
 	}
 	
 	// Trash page
@@ -183,6 +183,7 @@ public class CategoryManger {
 	public String trash(Model model) {
 		List<Category> deletedList = dao.findAllDeleted();
 		model.addAttribute("list", deletedList);
+		model.addAttribute("trashedList", deletedList); // For JSP compatibility
 		
 		// Add product counts for each category
 		Map<Integer, Long> productCounts = new HashMap<>();
@@ -192,6 +193,10 @@ public class CategoryManger {
 		}
 		model.addAttribute("productCounts", productCounts);
 		
+		// Mock statistics for now - you can implement proper logic later
+		model.addAttribute("expiringSoonCount", 0);
+		model.addAttribute("recoverableCount", deletedList.size());
+		
 		// Add statistics
 		model.addAttribute("totalCategories", dao.countAll());
 		model.addAttribute("activeCategories", dao.countActive());
@@ -200,13 +205,33 @@ public class CategoryManger {
 		return "admin/category/trash";
 	}
 	
+	// Empty trash - delete all trashed categories permanently
+	@RequestMapping("/admin/category/empty-trash")
+	public String emptyTrash(RedirectAttributes model) {
+		try {
+			List<Category> deletedList = dao.findAllDeleted();
+			int count = deletedList.size();
+			
+			for (Category category : deletedList) {
+				dao.permanentDelete(category.getId());
+			}
+			
+			model.addAttribute("message", "Đã dọn sạch thùng rác! Xóa vĩnh viễn " + count + " loại sản phẩm.");
+		} catch (Exception e) {
+			model.addAttribute("error", "Có lỗi xảy ra khi dọn sạch thùng rác. Vui lòng thử lại!");
+		}
+		
+		return "redirect:/admin/category/trash";
+	}
+
 	// Legacy delete method for backward compatibility
 	@RequestMapping(value = {"/admin/category/delete","/admin/category/delete/{id}"})
 	public String delete(RedirectAttributes model, 
 			@RequestParam(value="id", required = false) Integer id1, 
 			@PathVariable(value="id", required = false) Integer id2) {
 		
-		// Redirect to soft delete method
-		return moveToTrash(model, id1, id2);
+		// Use same logic as moveToTrash
+		Integer deleteId = (id1 != null) ? id1 : id2;
+		return moveToTrash(model, deleteId, null);
 	}
 }

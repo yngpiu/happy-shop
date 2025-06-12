@@ -267,15 +267,13 @@
                       <c:when test="${category.deletedAt != null}">
                         <!-- Trashed item actions -->
                         <div class="btn-group" role="group">
-                          <button type="button" class="btn btn-sm btn-outline-success restore-btn" 
-                                  data-id="${category.id}"
-                                  data-name="${category.name}"
+                          <button type="button" class="btn btn-sm btn-outline-success" 
+                                  onclick="restoreCategory('${category.id}', '${category.name}')"
                                   title="Khôi phục">
                             <i class="bi bi-arrow-clockwise"></i>
                           </button>
-                          <button type="button" class="btn btn-sm btn-outline-danger permanent-delete-btn" 
-                                  data-id="${category.id}"
-                                  data-name="${category.name}"
+                          <button type="button" class="btn btn-sm btn-outline-danger" 
+                                  onclick="permanentDeleteCategory('${category.id}', '${category.name}')"
                                   title="Xóa vĩnh viễn">
                             <i class="bi bi-x-circle"></i>
                           </button>
@@ -290,10 +288,8 @@
                             <i class="bi bi-pencil"></i>
                           </a>
                           <button type="button" 
-                                  class="btn btn-sm btn-outline-danger move-to-trash-btn" 
-                                  data-id="${category.id}"
-                                  data-name="${category.name}"
-                                  data-product-count="${productCounts[category.id] != null ? productCounts[category.id] : 0}"
+                                  class="btn btn-sm btn-outline-danger" 
+                                  onclick="moveToTrash('${category.id}', '${category.name}', '${productCounts[category.id] != null ? productCounts[category.id] : 0}')"
                                   title="Chuyển vào thùng rác">
                             <i class="bi bi-trash"></i>
                           </button>
@@ -356,14 +352,12 @@
                     <div class="d-flex justify-content-between">
                       <c:choose>
                         <c:when test="${category.deletedAt != null}">
-                          <button class="btn btn-sm btn-outline-success restore-btn"
-                                  data-id="${category.id}"
-                                  data-name="${category.name}">
+                          <button class="btn btn-sm btn-outline-success"
+                                  onclick="restoreCategory('${category.id}', '${category.name}')">
                             <i class="bi bi-arrow-clockwise me-1"></i>Khôi phục
                           </button>
-                          <button class="btn btn-sm btn-outline-danger permanent-delete-btn"
-                                  data-id="${category.id}"
-                                  data-name="${category.name}">
+                          <button class="btn btn-sm btn-outline-danger"
+                                  onclick="permanentDeleteCategory('${category.id}', '${category.name}')">
                             <i class="bi bi-x-circle me-1"></i>Xóa vĩnh viễn
                           </button>
                         </c:when>
@@ -371,10 +365,8 @@
                           <a href="${base}/edit/${category.id}" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-pencil me-1"></i>Sửa
                           </a>
-                          <button class="btn btn-sm btn-outline-danger move-to-trash-btn"
-                                  data-id="${category.id}"
-                                  data-name="${category.name}"
-                                  data-product-count="${productCounts[category.id] != null ? productCounts[category.id] : 0}">
+                          <button class="btn btn-sm btn-outline-danger"
+                                  onclick="moveToTrash('${category.id}', '${category.name}', '${productCounts[category.id] != null ? productCounts[category.id] : 0}')">
                             <i class="bi bi-trash me-1"></i>Xóa
                           </button>
                         </c:otherwise>
@@ -495,14 +487,12 @@
 </div>
 
 <script>
-  // Event handlers using event delegation
-  $(document).on('click', '.move-to-trash-btn', function() {
-    const id = $(this).data('id');
-    const name = $(this).data('name');
-    const productCount = $(this).data('product-count');
+  // Global functions for onclick handlers (no jQuery dependency)
+  function moveToTrash(id, name, productCount) {
+    console.log('Move to trash clicked:', id, name); // Debug
     
     document.getElementById('trashCategoryName').textContent = name;
-    document.getElementById('trashLink').href = '${base}/move-to-trash/' + id;
+    document.getElementById('trashLink').href = '/admin/category/move-to-trash/' + id;
     
     const productWarning = document.getElementById('productWarning');
     if (productCount > 0) {
@@ -513,85 +503,106 @@
     }
     
     new bootstrap.Modal(document.getElementById('trashModal')).show();
-  });
+  }
 
-  $(document).on('click', '.restore-btn', function() {
-    const id = $(this).data('id');
-    const name = $(this).data('name');
+  function restoreCategory(id, name) {
+    console.log('Restore clicked:', id, name); // Debug
     
     document.getElementById('restoreCategoryName').textContent = name;
-    document.getElementById('restoreLink').href = '${base}/restore/' + id;
+    document.getElementById('restoreLink').href = '/admin/category/restore/' + id;
     new bootstrap.Modal(document.getElementById('restoreModal')).show();
-  });
+  }
 
-  $(document).on('click', '.permanent-delete-btn', function() {
-    const id = $(this).data('id');
-    const name = $(this).data('name');
+  function permanentDeleteCategory(id, name) {
+    console.log('Permanent delete clicked:', id, name); // Debug
     
     document.getElementById('permanentDeleteCategoryName').textContent = name;
-    document.getElementById('permanentDeleteLink').href = '${base}/delete-permanent/' + id;
+    document.getElementById('permanentDeleteLink').href = '/admin/category/delete-permanent/' + id;
     new bootstrap.Modal(document.getElementById('permanentDeleteModal')).show();
-  });
+  }
 
   function refreshData() {
     location.reload();
   }
 
-  // Initialize DataTable with full functionality
-  $(document).ready(function () {
-    var table = $('#dataTable').DataTable({
-      responsive: true,
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json',
-      },
-      pageLength: 25,
-      lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]],
-      order: [[0, 'asc']],
-      columnDefs: [
-        { orderable: false, targets: [5] }, // Disable sorting for action column
-        { className: "text-center", targets: [0, 2, 3, 4, 5] }
-      ],
-      dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
-           '<"row"<"col-sm-12"tr>>' +
-           '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-      searching: true,
-      paging: true,
-      info: true,
-      autoWidth: false
-    });
+  // Wait for jQuery to be available for DataTable only
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, waiting for jQuery...'); // Debug
+    
+    // Simple function to wait for jQuery
+    function initializeDataTable() {
+      if (typeof $ !== 'undefined') {
+        console.log('jQuery loaded, initializing DataTable...'); // Debug
+        
+        // Initialize DataTable
+        $('#dataTable').DataTable({
+          responsive: true,
+          language: {
+            "sProcessing": "Đang xử lý...",
+            "sLengthMenu": "Hiển thị _MENU_ mục",
+            "sZeroRecords": "Không tìm thấy dữ liệu",
+            "sInfo": "Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục",
+            "sInfoEmpty": "Hiển thị 0 đến 0 trong tổng số 0 mục",
+            "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+            "sSearch": "Tìm kiếm:",
+            "oPaginate": {
+              "sFirst": "Đầu",
+              "sPrevious": "Trước",
+              "sNext": "Tiếp",
+              "sLast": "Cuối"
+            }
+          },
+          pageLength: 25,
+          lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]],
+          order: [[0, 'asc']],
+          columnDefs: [
+            { orderable: false, targets: [5] },
+            { className: "text-center", targets: [0, 2, 3, 4, 5] }
+          ],
+          dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+               '<"row"<"col-sm-12"tr>>' +
+               '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+          searching: true,
+          paging: true,
+          info: true,
+          autoWidth: false
+        });
 
-    // Status filter functionality
-    $('input[name="statusFilter"]').change(function() {
-      const filterValue = $(this).val();
-      
-      if (filterValue === 'active') {
-        // Show only active categories
-        $('tr[data-status="deleted"]').hide();
-        $('div[data-status="deleted"]').hide();
-        $('#categoryCount').text($('tr[data-status="active"]').length + ' loại');
+        // Status filter functionality  
+        $('input[name="statusFilter"]').change(function() {
+          const filterValue = $(this).val();
+          
+          if (filterValue === 'active') {
+            $('tr[data-status="deleted"]').hide();
+            $('div[data-status="deleted"]').hide();
+            $('#categoryCount').text($('tr[data-status="active"]').length + ' loại');
+          } else {
+            $('tr[data-status], div[data-status]').show();
+            $('#categoryCount').text('${list.size()} loại');
+          }
+        });
+
+        // View toggle
+        $('input[name="viewType"]').change(function () {
+          if ($(this).attr('id') === 'tableView') {
+            $('#tableViewContainer').show();
+            $('#cardViewContainer').hide();
+          } else {
+            $('#tableViewContainer').hide();
+            $('#cardViewContainer').show();
+          }
+        });
+
+        // Initialize with active filter
+        $('input[name="statusFilter"][value="active"]').trigger('change');
+        
       } else {
-        // Show all categories
-        $('tr[data-status], div[data-status]').show();
-        $('#categoryCount').text('${list.size()} loại');
+        // Retry after 100ms if jQuery not loaded yet
+        setTimeout(initializeDataTable, 100);
       }
-      
-      table.draw();
-    });
-
-    // View toggle
-    $('input[name="viewType"]').change(function () {
-      if ($(this).attr('id') === 'tableView') {
-        $('#tableViewContainer').show();
-        $('#cardViewContainer').hide();
-        // Redraw table to handle any layout issues
-        table.columns.adjust().draw();
-      } else {
-        $('#tableViewContainer').hide();
-        $('#cardViewContainer').show();
-      }
-    });
-
-    // Initialize with active filter
-    $('input[name="statusFilter"][value="active"]').trigger('change');
+    }
+    
+    // Start trying to initialize
+    initializeDataTable();
   });
 </script>

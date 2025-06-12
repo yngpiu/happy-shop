@@ -109,4 +109,13 @@ public class Category {
 	public boolean isActive() {
 		return deletedAt == null;
 	}
+	
+	// Calculate days since deleted (for trash page)
+	public Long getDaysSinceDeleted() {
+		if (deletedAt == null) {
+			return 0L;
+		}
+		long diffInMillies = new Date().getTime() - deletedAt.getTime();
+		return diffInMillies / (24 * 60 * 60 * 1000); // Convert milliseconds to days
+	}
 }

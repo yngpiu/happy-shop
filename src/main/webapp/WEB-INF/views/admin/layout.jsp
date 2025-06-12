@@ -172,11 +172,26 @@ uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
       <tiles:insertAttribute name="body" />
     </div>
 
+    <!-- jQuery FIRST - Load before everything else -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // Fallback if jQuery fails to load
+      if (typeof $ === 'undefined') {
+        console.error('Primary jQuery failed to load, trying fallback...');
+        document.write(
+          '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"><\/script>'
+        );
+      } else {
+        console.log('jQuery loaded successfully, version:', $.fn.jquery);
+      }
+    </script>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
@@ -187,13 +202,30 @@ uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
     <script>
       $(document).ready(function () {
-        // Initialize DataTables
-        $('#dataTable').DataTable({
-          responsive: true,
-          language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json',
-          },
-        });
+        // Only initialize DataTable if it hasn't been initialized in page-specific script
+        if (
+          $('#dataTable').length &&
+          !$.fn.DataTable.isDataTable('#dataTable')
+        ) {
+          $('#dataTable').DataTable({
+            responsive: true,
+            language: {
+              sProcessing: 'Đang xử lý...',
+              sLengthMenu: 'Hiển thị _MENU_ mục',
+              sZeroRecords: 'Không tìm thấy dữ liệu',
+              sInfo: 'Hiển thị _START_ đến _END_ trong tổng số _TOTAL_ mục',
+              sInfoEmpty: 'Hiển thị 0 đến 0 trong tổng số 0 mục',
+              sInfoFiltered: '(được lọc từ _MAX_ mục)',
+              sSearch: 'Tìm kiếm:',
+              oPaginate: {
+                sFirst: 'Đầu',
+                sPrevious: 'Trước',
+                sNext: 'Tiếp',
+                sLast: 'Cuối',
+              },
+            },
+          });
+        }
 
         // Initialize CKEditor if textarea exists
         if ($('#description').length) {
