@@ -34,18 +34,16 @@
 
 <!-- Success/Error Messages -->
 <c:if test="${not empty message}">
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
+  <div class="alert alert-success auto-hide-alert fade show" role="alert">
     <i class="bi bi-check-circle me-2"></i>
     ${message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
 </c:if>
 
 <c:if test="${not empty error}">
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <div class="alert alert-danger auto-hide-alert fade show" role="alert">
     <i class="bi bi-exclamation-triangle me-2"></i>
     ${error}
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
 </c:if>
 
@@ -465,8 +463,41 @@
     }
   }
 
-  // ========== FORM VALIDATION ==========
+  // ========== XỬ LÝ AUTO-HIDE ALERT MESSAGES ==========
   document.addEventListener('DOMContentLoaded', function() {
+    const autoHideAlerts = document.querySelectorAll('.auto-hide-alert');
+    autoHideAlerts.forEach(function(alert) {
+      // Thêm hiệu ứng bounce nhẹ khi xuất hiện
+      alert.style.animation = 'fadeInBounce 0.5s ease-out';
+      
+      // Thêm hiệu ứng hover
+      alert.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.01)';
+        this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+      });
+      
+      alert.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+        this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+      });
+      
+      // Tự động ẩn sau 4 giây
+      setTimeout(function() {
+        if (alert && alert.parentNode) {
+          alert.style.transition = 'all 0.6s ease-out';
+          alert.style.opacity = '0';
+          alert.style.transform = 'translateY(-20px) scale(0.95)';
+          
+          setTimeout(function() {
+            if (alert && alert.parentNode) {
+              alert.remove();
+            }
+          }, 600);
+        }
+      }, 4000); // 4 giây
+    });
+
+  // ========== FORM VALIDATION ==========
     // Store original values for reset functionality
     const form = document.querySelector('form');
     const formData = new FormData(form);
@@ -673,6 +704,45 @@
     document.getElementById('name').focus();
   });
 </script>
+
+<!-- Custom CSS for Alert Animations -->
+<style>
+  /* Alert Animations */
+  @keyframes fadeInBounce {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px) scale(0.95);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateY(5px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .auto-hide-alert {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: none;
+    border-left: 4px solid;
+    padding: 1rem 1.25rem;
+  }
+  
+  .auto-hide-alert.alert-success {
+    border-left-color: #28a745;
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+  }
+  
+  .auto-hide-alert.alert-danger {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+  }
+</style>
 
 <!-- Custom CSS -->
 <style>

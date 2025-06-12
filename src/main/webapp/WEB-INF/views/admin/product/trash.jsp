@@ -41,18 +41,16 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
 
 <!-- Success/Error Messages -->
 <c:if test="${not empty message}">
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
+  <div class="alert alert-success auto-hide-alert fade show" role="alert">
     <i class="bi bi-check-circle me-2"></i>
     ${message}${param.message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
 </c:if>
 
 <c:if test="${not empty error}">
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <div class="alert alert-danger auto-hide-alert fade show" role="alert">
     <i class="bi bi-exclamation-triangle me-2"></i>
     ${error}${param.error}
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
 </c:if>
 
@@ -367,8 +365,8 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
           Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm
           <strong id="permanentDeleteProductName"></strong>?
         </p>
-        <div class="alert alert-danger">
-          <i class="bi bi-exclamation-triangle me-1"></i>
+        <div class="warning-box">
+          <i class="bi bi-exclamation-triangle me-2"></i>
           <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác! Sản phẩm
           và <strong>tất cả đơn hàng liên quan</strong> sẽ bị xóa khỏi hệ thống vĩnh viễn.
         </div>
@@ -411,8 +409,8 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
           <strong>tất cả ${trashedList.size()} sản phẩm</strong> trong
           thùng rác?
         </p>
-        <div class="alert alert-danger">
-          <i class="bi bi-exclamation-triangle me-1"></i>
+        <div class="warning-box">
+          <i class="bi bi-exclamation-triangle me-2"></i>
           <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác! Tất cả
           sản phẩm và <strong>đơn hàng liên quan</strong> trong thùng rác sẽ bị xóa vĩnh viễn.
         </div>
@@ -466,6 +464,41 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
     location.reload();
   }
 
+  // ========== XỬ LÝ AUTO-HIDE ALERT MESSAGES ==========
+  document.addEventListener('DOMContentLoaded', function() {
+    const autoHideAlerts = document.querySelectorAll('.auto-hide-alert');
+    autoHideAlerts.forEach(function(alert) {
+      // Thêm hiệu ứng bounce nhẹ khi xuất hiện
+      alert.style.animation = 'fadeInBounce 0.5s ease-out';
+      
+      // Thêm hiệu ứng hover
+      alert.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.01)';
+        this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+      });
+      
+      alert.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+        this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+      });
+      
+      // Tự động ẩn sau 4 giây
+      setTimeout(function() {
+        if (alert && alert.parentNode) {
+          alert.style.transition = 'all 0.6s ease-out';
+          alert.style.opacity = '0';
+          alert.style.transform = 'translateY(-20px) scale(0.95)';
+          
+          setTimeout(function() {
+            if (alert && alert.parentNode) {
+              alert.remove();
+            }
+          }, 600);
+        }
+      }, 4000); // 4 giây
+    });
+  });
+
   // Wait for jQuery to be available for DataTable only
   $(document).ready(function () {
     // Initialize DataTable
@@ -507,8 +540,77 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
     });
 
     // Auto-refresh every 5 minutes to update remaining days
+    // BUT ONLY if no modal is currently open
     setInterval(function () {
-      location.reload();
+      // Check if any modal is currently open
+      const openModals = document.querySelectorAll('.modal.show');
+      if (openModals.length === 0) {
+        // No modal open, safe to reload
+        location.reload();
+      } else {
+        console.log('Modal đang mở, bỏ qua auto-refresh để không làm phiền người dùng');
+      }
     }, 300000); // 5 minutes
   });
-</script> 
+</script>
+
+<!-- Custom CSS for Alert Animations -->
+<style>
+  /* Alert Animations */
+  @keyframes fadeInBounce {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px) scale(0.95);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateY(5px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .auto-hide-alert {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: none;
+    border-left: 4px solid;
+    padding: 1rem 1.25rem;
+  }
+  
+  .auto-hide-alert.alert-success {
+    border-left-color: #28a745;
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+  }
+  
+  .auto-hide-alert.alert-danger {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+  }
+  
+  /* Custom Warning Box - No Auto-hide Behavior */
+  .warning-box {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.375rem;
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+  }
+  
+  .warning-box i {
+    color: #dc3545;
+    font-size: 1.1rem;
+  }
+  
+  .warning-box strong {
+    color: #721c24;
+  }
+</style> 
