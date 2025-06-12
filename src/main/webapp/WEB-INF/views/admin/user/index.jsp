@@ -210,16 +210,8 @@
         <div id="tableViewContainer">
           <div class="table-responsive">
             <table class="table table-hover mb-0" id="dataTable">
-              <thead class="table-dark">
+              <thead class="table-light">
                 <tr>
-                  <th scope="col" width="80px">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="selectAll">
-                      <label class="form-check-label" for="selectAll">
-                        <span class="visually-hidden">Chọn tất cả</span>
-                      </label>
-                    </div>
-                  </th>
                   <th scope="col" width="100px">Avatar</th>
                   <th scope="col">Thông tin</th>
                   <th scope="col">Liên hệ</th>
@@ -231,14 +223,6 @@
               <tbody>
                 <c:forEach var="user" items="${list}">
                   <tr class="user-row" data-status="${user.isBanned ? 'banned' : 'active'}" data-role="${user.admin ? 'admin' : 'user'}">
-                    <td>
-                      <div class="form-check">
-                        <input class="form-check-input user-checkbox" type="checkbox" value="${user.id}" id="user_${user.id}">
-                        <label class="form-check-label" for="user_${user.id}">
-                          <span class="visually-hidden">Chọn ${user.fullname}</span>
-                        </label>
-                      </div>
-                    </td>
                     <td>
                       <div class="d-flex align-items-center">
                         <img src="/static/images/customers/${user.photo}" 
@@ -524,10 +508,10 @@
           },
           pageLength: 25, // Hiển thị 25 dòng mỗi trang
           lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Tất cả"]], // Tùy chọn số dòng
-          order: [[2, 'asc']], // Sắp xếp theo tên user tăng dần
+          order: [[1, 'asc']], // Sắp xếp theo tên user tăng dần
           columnDefs: [
-            { orderable: false, targets: [0, 1, 6] }, // Cột checkbox, avatar và hành động không sort được
-            { className: "text-center", targets: [0, 1, 4, 5, 6] } // Căn giữa các cột
+            { orderable: false, targets: [0, 5] }, // Cột avatar và hành động không sort được
+            { className: "text-center", targets: [0, 3, 4, 5] } // Căn giữa các cột
           ],
           // Layout của các control với padding
           dom: '<"row px-3 py-2"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
@@ -573,10 +557,7 @@
           }
         });
 
-        // ========== SELECT ALL FUNCTIONALITY ==========
-        $('#selectAll').change(function() {
-          $('.user-checkbox').prop('checked', this.checked);
-        });
+
 
         // ========== KHỞI TẠO MẶC ĐỊNH ==========
         // Mặc định hiển thị người dùng đang hoạt động
