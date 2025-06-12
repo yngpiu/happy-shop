@@ -22,7 +22,7 @@
 						<h3 style="color: black; font-weight: bold; text-align: left;">
 							${prod.name}</h3>
 						<p>
-							Thương hiệu: <b>${prod.category.nameVN}</b> | SKU: ${prod.id}
+							Thương hiệu: <b>${prod.category.name}</b> | SKU: ${prod.id}
 						</p>
 						<br /> <a href="/product/detail/${prod.id}"> <c:choose>
 								<c:when test="${prod.discount > 0 }">
