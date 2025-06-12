@@ -302,4 +302,6 @@ public class CategoryManger {
 		
 		return "redirect:/admin/category/trash";
 	}
+	
+
 }

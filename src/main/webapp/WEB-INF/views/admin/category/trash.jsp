@@ -36,11 +36,6 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         Dọn sạch thùng rác
       </button>
     </c:if>
-    <!-- Debug button to test JavaScript -->
-    <button class="btn btn-info" onclick="testJavaScript()">
-      <i class="bi bi-bug me-2"></i>
-      Test JS
-    </button>
   </div>
 </div>
 
@@ -69,8 +64,9 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
       <h6 class="alert-heading mb-1">Thông tin về thùng rác</h6>
       <p class="mb-0">
         Các loại sản phẩm trong thùng rác sẽ được
-        <strong>tự động xóa vĩnh viễn sau 30 ngày</strong>. Bạn có thể khôi phục
-        hoặc xóa vĩnh viễn bất cứ lúc nào.
+        <strong>tự động xóa vĩnh viễn sau 30 ngày</strong> (hệ thống tự động
+        chạy lúc 2:00 AM hàng ngày). Bạn có thể khôi phục hoặc xóa vĩnh viễn thủ
+        công bất cứ lúc nào.
       </p>
     </div>
   </div>
@@ -422,11 +418,6 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
   console.log(
     'Defining functions: restoreCategory, permanentDelete, emptyTrash, refreshTrash'
   ); // Debug
-
-  // Test function to verify JavaScript is working
-  function testJavaScript() {
-    alert('JavaScript is working! Functions are defined.');
-  }
 
   function restoreCategory(id, name) {
     console.log('restoreCategory called:', id, name); // Debug

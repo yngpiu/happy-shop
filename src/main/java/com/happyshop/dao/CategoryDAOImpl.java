@@ -148,4 +148,45 @@ public class CategoryDAOImpl implements CategoryDAO{
 		TypedQuery<Long> query = session.createQuery(hql, Long.class);
 		return query.getSingleResult();
 	}
+
+	// ================= TỰ ĐỘNG DỌN DẸP =================
+	
+	/**
+	 * Tìm các category đã bị xóa mềm quá 30 ngày
+	 * @return List<Category> danh sách category hết hạn
+	 */
+	@Override
+	public List<Category> findExpiredCategories() {
+		Session session = factory.getCurrentSession();
+		// Tính ngày 30 ngày trước
+		long thirtyDaysAgo = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000);
+		Date cutoffDate = new Date(thirtyDaysAgo);
+		
+		String hql = "FROM Category WHERE deletedAt IS NOT NULL AND deletedAt <= :cutoffDate";
+		TypedQuery<Category> query = session.createQuery(hql, Category.class);
+		query.setParameter("cutoffDate", cutoffDate);
+		
+		List<Category> expiredCategories = query.getResultList();
+		return expiredCategories;
+	}
+	
+	/**
+	 * Tự động xóa vĩnh viễn các category đã ở thùng rác quá 30 ngày
+	 * @return int số lượng category đã bị xóa
+	 */
+	@Override
+	public int autoDeleteExpiredCategories() {
+		Session session = factory.getCurrentSession();
+		// Tính ngày 30 ngày trước
+		long thirtyDaysAgo = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000);
+		Date cutoffDate = new Date(thirtyDaysAgo);
+		
+		// Xóa vĩnh viễn các category hết hạn
+		String hql = "DELETE FROM Category WHERE deletedAt IS NOT NULL AND deletedAt <= :cutoffDate";
+		org.hibernate.query.Query query = session.createQuery(hql);
+		query.setParameter("cutoffDate", cutoffDate);
+		
+		int deletedCount = query.executeUpdate();
+		return deletedCount;
+	}
 }
