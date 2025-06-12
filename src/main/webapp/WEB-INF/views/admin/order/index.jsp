@@ -150,9 +150,21 @@
             <label class="btn btn-outline-warning btn-sm" for="pendingFilter">
               <i class="bi bi-clock me-1"></i>Chờ xử lý (${pendingOrders})
             </label>
+            <input type="radio" class="btn-check" name="statusFilter" id="processingFilter" value="processing">
+            <label class="btn btn-outline-info btn-sm" for="processingFilter">
+              <i class="bi bi-gear me-1"></i>Đang xử lý (${processingOrders})
+            </label>
+            <input type="radio" class="btn-check" name="statusFilter" id="shippingFilter" value="shipping">
+            <label class="btn btn-outline-primary btn-sm" for="shippingFilter">
+              <i class="bi bi-truck me-1"></i>Đang giao (${shippingOrders})
+            </label>
             <input type="radio" class="btn-check" name="statusFilter" id="completedFilter" value="completed">
             <label class="btn btn-outline-success btn-sm" for="completedFilter">
               <i class="bi bi-check-circle me-1"></i>Hoàn thành (${completedOrders})
+            </label>
+            <input type="radio" class="btn-check" name="statusFilter" id="cancelledFilter" value="cancelled">
+            <label class="btn btn-outline-danger btn-sm" for="cancelledFilter">
+              <i class="bi bi-x-circle me-1"></i>Đã hủy (${cancelledOrders})
             </label>
           </div>
         </div>
@@ -340,7 +352,45 @@
   </div>
 </div>
 
+<!-- Status Change Confirmation Modal -->
+<div class="modal fade" id="statusChangeModal" tabindex="-1" aria-labelledby="statusChangeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" id="modalHeader">
+        <h5 class="modal-title" id="statusChangeModalLabel">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          Xác nhận thay đổi trạng thái
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <i id="statusIcon" class="display-4 mb-3"></i>
+          <h6 id="statusChangeTitle" class="fw-bold mb-2"></h6>
+          <p id="statusChangeMessage" class="text-muted mb-0"></p>
+        </div>
+        <div id="warningSection" class="alert alert-warning d-none">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          <strong>Cảnh báo:</strong> Điều này có thể ảnh hưởng đến quy trình xử lý đơn hàng.
+          <br>Hãy đảm bảo bạn có lý do chính đáng để thực hiện thay đổi này.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i>Hủy
+        </button>
+        <button type="button" class="btn" id="confirmStatusChange">
+          <i class="bi bi-check-circle me-1"></i>Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  // Global variables for status change
+  let pendingStatusChange = null;
+
   /**
    * Thay đổi trạng thái đơn hàng trực tiếp từ dropdown
    * @param {HTMLElement} selectElement - Element dropdown vừa được thay đổi
@@ -355,84 +405,137 @@
       return;
     }
     
+    // Lưu thông tin thay đổi để xử lý sau khi confirm
+    pendingStatusChange = {
+      selectElement: selectElement,
+      orderId: orderId,
+      currentStatus: currentStatus,
+      newStatus: newStatus
+    };
+    
     // Lấy thông tin chi tiết về sự thay đổi
     const changeInfo = getStatusChangeInfo(currentStatus, newStatus);
     
-    // Tạo thông báo xác nhận phù hợp
-    let confirmMessage;
-    if (changeInfo.isDowngrade) {
-      confirmMessage = `${changeInfo.icon} CẢNH BÁO: BẠN ĐANG LÙI TRẠNG THÁI!\n\n` +
-        `Từ: "${changeInfo.currentName}" → "${changeInfo.newName}"\n\n` +
-        `⚠️ Điều này có thể ảnh hưởng đến quy trình xử lý đơn hàng.\n` +
-        `📋 Hãy đảm bảo bạn có lý do chính đáng để thực hiện thay đổi này.\n\n` +
-        `Bạn có chắc chắn muốn tiếp tục không?`;
-    } else {
-      confirmMessage = `${changeInfo.icon} ${changeInfo.explanation}\n\n` +
-        `Đơn hàng #${orderId}: "${changeInfo.currentName}" → "${changeInfo.newName}"\n\n` +
-        `Bạn có xác nhận thay đổi này không?`;
-    }
+    // Thiết lập nội dung modal
+    setupStatusChangeModal(changeInfo, orderId);
     
-    // Xác nhận thay đổi
-    if (confirm(confirmMessage)) {
-      // Disable dropdown trong khi xử lý
-      selectElement.disabled = true;
-      selectElement.style.opacity = '0.5';
-      
-      // Gửi request AJAX để cập nhật trạng thái
-      fetch('/admin/order/update-status', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          orderId: orderId,
-          newStatus: newStatus
-        })
+    // Hiển thị modal
+    const modal = new bootstrap.Modal(document.getElementById('statusChangeModal'));
+    modal.show();
+    
+    // Reset dropdown về giá trị cũ (sẽ cập nhật lại nếu user confirm)
+    selectElement.value = currentStatus;
+  }
+
+  /**
+   * Thiết lập nội dung cho modal xác nhận thay đổi trạng thái
+   */
+  function setupStatusChangeModal(changeInfo, orderId) {
+    const modalHeader = document.getElementById('modalHeader');
+    const statusIcon = document.getElementById('statusIcon');
+    const statusChangeTitle = document.getElementById('statusChangeTitle');
+    const statusChangeMessage = document.getElementById('statusChangeMessage');
+    const warningSection = document.getElementById('warningSection');
+    const confirmButton = document.getElementById('confirmStatusChange');
+    
+    // Thiết lập icon và màu sắc
+    if (changeInfo.isDowngrade) {
+      modalHeader.className = 'modal-header bg-warning text-dark';
+      statusIcon.className = 'bi bi-arrow-down-circle-fill text-warning display-4 mb-3';
+      statusChangeTitle.textContent = 'Lùi trạng thái đơn hàng';
+      statusChangeMessage.textContent = `Đơn hàng #${orderId} sẽ được chuyển về trạng thái trước đó.`;
+      warningSection.classList.remove('d-none');
+      confirmButton.className = 'btn btn-warning';
+      confirmButton.innerHTML = '<i class="bi bi-arrow-down-circle me-1"></i>Xác nhận lùi';
+    } else {
+      modalHeader.className = 'modal-header bg-info text-white';
+      statusIcon.className = 'bi bi-arrow-up-circle-fill text-info display-4 mb-3';
+      statusChangeTitle.textContent = 'Cập nhật trạng thái đơn hàng';
+      statusChangeMessage.textContent = `Đơn hàng #${orderId} sẽ được cập nhật trạng thái mới.`;
+      warningSection.classList.add('d-none');
+      confirmButton.className = 'btn btn-info';
+      confirmButton.innerHTML = '<i class="bi bi-check-circle me-1"></i>Xác nhận';
+    }
+  }
+
+  /**
+   * Xử lý khi user click nút xác nhận trong modal
+   */
+  document.getElementById('confirmStatusChange').addEventListener('click', function() {
+    if (!pendingStatusChange) return;
+    
+    const { selectElement, orderId, currentStatus, newStatus } = pendingStatusChange;
+    
+    // Đóng modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('statusChangeModal'));
+    modal.hide();
+    
+    // Disable dropdown trong khi xử lý
+    selectElement.disabled = true;
+    selectElement.style.opacity = '0.5';
+    selectElement.value = newStatus; // Set giá trị mới
+    
+    // Gửi request AJAX để cập nhật trạng thái
+    fetch('/admin/order/update-status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        orderId: orderId,
+        newStatus: newStatus
       })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Lỗi khi cập nhật trạng thái');
-        }
-      })
-      .then(data => {
-        if (data.success) {
-          // Cập nhật thành công
-          selectElement.dataset.currentStatus = newStatus;
-          selectElement.disabled = false;
-          selectElement.style.opacity = '1';
-          
-          // Hiển thị thông báo thành công
-          const successMessage = changeInfo.isDowngrade 
-            ? `${changeInfo.icon} Đã lùi trạng thái: "${changeInfo.currentName}" → "${changeInfo.newName}"`
-            : `${changeInfo.icon} Đã cập nhật: "${changeInfo.currentName}" → "${changeInfo.newName}"`;
-          
-          showNotification('success', successMessage);
-          
-          // Cập nhật màu sắc của select theo trạng thái mới
-          updateSelectColor(selectElement, newStatus);
-          
-        } else {
-          throw new Error(data.message || 'Có lỗi xảy ra');
-        }
-      })
-      .catch(error => {
-        console.error('Lỗi:', error);
-        // Khôi phục trạng thái cũ
-        selectElement.value = currentStatus;
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Lỗi khi cập nhật trạng thái');
+      }
+    })
+    .then(data => {
+      if (data.success) {
+        // Cập nhật thành công
+        selectElement.dataset.currentStatus = newStatus;
         selectElement.disabled = false;
         selectElement.style.opacity = '1';
         
-        // Hiển thị thông báo lỗi
-        showNotification('error', 'Lỗi khi cập nhật trạng thái: ' + error.message);
-      });
-    } else {
-      // Người dùng hủy, khôi phục giá trị cũ
+        // Hiển thị thông báo thành công
+        showNotification('success', 'Cập nhật trạng thái đơn hàng thành công!');
+        
+        // Cập nhật màu sắc của select theo trạng thái mới
+        updateSelectColor(selectElement, newStatus);
+        
+      } else {
+        throw new Error(data.message || 'Có lỗi xảy ra');
+      }
+    })
+    .catch(error => {
+      console.error('Lỗi:', error);
+      // Khôi phục trạng thái cũ
       selectElement.value = currentStatus;
+      selectElement.disabled = false;
+      selectElement.style.opacity = '1';
+      
+      // Hiển thị thông báo lỗi
+      showNotification('error', 'Lỗi khi cập nhật trạng thái: ' + error.message);
+    });
+    
+    // Clear pending change
+    pendingStatusChange = null;
+  });
+
+  /**
+   * Xử lý khi modal bị đóng (hủy)
+   */
+  document.getElementById('statusChangeModal').addEventListener('hidden.bs.modal', function() {
+    if (pendingStatusChange) {
+      // Khôi phục giá trị cũ nếu user hủy
+      pendingStatusChange.selectElement.value = pendingStatusChange.currentStatus;
+      pendingStatusChange = null;
     }
-  }
-  
+  });
+
   /**
    * Cập nhật màu sắc của select theo trạng thái
    */
@@ -583,21 +686,51 @@
         $('input[name="statusFilter"]').change(function() {
           const filterValue = $(this).val();
           
-          if (filterValue === 'pending') {
-            // Chỉ hiển thị đơn hàng chờ xử lý (status = 0 hoặc null)
-            $('tr[data-status]:not([data-status="0"])').hide();
-            $('div[data-status]:not([data-status="0"])').hide();
-            $('#orderCount').text($('tr[data-status="0"]').length + ' đơn hàng');
-          } else if (filterValue === 'completed') {
-            // Chỉ hiển thị đơn hàng hoàn thành (status = 3)
-            $('tr[data-status]:not([data-status="3"])').hide();
-            $('div[data-status]:not([data-status="3"])').hide();
-            $('#orderCount').text($('tr[data-status="3"]').length + ' đơn hàng');
-          } else {
-            // Hiển thị tất cả đơn hàng
-            $('tr[data-status], div[data-status]').show();
-            $('#orderCount').text($('tr[data-status]').length + ' đơn hàng');
+          // Ẩn tất cả đơn hàng trước
+          $('tr[data-status], div[data-status]').hide();
+          
+          let visibleCount = 0;
+          
+          switch(filterValue) {
+            case 'pending':
+              // Chỉ hiển thị đơn hàng chờ xử lý (status = 0)
+              $('tr[data-status="0"], div[data-status="0"]').show();
+              visibleCount = $('tr[data-status="0"]').length;
+              break;
+              
+            case 'processing':
+              // Chỉ hiển thị đơn hàng đang xử lý (status = 1)
+              $('tr[data-status="1"], div[data-status="1"]').show();
+              visibleCount = $('tr[data-status="1"]').length;
+              break;
+              
+            case 'shipping':
+              // Chỉ hiển thị đơn hàng đang giao (status = 2)
+              $('tr[data-status="2"], div[data-status="2"]').show();
+              visibleCount = $('tr[data-status="2"]').length;
+              break;
+              
+            case 'completed':
+              // Chỉ hiển thị đơn hàng hoàn thành (status = 3)
+              $('tr[data-status="3"], div[data-status="3"]').show();
+              visibleCount = $('tr[data-status="3"]').length;
+              break;
+              
+            case 'cancelled':
+              // Chỉ hiển thị đơn hàng đã hủy (status = -1)
+              $('tr[data-status="-1"], div[data-status="-1"]').show();
+              visibleCount = $('tr[data-status="-1"]').length;
+              break;
+              
+            default: // 'all'
+              // Hiển thị tất cả đơn hàng
+              $('tr[data-status], div[data-status]').show();
+              visibleCount = $('tr[data-status]').length;
+              break;
           }
+          
+          // Cập nhật số lượng hiển thị
+          $('#orderCount').text(visibleCount + ' đơn hàng');
         });
 
         // ========== CHUYỂN ĐỔI CHẾ ĐỘ HIỂN THỊ ==========
@@ -644,20 +777,69 @@
    * Lấy thông tin về loại thay đổi trạng thái
    */
   function getStatusChangeInfo(currentStatus, newStatus) {
-    const statusOrder = {'-1': -1, '0': 0, '1': 1, '2': 2, '3': 3};
+    // Định nghĩa thứ tự ưu tiên của trạng thái
+    const statusOrder = {
+      '-1': -1, // Đã hủy
+      '0': 0,   // Chờ xử lý  
+      '1': 1,   // Đang xử lý
+      '2': 2,   // Đang giao
+      '3': 3    // Hoàn thành
+    };
+    
+    // Định nghĩa tên trạng thái
     const statusNames = {
+      '-1': 'Đã hủy',
       '0': 'Chờ xử lý',
       '1': 'Đang xử lý', 
       '2': 'Đang giao',
-      '3': 'Hoàn thành',
-      '-1': 'Đã hủy'
+      '3': 'Hoàn thành'
     };
     
-    const currentOrder = statusOrder[currentStatus];
-    const newOrder = statusOrder[newStatus];
-    const currentName = statusNames[currentStatus] || 'Không xác định';
-    const newName = statusNames[newStatus] || 'Không xác định';
+    // Chuẩn hóa giá trị - chuyển về string và xử lý các trường hợp đặc biệt
+    let currentStatusStr, newStatusStr;
     
+    // Xử lý currentStatus
+    if (currentStatus === null || currentStatus === undefined || currentStatus === '' || currentStatus === 'null' || currentStatus === 'undefined') {
+      currentStatusStr = '0'; // Mặc định là "Chờ xử lý"
+    } else {
+      currentStatusStr = String(currentStatus).trim();
+    }
+    
+    // Xử lý newStatus
+    if (newStatus === null || newStatus === undefined || newStatus === '' || newStatus === 'null' || newStatus === 'undefined') {
+      newStatusStr = '0'; // Mặc định là "Chờ xử lý"
+    } else {
+      newStatusStr = String(newStatus).trim();
+    }
+    
+    // Lấy thông tin thứ tự và tên trạng thái
+    const currentOrder = statusOrder[currentStatusStr];
+    const newOrder = statusOrder[newStatusStr];
+    const currentName = statusNames[currentStatusStr];
+    const newName = statusNames[newStatusStr];
+    
+    // Kiểm tra tính hợp lệ
+    if (currentOrder === undefined || newOrder === undefined || !currentName || !newName) {
+      console.error('Invalid status values detected!', {
+        currentStatusStr,
+        newStatusStr,
+        currentOrder,
+        newOrder,
+        currentName,
+        newName
+      });
+      
+      return {
+        changeType: 'invalid',
+        icon: '❌',
+        explanation: 'Trạng thái không hợp lệ',
+        currentName: currentName || 'Trạng thái không xác định',
+        newName: newName || 'Trạng thái không xác định',
+        isDowngrade: false
+      };
+    }
+    
+    // Xác định loại thay đổi
     let changeType, icon, explanation;
     
     if (newOrder > currentOrder) {
@@ -674,7 +856,7 @@
       explanation = 'Không thay đổi';
     }
     
-    return {
+    const result = {
       changeType,
       icon,
       explanation,
@@ -682,6 +864,8 @@
       newName,
       isDowngrade: changeType === 'downgrade'
     };
+    
+    return result;
   }
 </script>
 
