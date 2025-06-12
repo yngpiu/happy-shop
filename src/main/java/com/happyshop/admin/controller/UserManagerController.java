@@ -120,12 +120,7 @@ public class UserManagerController {
 				user.setAdmin(false);
 			}
 			
-			// Debug: In thông tin user trước khi lưu
-			System.out.println("=== DEBUG USER BEFORE SAVE ===");
-			System.out.println("ID: " + user.getId());
-			System.out.println("Telephone: '" + user.getTelephone() + "'");
-			System.out.println("Telephone length: " + (user.getTelephone() != null ? user.getTelephone().length() : "null"));
-			System.out.println("========================");
+
 			
 			// Lưu người dùng vào database
 			userDAO.create(user);

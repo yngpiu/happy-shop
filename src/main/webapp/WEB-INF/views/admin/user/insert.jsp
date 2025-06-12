@@ -57,7 +57,7 @@
         </h5>
       </div>
       <div class="card-body">
-        <form:form modelAttribute="user" method="post" action="${base}/insert" enctype="multipart/form-data" class="needs-validation" novalidate="true">
+        <form:form modelAttribute="user" method="post" action="${base}/insert" enctype="multipart/form-data" class="needs-validation" novalidate="true" id="userForm">
           <div class="row">
             <!-- Username -->
             <div class="col-12 col-md-6 mb-3">
@@ -65,9 +65,9 @@
                 <i class="bi bi-person-circle me-1"></i>
                 Tên đăng nhập <span class="text-danger">*</span>
               </label>
-              <form:input path="id" class="form-control" id="id" placeholder="Nhập tên đăng nhập" required="true" />
+              <form:input path="id" class="form-control" id="id" placeholder="Nhập tên đăng nhập" required="true" minlength="3" maxlength="50" pattern="^[a-zA-Z0-9_-]+$" />
               <div class="invalid-feedback">
-                Vui lòng nhập tên đăng nhập.
+                Tên đăng nhập phải có 3-50 ký tự, chỉ chứa chữ cái, số, dấu gạch dưới và gạch ngang.
               </div>
               <div class="form-text">
                 Tên đăng nhập không thể thay đổi sau khi tạo.
@@ -81,13 +81,13 @@
                 Mật khẩu <span class="text-danger">*</span>
               </label>
               <div class="input-group">
-                <form:password path="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required="true" />
+                <form:password path="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required="true" minlength="6" maxlength="100" />
                 <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                   <i class="bi bi-eye"></i>
                 </button>
               </div>
               <div class="invalid-feedback">
-                Vui lòng nhập mật khẩu (tối thiểu 6 ký tự).
+                Mật khẩu phải có từ 6-100 ký tự.
               </div>
             </div>
             
@@ -97,9 +97,9 @@
                 <i class="bi bi-person me-1"></i>
                 Họ và tên <span class="text-danger">*</span>
               </label>
-              <form:input path="fullname" class="form-control" id="fullname" placeholder="Nhập họ và tên đầy đủ" required="true" />
+              <form:input path="fullname" class="form-control" id="fullname" placeholder="Nhập họ và tên đầy đủ" required="true" maxlength="100" />
               <div class="invalid-feedback">
-                Vui lòng nhập họ và tên.
+                Vui lòng nhập họ và tên (tối đa 100 ký tự).
               </div>
             </div>
             
@@ -109,9 +109,9 @@
                 <i class="bi bi-envelope me-1"></i>
                 Email <span class="text-danger">*</span>
               </label>
-              <form:input path="email" type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email" required="true" />
+              <form:input path="email" type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email" required="true" maxlength="100" />
               <div class="invalid-feedback">
-                Vui lòng nhập email hợp lệ.
+                Vui lòng nhập email hợp lệ (tối đa 100 ký tự).
               </div>
             </div>
             
@@ -121,9 +121,9 @@
                 <i class="bi bi-telephone me-1"></i>
                 Số điện thoại <span class="text-danger">*</span>
               </label>
-              <form:input path="telephone" class="form-control" id="telephone" placeholder="Nhập số điện thoại" required="true" />
+              <form:input path="telephone" class="form-control" id="telephone" placeholder="Nhập số điện thoại" required="true" maxlength="20" pattern="[0-9+\-\s\(\)]{10,20}" />
               <div class="invalid-feedback">
-                Vui lòng nhập số điện thoại.
+                Vui lòng nhập số điện thoại hợp lệ (10-20 ký tự, chỉ số và ký tự +, -, (), khoảng trắng).
               </div>
             </div>
             
@@ -342,6 +342,51 @@ document.getElementById('imageFile').addEventListener('change', function(event) 
     reader.readAsDataURL(file);
   } else {
     preview.style.display = 'none';
+  }
+});
+
+// Phone number validation and formatting
+document.getElementById('telephone').addEventListener('input', function(e) {
+  let value = e.target.value;
+  // Remove any characters that are not numbers, +, -, (), or spaces
+  let cleaned = value.replace(/[^0-9+\-\s\(\)]/g, '');
+  
+  // Limit length
+  if (cleaned.length > 20) {
+    cleaned = cleaned.substring(0, 20);
+  }
+  
+  e.target.value = cleaned;
+  
+  // Custom validation message
+  if (cleaned.length > 0) {
+    let numbersOnly = cleaned.replace(/[^0-9]/g, '');
+    if (numbersOnly.length < 10 || numbersOnly.length > 15) {
+      e.target.setCustomValidity('Số điện thoại phải có từ 10-15 chữ số');
+    } else {
+      e.target.setCustomValidity('');
+    }
+  }
+});
+
+// Username validation
+document.getElementById('id').addEventListener('input', function(e) {
+  let value = e.target.value;
+  // Remove any invalid characters
+  let cleaned = value.replace(/[^a-zA-Z0-9_-]/g, '');
+  e.target.value = cleaned;
+});
+
+// Additional form validation before submit
+document.getElementById('userForm').addEventListener('submit', function(e) {
+  const telephone = document.getElementById('telephone').value;
+  const telephoneNumbers = telephone.replace(/[^0-9]/g, '');
+  
+  if (telephoneNumbers.length < 10 || telephoneNumbers.length > 15) {
+    e.preventDefault();
+    document.getElementById('telephone').setCustomValidity('Số điện thoại phải có từ 10-15 chữ số');
+    document.getElementById('telephone').reportValidity();
+    return false;
   }
 });
 
