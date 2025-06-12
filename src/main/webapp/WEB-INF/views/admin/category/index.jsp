@@ -192,7 +192,7 @@
       </c:when>
       <c:otherwise>
         <!-- Table View -->
-        <div id="tableViewContainer" class="table-responsive">
+        <div id="tableViewContainer" class="table-responsive pt-1">
           <table class="table table-hover mb-0" id="dataTable">
             <thead class="table-light">
               <tr>
