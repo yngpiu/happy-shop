@@ -230,7 +230,7 @@
               </thead>
               <tbody>
                 <c:forEach var="user" items="${list}">
-                  <tr class="user-row" data-status="${user.activated ? 'active' : 'banned'}" data-role="${user.admin ? 'admin' : 'user'}">
+                  <tr class="user-row" data-status="${user.isBanned ? 'banned' : 'active'}" data-role="${user.admin ? 'admin' : 'user'}">
                     <td>
                       <div class="form-check">
                         <input class="form-check-input user-checkbox" type="checkbox" value="${user.id}" id="user_${user.id}">
@@ -268,14 +268,14 @@
                     </td>
                     <td>
                       <c:choose>
-                        <c:when test="${user.activated}">
-                          <span class="badge bg-success">
-                            <i class="bi bi-check-circle me-1"></i>Hoạt động
+                        <c:when test="${user.isBanned}">
+                          <span class="badge bg-danger">
+                            <i class="bi bi-x-circle me-1"></i>Bị cấm
                           </span>
                         </c:when>
                         <c:otherwise>
-                          <span class="badge bg-danger">
-                            <i class="bi bi-x-circle me-1"></i>Bị cấm
+                          <span class="badge bg-success">
+                            <i class="bi bi-check-circle me-1"></i>Hoạt động
                           </span>
                         </c:otherwise>
                       </c:choose>
@@ -303,20 +303,20 @@
                         </a>
                         
                         <c:choose>
-                          <c:when test="${user.activated}">
-                            <button type="button" 
-                                    class="btn btn-outline-danger btn-sm"
-                                    title="Cấm người dùng"
-                                    onclick="confirmBan('${user.id}', '${user.fullname}')">
-                              <i class="bi bi-person-x"></i>
-                            </button>
-                          </c:when>
-                          <c:otherwise>
+                          <c:when test="${user.isBanned}">
                             <button type="button" 
                                     class="btn btn-outline-success btn-sm"
                                     title="Mở cấm người dùng"
                                     onclick="confirmUnban('${user.id}', '${user.fullname}')">
                               <i class="bi bi-person-check"></i>
+                            </button>
+                          </c:when>
+                          <c:otherwise>
+                            <button type="button" 
+                                    class="btn btn-outline-danger btn-sm"
+                                    title="Cấm người dùng"
+                                    onclick="confirmBan('${user.id}', '${user.fullname}')">
+                              <i class="bi bi-person-x"></i>
                             </button>
                           </c:otherwise>
                         </c:choose>
@@ -333,7 +333,7 @@
         <div id="cardViewContent" style="display: none;">
           <div class="row p-3">
             <c:forEach var="user" items="${list}">
-              <div class="col-12 col-md-6 col-lg-4 mb-3 user-card" data-status="${user.activated ? 'active' : 'banned'}" data-role="${user.admin ? 'admin' : 'user'}">
+              <div class="col-12 col-md-6 col-lg-4 mb-3 user-card" data-status="${user.isBanned ? 'banned' : 'active'}" data-role="${user.admin ? 'admin' : 'user'}">
                 <div class="card h-100 shadow-sm">
                   <div class="card-body">
                     <div class="d-flex align-items-start mb-3">
@@ -347,11 +347,11 @@
                         <small class="text-muted">@${user.id}</small>
                         <div class="mt-2">
                           <c:choose>
-                            <c:when test="${user.activated}">
-                              <span class="badge bg-success">Hoạt động</span>
+                            <c:when test="${user.isBanned}">
+                              <span class="badge bg-danger">Bị cấm</span>
                             </c:when>
                             <c:otherwise>
-                              <span class="badge bg-danger">Bị cấm</span>
+                              <span class="badge bg-success">Hoạt động</span>
                             </c:otherwise>
                           </c:choose>
                           <c:choose>
@@ -384,18 +384,18 @@
                       </a>
                       
                       <c:choose>
-                        <c:when test="${user.activated}">
-                          <button type="button" 
-                                  class="btn btn-outline-danger btn-sm flex-fill"
-                                  onclick="confirmBan('${user.id}', '${user.fullname}')">
-                            <i class="bi bi-person-x me-1"></i>Cấm
-                          </button>
-                        </c:when>
-                        <c:otherwise>
+                        <c:when test="${user.isBanned}">
                           <button type="button" 
                                   class="btn btn-outline-success btn-sm flex-fill"
                                   onclick="confirmUnban('${user.id}', '${user.fullname}')">
                             <i class="bi bi-person-check me-1"></i>Mở cấm
+                          </button>
+                        </c:when>
+                        <c:otherwise>
+                          <button type="button" 
+                                  class="btn btn-outline-danger btn-sm flex-fill"
+                                  onclick="confirmBan('${user.id}', '${user.fullname}')">
+                            <i class="bi bi-person-x me-1"></i>Cấm
                           </button>
                         </c:otherwise>
                       </c:choose>

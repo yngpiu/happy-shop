@@ -106,15 +106,26 @@ public class UserManagerController {
 			// Xử lý upload hình ảnh
 			handleImageUpload(user, imageFile);
 			
-			// Mặc định người dùng được kích hoạt
+			// Mặc định người dùng được kích hoạt và không bị cấm
 			if (user.getActivated() == null) {
 				user.setActivated(true);
+			}
+			
+			if (user.getIsBanned() == null) {
+				user.setIsBanned(false);
 			}
 			
 			// Mặc định không phải admin
 			if (user.getAdmin() == null) {
 				user.setAdmin(false);
 			}
+			
+			// Debug: In thông tin user trước khi lưu
+			System.out.println("=== DEBUG USER BEFORE SAVE ===");
+			System.out.println("ID: " + user.getId());
+			System.out.println("Telephone: '" + user.getTelephone() + "'");
+			System.out.println("Telephone length: " + (user.getTelephone() != null ? user.getTelephone().length() : "null"));
+			System.out.println("========================");
 			
 			// Lưu người dùng vào database
 			userDAO.create(user);
@@ -192,7 +203,7 @@ public class UserManagerController {
 	}
 	
 	/**
-	 * Cấm người dùng (vô hiệu hóa tài khoản)
+	 * Cấm người dùng (đánh dấu isBanned = true)
 	 */
 	@PostMapping("/ban/{id}")
 	public String banUser(@PathVariable("id") String id, RedirectAttributes redirectAttributes) {
@@ -203,7 +214,7 @@ public class UserManagerController {
 				return "redirect:/admin/user/index";
 			}
 			
-			user.setActivated(false);
+			user.setIsBanned(true);
 			userDAO.update(user);
 			
 			redirectAttributes.addFlashAttribute("message", 
@@ -219,7 +230,7 @@ public class UserManagerController {
 	}
 	
 	/**
-	 * Mở cấm người dùng (kích hoạt lại tài khoản)
+	 * Mở cấm người dùng (đánh dấu isBanned = false)
 	 */
 	@PostMapping("/unban/{id}")
 	public String unbanUser(@PathVariable("id") String id, RedirectAttributes redirectAttributes) {
@@ -230,7 +241,7 @@ public class UserManagerController {
 				return "redirect:/admin/user/index";
 			}
 			
-			user.setActivated(true);
+			user.setIsBanned(false);
 			userDAO.update(user);
 			
 			redirectAttributes.addFlashAttribute("message", 
@@ -305,6 +316,9 @@ public class UserManagerController {
 		if (newUser.getActivated() != null) {
 			existingUser.setActivated(newUser.getActivated());
 		}
+		if (newUser.getIsBanned() != null) {
+			existingUser.setIsBanned(newUser.getIsBanned());
+		}
 		if (newUser.getAdmin() != null) {
 			existingUser.setAdmin(newUser.getAdmin());
 		}
@@ -317,7 +331,7 @@ public class UserManagerController {
 		if (users != null) {
 			int totalUsers = users.size();
 			int activeUsers = (int) users.stream().filter(u -> u.getActivated() == null || u.getActivated()).count();
-			int bannedUsers = totalUsers - activeUsers;
+			int bannedUsers = (int) users.stream().filter(u -> u.getIsBanned() != null && u.getIsBanned()).count();
 			int adminUsers = (int) users.stream().filter(u -> u.getAdmin() != null && u.getAdmin()).count();
 			int regularUsers = totalUsers - adminUsers;
 			

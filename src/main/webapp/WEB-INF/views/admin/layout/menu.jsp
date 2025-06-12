@@ -59,7 +59,7 @@
 				</a>
 				
 				<!-- Customer Management -->
-				<a class="nav-link" href="/admin/customer/index">
+				<a class="nav-link" href="/admin/user/index">
 					<i class="bi bi-people me-2"></i>
 					Quản lý người dùng
 				</a>

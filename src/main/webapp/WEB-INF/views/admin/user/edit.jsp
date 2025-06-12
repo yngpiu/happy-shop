@@ -58,14 +58,14 @@
           </h5>
           <div class="d-flex gap-2">
             <c:choose>
-              <c:when test="${user.activated}">
-                <span class="badge bg-success">
-                  <i class="bi bi-check-circle me-1"></i>Hoạt động
+              <c:when test="${user.isBanned}">
+                <span class="badge bg-danger">
+                  <i class="bi bi-x-circle me-1"></i>Bị cấm
                 </span>
               </c:when>
               <c:otherwise>
-                <span class="badge bg-danger">
-                  <i class="bi bi-x-circle me-1"></i>Bị cấm
+                <span class="badge bg-success">
+                  <i class="bi bi-check-circle me-1"></i>Hoạt động
                 </span>
               </c:otherwise>
             </c:choose>
@@ -190,33 +190,46 @@
                 Cài đặt tài khoản
               </h6>
               
-              <div class="row">
-                <div class="col-12 col-md-6 mb-3">
-                  <div class="form-check form-switch">
-                    <form:checkbox path="activated" class="form-check-input" id="activated" />
-                    <label class="form-check-label" for="activated">
-                      <i class="bi bi-check-circle me-1"></i>
-                      Kích hoạt tài khoản
-                    </label>
-                  </div>
-                  <div class="form-text">
-                    Tài khoản được kích hoạt có thể đăng nhập vào hệ thống.
-                  </div>
-                </div>
-                
-                <div class="col-12 col-md-6 mb-3">
-                  <div class="form-check form-switch">
-                    <form:checkbox path="admin" class="form-check-input" id="admin" />
-                    <label class="form-check-label" for="admin">
-                      <i class="bi bi-shield-check me-1"></i>
-                      Quyền quản trị viên
-                    </label>
-                  </div>
-                  <div class="form-text">
-                    Quản trị viên có thể truy cập vào trang quản lý.
-                  </div>
-                </div>
-              </div>
+                             <div class="row">
+                 <div class="col-12 col-md-4 mb-3">
+                   <div class="form-check form-switch">
+                     <form:checkbox path="activated" class="form-check-input" id="activated" />
+                     <label class="form-check-label" for="activated">
+                       <i class="bi bi-check-circle me-1"></i>
+                       Kích hoạt tài khoản
+                     </label>
+                   </div>
+                   <div class="form-text">
+                     Tài khoản được kích hoạt có thể đăng nhập vào hệ thống.
+                   </div>
+                 </div>
+                 
+                 <div class="col-12 col-md-4 mb-3">
+                   <div class="form-check form-switch">
+                     <form:checkbox path="isBanned" class="form-check-input" id="isBanned" />
+                     <label class="form-check-label" for="isBanned">
+                       <i class="bi bi-person-x me-1"></i>
+                       Cấm người dùng
+                     </label>
+                   </div>
+                   <div class="form-text">
+                     Người dùng bị cấm không thể đăng nhập.
+                   </div>
+                 </div>
+                 
+                 <div class="col-12 col-md-4 mb-3">
+                   <div class="form-check form-switch">
+                     <form:checkbox path="admin" class="form-check-input" id="admin" />
+                     <label class="form-check-label" for="admin">
+                       <i class="bi bi-shield-check me-1"></i>
+                       Quyền quản trị viên
+                     </label>
+                   </div>
+                   <div class="form-text">
+                     Quản trị viên có thể truy cập vào trang quản lý.
+                   </div>
+                 </div>
+               </div>
             </div>
           </div>
           
@@ -259,14 +272,14 @@
           <label class="fw-semibold">Trạng thái:</label>
           <p class="mb-0">
             <c:choose>
-              <c:when test="${user.activated}">
-                <span class="text-success">
-                  <i class="bi bi-check-circle me-1"></i>Đang hoạt động
+              <c:when test="${user.isBanned}">
+                <span class="text-danger">
+                  <i class="bi bi-x-circle me-1"></i>Bị cấm
                 </span>
               </c:when>
               <c:otherwise>
-                <span class="text-danger">
-                  <i class="bi bi-x-circle me-1"></i>Bị cấm
+                <span class="text-success">
+                  <i class="bi bi-check-circle me-1"></i>Đang hoạt động
                 </span>
               </c:otherwise>
             </c:choose>
@@ -303,20 +316,20 @@
       <div class="card-body">
         <div class="d-grid gap-2">
           <c:choose>
-            <c:when test="${user.activated}">
-              <button type="button" 
-                      class="btn btn-outline-danger"
-                      onclick="confirmBan('${user.id}', '${user.fullname}')">
-                <i class="bi bi-person-x me-2"></i>
-                Cấm người dùng
-              </button>
-            </c:when>
-            <c:otherwise>
+            <c:when test="${user.isBanned}">
               <button type="button" 
                       class="btn btn-outline-success"
                       onclick="confirmUnban('${user.id}', '${user.fullname}')">
                 <i class="bi bi-person-check me-2"></i>
                 Mở cấm người dùng
+              </button>
+            </c:when>
+            <c:otherwise>
+              <button type="button" 
+                      class="btn btn-outline-danger"
+                      onclick="confirmBan('${user.id}', '${user.fullname}')">
+                <i class="bi bi-person-x me-2"></i>
+                Cấm người dùng
               </button>
             </c:otherwise>
           </c:choose>

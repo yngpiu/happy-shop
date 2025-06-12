@@ -152,7 +152,7 @@
               </h6>
               
               <div class="row">
-                <div class="col-12 col-md-6 mb-3">
+                <div class="col-12 col-md-4 mb-3">
                   <div class="form-check form-switch">
                     <form:checkbox path="activated" class="form-check-input" id="activated" />
                     <label class="form-check-label" for="activated">
@@ -165,7 +165,20 @@
                   </div>
                 </div>
                 
-                <div class="col-12 col-md-6 mb-3">
+                <div class="col-12 col-md-4 mb-3">
+                  <div class="form-check form-switch">
+                    <form:checkbox path="isBanned" class="form-check-input" id="isBanned" />
+                    <label class="form-check-label" for="isBanned">
+                      <i class="bi bi-person-x me-1"></i>
+                      Cấm người dùng
+                    </label>
+                  </div>
+                  <div class="form-text">
+                    Người dùng bị cấm không thể đăng nhập.
+                  </div>
+                </div>
+                
+                <div class="col-12 col-md-4 mb-3">
                   <div class="form-check form-switch">
                     <form:checkbox path="admin" class="form-check-input" id="admin" />
                     <label class="form-check-label" for="admin">
@@ -336,6 +349,9 @@ document.getElementById('imageFile').addEventListener('change', function(event) 
 document.addEventListener('DOMContentLoaded', function() {
   // Set activated to true by default
   document.getElementById('activated').checked = true;
+  
+  // Set isBanned to false by default
+  document.getElementById('isBanned').checked = false;
   
   // Set admin to false by default
   document.getElementById('admin').checked = false;

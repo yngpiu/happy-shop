@@ -28,7 +28,7 @@ public class InterceptorConfigAdmin implements WebMvcConfigurer {
 				"/admin/category/edit/**",
 				"/admin/inventory/index",
 				"/admin/profile",
-				"/admin/customer/index",
+				"/admin/user/index",
 				"/admin/order/index", 
 				"/admin/report/inventory", 
 				"/admin/revenue/category",

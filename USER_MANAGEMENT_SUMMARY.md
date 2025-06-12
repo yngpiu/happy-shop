@@ -71,9 +71,9 @@ src/main/webapp/WEB-INF/views/admin/user/
 
 ### 1. Cơ chế cấm/mở cấm
 
-- Thay vì xóa user, sử dụng field `activated` để control
-- User bị cấm không thể đăng nhập nhưng dữ liệu vẫn được bảo toàn
-- Có thể mở cấm bất cứ lúc nào
+- Thay vì xóa user, sử dụng field `isBanned` để control
+- User bị cấm (`isBanned = true`) không thể đăng nhập nhưng dữ liệu vẫn được bảo toàn
+- Có thể mở cấm bất cứ lúc nào bằng cách set `isBanned = false`
 
 ### 2. Phân quyền rõ ràng
 

@@ -29,12 +29,12 @@ public class UserManger {
 	@Autowired
 	ServletContext app;
 
-	@RequestMapping("/admin/customer/index")
+	@RequestMapping("/admin/user/index")
 	public String index(Model model) {
 		User entity = new User();
 		model.addAttribute("entity", entity);
 		model.addAttribute("list", dao.findAll());
-		return "admin/customer/index";
+		return "admin/user/index";
 	}
 
 	@RequestMapping("/admin/customer/edit/{id}")
@@ -42,7 +42,7 @@ public class UserManger {
 		User entity = dao.findById(id);
 		model.addAttribute("entity", entity);
 		model.addAttribute("list", dao.findAll());
-		return "admin/customer/index";
+		return "admin/user/index";
 	}
 
 	@RequestMapping("/admin/customer/create")
@@ -52,7 +52,7 @@ public class UserManger {
 		User user2 = dao.findById(entity.getId());
 		if (user2 != null) {
 			model.addAttribute("message", "Tên đăng nhập đã được sử dụng!");
-			return "redirect:/admin/customer/index";
+			return "redirect:/admin/user/index";
 		}
 
 		if (file.isEmpty()) {
@@ -65,7 +65,7 @@ public class UserManger {
 
 		dao.create(entity);
 		model.addAttribute("message", "Thêm mới thành công!");
-		return "redirect:/admin/customer/index";
+		return "redirect:/admin/user/index";
 	}
 
 	@RequestMapping("/admin/customer/update")
@@ -91,7 +91,7 @@ public class UserManger {
 		}
 
 		model.addAttribute("message", "Xóa thành công!");
-		return "redirect:/admin/customer/index";
+		return "redirect:/admin/user/index";
 	}
 
 	int pageSize = 8;

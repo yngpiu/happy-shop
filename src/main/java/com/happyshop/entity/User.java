@@ -3,7 +3,7 @@ package com.happyshop.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
-
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -19,20 +19,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User {
 	@Id
 	@NotEmpty
+	@Column(name = "Id")
 	String id;
 	@NotEmpty
 	@Length(min=6)
+	@Column(name = "Password")
 	String password;
 	@NotEmpty
+	@Column(name = "Fullname")
 	String fullname;
 	@NotEmpty
+	@Column(name = "Telephone", length = 50)
 	String telephone;
 	@NotEmpty
 	@Email
+	@Column(name = "Email")
 	String email;
+	@Column(name = "Photo")
 	String photo;
+	@Column(name = "Activated")
 	Boolean activated;
+	@Column(name = "Admin")
 	Boolean admin;
+	@Column(name = "isBanned")
+	Boolean isBanned;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
@@ -109,7 +119,13 @@ public class User {
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
-	
-	
 
+	public Boolean getIsBanned() {
+		return isBanned;
+	}
+
+	public void setIsBanned(Boolean isBanned) {
+		this.isBanned = isBanned;
+	}
+	
 }
