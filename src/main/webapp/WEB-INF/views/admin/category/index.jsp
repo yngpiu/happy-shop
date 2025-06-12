@@ -59,11 +59,11 @@
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="card-title text-white-50 mb-1">Tổng số loại</h6>
+            <h6 class="card-title text-white-80 mb-1">Tổng số loại</h6>
             <h3 class="mb-0">${totalCategories}</h3>
-            <small class="text-white-50">loại sản phẩm</small>
+            <small class="text-white-80">loại sản phẩm</small>
           </div>
-          <div class="text-white-50">
+          <div class="text-white-80">
             <i class="bi bi-tags display-6"></i>
           </div>
         </div>
@@ -76,11 +76,11 @@
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="card-title text-white-50 mb-1">Đang hoạt động</h6>
+            <h6 class="card-title text-white-80 mb-1">Đang hoạt động</h6>
             <h3 class="mb-0">${activeCategories}</h3>
-            <small class="text-white-50">loại đang sử dụng</small>
+            <small class="text-white-80">loại đang sử dụng</small>
           </div>
-          <div class="text-white-50">
+          <div class="text-white-80">
             <i class="bi bi-check-circle display-6"></i>
           </div>
         </div>
@@ -93,11 +93,11 @@
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="card-title text-white-50 mb-1">Có sản phẩm</h6>
+            <h6 class="card-title text-white-80 mb-1">Có sản phẩm</h6>
             <h3 class="mb-0">${categoriesWithProducts}</h3>
-            <small class="text-white-50">loại có sản phẩm</small>
+            <small class="text-white-80">loại có sản phẩm</small>
           </div>
-          <div class="text-white-50">
+          <div class="text-white-80">
             <i class="bi bi-box display-6"></i>
           </div>
         </div>
@@ -110,11 +110,11 @@
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="card-title text-white-50 mb-1">Thùng rác</h6>
+            <h6 class="card-title text-white-80 mb-1">Thùng rác</h6>
             <h3 class="mb-0">${deletedCategories}</h3>
-            <small class="text-white-50">đã xóa tạm thời</small>
+            <small class="text-white-80">đã xóa tạm thời</small>
           </div>
-          <div class="text-white-50">
+          <div class="text-white-80">
             <i class="bi bi-trash display-6"></i>
           </div>
         </div>
