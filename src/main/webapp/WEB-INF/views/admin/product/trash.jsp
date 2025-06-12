@@ -278,16 +278,16 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
                   <td class="text-center">
                     <div class="btn-group-vertical btn-group-sm">
                       <button
-                        class="btn btn-sm btn-outline-success mb-1"
+                        class="btn btn-sm btn-outline-success mb-1" title="Khôi phục"
                         onclick="restoreProduct('${product.id}', '${product.name}')"
                       >
-                        <i class="bi bi-arrow-clockwise me-1"></i>Khôi phục
+                        <i class="bi bi-arrow-clockwise"></i>
                       </button>
                       <button
-                        class="btn btn-sm btn-outline-danger"
+                        class="btn btn-sm btn-outline-danger" title="Xóa vĩnh viễn"
                         onclick="permanentDelete('${product.id}', '${product.name}')"
                       >
-                        <i class="bi bi-x-circle me-1"></i>Xóa vĩnh viễn
+                        <i class="bi bi-x-circle"></i>
                       </button>
                     </div>
                   </td>

@@ -190,8 +190,8 @@
               <img id="previewImg" src="" alt="Preview" 
                    class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
               <div class="mt-2">
-                <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearImage()">
-                  <i class="bi bi-trash me-1"></i>Xóa ảnh
+                <button type="button" class="btn btn-sm btn-outline-danger" title="Xóa ảnh" onclick="clearImage()">
+                  <i class="bi bi-trash"></i>
                 </button>
               </div>
             </div>
@@ -236,9 +236,8 @@
           <hr class="my-4">
           <div class="d-flex justify-content-between">
             <div>
-              <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">
-                <i class="bi bi-arrow-clockwise me-2"></i>
-                Đặt lại
+              <button type="button" class="btn btn-outline-secondary" title="Đặt lại" onclick="resetForm()">
+                <i class="bi bi-arrow-clockwise"></i>
               </button>
             </div>
             <div class="d-flex gap-2">

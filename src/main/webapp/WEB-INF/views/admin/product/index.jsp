@@ -332,22 +332,22 @@
                     <div class="btn-group btn-group-sm" role="group">
                       <c:choose>
                         <c:when test="${product.deletedAt != null}">
-                          <button class="btn btn-sm btn-outline-success"
+                          <button class="btn btn-sm btn-outline-success" title="Khôi phục"
                                   onclick="restoreProduct('${product.id}', '${product.name}')">
-                            <i class="bi bi-arrow-clockwise me-1"></i>Khôi phục
+                            <i class="bi bi-arrow-clockwise"></i>
                           </button>
-                          <button class="btn btn-sm btn-outline-danger"
+                          <button class="btn btn-sm btn-outline-danger" title="Xóa vĩnh viễn"
                                   onclick="permanentDeleteProduct('${product.id}', '${product.name}')">
-                            <i class="bi bi-x-circle me-1"></i>Xóa vĩnh viễn
+                            <i class="bi bi-x-circle"></i>
                           </button>
                         </c:when>
                         <c:otherwise>
-                          <a href="${base}/edit/${product.id}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil me-1"></i>Sửa
+                          <a href="${base}/edit/${product.id}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                            <i class="bi bi-pencil"></i>
                           </a>
-                          <button class="btn btn-sm btn-outline-danger"
+                          <button class="btn btn-sm btn-outline-danger" title="Xóa"
                                   onclick="moveToTrash('${product.id}', '${product.name}', '${orderCounts[product.id] != null ? orderCounts[product.id] : 0}')">
-                            <i class="bi bi-trash me-1"></i>Xóa
+                            <i class="bi bi-trash"></i>
                           </button>
                         </c:otherwise>
                       </c:choose>
@@ -417,22 +417,22 @@
                     <div class="d-flex gap-2">
                       <c:choose>
                         <c:when test="${product.deletedAt != null}">
-                          <button class="btn btn-sm btn-outline-success"
+                          <button class="btn btn-sm btn-outline-success" title="Khôi phục"
                                   onclick="restoreProduct('${product.id}', '${product.name}')">
-                            <i class="bi bi-arrow-clockwise me-1"></i>Khôi phục
+                            <i class="bi bi-arrow-clockwise"></i>
                           </button>
-                          <button class="btn btn-sm btn-outline-danger"
+                          <button class="btn btn-sm btn-outline-danger" title="Xóa vĩnh viễn"
                                   onclick="permanentDeleteProduct('${product.id}', '${product.name}')">
-                            <i class="bi bi-x-circle me-1"></i>Xóa vĩnh viễn
+                            <i class="bi bi-x-circle"></i>
                           </button>
                         </c:when>
                         <c:otherwise>
-                          <a href="${base}/edit/${product.id}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil me-1"></i>Sửa
+                          <a href="${base}/edit/${product.id}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                            <i class="bi bi-pencil"></i>
                           </a>
-                          <button class="btn btn-sm btn-outline-danger"
+                          <button class="btn btn-sm btn-outline-danger" title="Xóa"
                                   onclick="moveToTrash('${product.id}', '${product.name}', '${orderCounts[product.id] != null ? orderCounts[product.id] : 0}')">
-                            <i class="bi bi-trash me-1"></i>Xóa
+                            <i class="bi bi-trash"></i>
                           </button>
                         </c:otherwise>
                       </c:choose>
