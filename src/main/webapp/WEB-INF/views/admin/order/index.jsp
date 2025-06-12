@@ -209,12 +209,12 @@
               <thead class="table-light">
                 <tr>
                   <th width="8%" class="text-center">ID</th>
-                  <th width="20%">Khách hàng</th>
+                  <th width="22%">Khách hàng</th>
                   <th width="15%" class="text-center">Ngày đặt</th>
-                  <th width="15%" class="text-center">Tổng tiền</th>
+                  <th width="18%" class="text-center">Tổng tiền</th>
                   <th width="10%" class="text-center">Số SP</th>
-                  <th width="12%" class="text-center">Trạng thái</th>
-                  <th width="20%" class="text-center">Thao tác</th>
+                  <th width="17%" class="text-center">Trạng thái</th>
+                  <th width="10%" class="text-center">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -269,49 +269,9 @@
                       </div>
                     </td>
                     <td class="text-center">
-                      <div class="btn-group btn-group-sm" role="group">
-                        <!-- Xem chi tiết -->
-                        <a href="${base}/details/${order.id}" class="btn btn-sm btn-outline-info" title="Xem chi tiết">
-                          <i class="bi bi-eye"></i>
-                        </a>
-                        
-                        <!-- Actions theo trạng thái -->
-                        <c:choose>
-                          <c:when test="${order.status == null || order.status == 0}">
-                            <!-- Chờ xử lý: có thể duyệt hoặc hủy -->
-                            <button class="btn btn-sm btn-outline-success" title="Duyệt đơn hàng"
-                                    onclick="changeStatus('${order.id}', 'process', 'Duyệt đơn hàng')">
-                              <i class="bi bi-check"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" title="Hủy đơn hàng"
-                                    onclick="changeStatus('${order.id}', 'cancel', 'Hủy đơn hàng')">
-                              <i class="bi bi-x"></i>
-                            </button>
-                          </c:when>
-                          <c:when test="${order.status == 1}">
-                            <!-- Đang xử lý: có thể chuyển sang giao hoặc hủy -->
-                            <button class="btn btn-sm btn-outline-primary" title="Chuyển giao hàng"
-                                    onclick="changeStatus('${order.id}', 'ship', 'Chuyển giao hàng')">
-                              <i class="bi bi-truck"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" title="Hủy đơn hàng"
-                                    onclick="changeStatus('${order.id}', 'cancel', 'Hủy đơn hàng')">
-                              <i class="bi bi-x"></i>
-                            </button>
-                          </c:when>
-                          <c:when test="${order.status == 2}">
-                            <!-- Đang giao: có thể hoàn thành -->
-                            <button class="btn btn-sm btn-outline-success" title="Hoàn thành đơn hàng"
-                                    onclick="changeStatus('${order.id}', 'complete', 'Hoàn thành đơn hàng')">
-                              <i class="bi bi-check-circle"></i>
-                            </button>
-                          </c:when>
-                          <c:otherwise>
-                            <!-- Hoàn thành hoặc đã hủy: chỉ xem -->
-                            <span class="text-muted">-</span>
-                          </c:otherwise>
-                        </c:choose>
-                      </div>
+                      <a href="${base}/details/${order.id}" class="btn btn-outline-info btn-sm" title="Xem chi tiết đơn hàng">
+                        <i class="bi bi-eye"></i>
+                      </a>
                     </td>
                   </tr>
                 </c:forEach>
@@ -365,30 +325,9 @@
                     </div>
                     
                     <div class="d-flex gap-1">
-                      <a href="${base}/details/${order.id}" class="btn btn-outline-info btn-sm flex-fill">
-                        <i class="bi bi-eye me-1"></i>Chi tiết
+                      <a href="${base}/details/${order.id}" class="btn btn-outline-info btn-sm w-100">
+                        <i class="bi bi-eye me-1"></i>Xem chi tiết
                       </a>
-                      
-                      <c:choose>
-                        <c:when test="${order.status == null || order.status == 0}">
-                          <button class="btn btn-outline-success btn-sm"
-                                  onclick="changeStatus('${order.id}', 'process', 'Duyệt đơn hàng')">
-                            <i class="bi bi-check"></i>
-                          </button>
-                        </c:when>
-                        <c:when test="${order.status == 1}">
-                          <button class="btn btn-outline-primary btn-sm"
-                                  onclick="changeStatus('${order.id}', 'ship', 'Chuyển giao hàng')">
-                            <i class="bi bi-truck"></i>
-                          </button>
-                        </c:when>
-                        <c:when test="${order.status == 2}">
-                          <button class="btn btn-outline-success btn-sm"
-                                  onclick="changeStatus('${order.id}', 'complete', 'Hoàn thành đơn hàng')">
-                            <i class="bi bi-check-circle"></i>
-                          </button>
-                        </c:when>
-                      </c:choose>
                     </div>
                   </div>
                 </div>
@@ -550,25 +489,6 @@
         toast.remove();
       }
     }, 4000);
-  }
-
-  /**
-   * Thay đổi trạng thái đơn hàng (function cũ cho các nút action)
-   * @param {string} orderId - ID của đơn hàng
-   * @param {string} action - Hành động cần thực hiện (process, ship, complete, cancel)
-   * @param {string} actionName - Tên hành động để hiển thị
-   */
-  function changeStatus(orderId, action, actionName) {
-    console.log('Thay đổi trạng thái đơn hàng:', orderId, action); // Debug
-    
-    if (confirm('Bạn có chắc chắn muốn ' + actionName.toLowerCase() + ' #' + orderId + '?')) {
-      // Tạo form và submit
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = '/admin/order/' + action + '/' + orderId;
-      document.body.appendChild(form);
-      form.submit();
-    }
   }
 
   /**
@@ -868,7 +788,7 @@
   }
   
   .status-container::after {
-    content: "💡 Có thể thay đổi về bất kỳ trạng thái nào";
+    content: "💡 Thay đổi trạng thái trực tiếp";
     position: absolute;
     bottom: -25px;
     left: 50%;
