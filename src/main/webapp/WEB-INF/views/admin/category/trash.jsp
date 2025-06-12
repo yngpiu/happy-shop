@@ -79,11 +79,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="card-title text-white-80 mb-1">Trong thùng rác</h6>
+            <h6 class="card-title text-white mb-1">Trong thùng rác</h6>
             <h3 class="mb-0">${trashedList.size()}</h3>
-            <small class="text-white-80">loại đã xóa</small>
+            <small class="text-white">loại đã xóa</small>
           </div>
-          <div class="text-white-80">
+          <div class="text-white">
             <i class="bi bi-trash display-6"></i>
           </div>
         </div>
@@ -96,11 +96,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="card-title text-white-80 mb-1">Sắp hết hạn</h6>
+            <h6 class="card-title text-white mb-1">Sắp hết hạn</h6>
             <h3 class="mb-0">${expiringSoonCount}</h3>
-            <small class="text-white-80">còn < 7 ngày</small>
+            <small class="text-white">còn < 7 ngày</small>
           </div>
-          <div class="text-white-80">
+          <div class="text-white">
             <i class="bi bi-clock display-6"></i>
           </div>
         </div>
@@ -113,11 +113,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h6 class="card-title text-white-80 mb-1">Có thể khôi phục</h6>
+            <h6 class="card-title text-white mb-1">Có thể khôi phục</h6>
             <h3 class="mb-0">${recoverableCount}</h3>
-            <small class="text-white-80">còn thời gian</small>
+            <small class="text-white">còn thời gian</small>
           </div>
-          <div class="text-white-80">
+          <div class="text-white">
             <i class="bi bi-arrow-clockwise display-6"></i>
           </div>
         </div>
@@ -474,9 +474,9 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         { className: 'text-center', targets: [0, 2, 3, 4, 5] },
       ],
       dom:
-        '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+        '<"row px-3 py-2"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
         '<"row"<"col-sm-12"tr>>' +
-        '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+        '<"row px-3 py-2"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
       searching: true,
       paging: true,
       info: true,
