@@ -370,7 +370,7 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         <div class="alert alert-danger">
           <i class="bi bi-exclamation-triangle me-1"></i>
           <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác! Sản phẩm
-          sẽ bị xóa khỏi hệ thống vĩnh viễn.
+          và <strong>tất cả đơn hàng liên quan</strong> sẽ bị xóa khỏi hệ thống vĩnh viễn.
         </div>
       </div>
       <div class="modal-footer">
@@ -414,7 +414,7 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt"%>
         <div class="alert alert-danger">
           <i class="bi bi-exclamation-triangle me-1"></i>
           <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác! Tất cả
-          sản phẩm trong thùng rác sẽ bị xóa vĩnh viễn.
+          sản phẩm và <strong>đơn hàng liên quan</strong> trong thùng rác sẽ bị xóa vĩnh viễn.
         </div>
       </div>
       <div class="modal-footer">

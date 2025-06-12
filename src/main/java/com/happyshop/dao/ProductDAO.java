@@ -114,6 +114,13 @@ public interface ProductDAO {
 	 */
 	Long countOrdersByProduct(Integer productId);
 	
+	/**
+	 * Xóa tất cả OrderDetails liên quan đến sản phẩm
+	 * @param productId ID của sản phẩm
+	 * @return int số lượng OrderDetail đã xóa
+	 */
+	int deleteOrderDetailsByProduct(Integer productId);
+	
 	// ================= FILTER BY CATEGORY =================
 	
 	/**

@@ -204,6 +204,18 @@ public class ProductDAOImpl implements ProductDAO {
 		return query.getSingleResult();
 	}
 
+	/**
+	 * Xóa tất cả OrderDetails liên quan đến sản phẩm
+	 */
+	@Override
+	public int deleteOrderDetailsByProduct(Integer productId) {
+		Session session = factory.getCurrentSession();
+		String hql = "DELETE FROM OrderDetail WHERE product.id = :productId";
+		Query<?> query = session.createQuery(hql);
+		query.setParameter("productId", productId);
+		return query.executeUpdate();
+	}
+
 	// ================= FILTER BY CATEGORY =================
 
 	/**

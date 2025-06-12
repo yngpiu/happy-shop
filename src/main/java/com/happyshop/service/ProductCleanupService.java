@@ -46,17 +46,34 @@ public class ProductCleanupService {
 			
 			// Log thông tin các sản phẩm sẽ bị xóa
 			logger.info("Tìm thấy {} sản phẩm hết hạn sẽ bị xóa vĩnh viễn:", expiredProducts.size());
+			int totalOrderDetails = 0;
+			
 			for (Product product : expiredProducts) {
 				long daysDeleted = product.getDaysSinceDeleted();
-				logger.info("- ID: {}, Tên: '{}', Đã xóa {} ngày", 
-						product.getId(), product.getName(), daysDeleted);
+				Long orderCount = productDAO.countOrdersByProduct(product.getId());
+				
+				logger.info("- ID: {}, Tên: '{}', Đã xóa {} ngày, Có {} đơn hàng", 
+						product.getId(), product.getName(), daysDeleted, orderCount);
+				
+				// Xóa OrderDetails liên quan trước (nếu có)
+				if (orderCount > 0) {
+					int deletedOrderDetails = productDAO.deleteOrderDetailsByProduct(product.getId());
+					totalOrderDetails += deletedOrderDetails;
+					logger.info("  → Đã xóa {} chi tiết đơn hàng liên quan", deletedOrderDetails);
+				}
 			}
 			
-			// Thực hiện xóa vĩnh viễn
+			// Thực hiện xóa vĩnh viễn các sản phẩm
 			int deletedCount = productDAO.autoDeleteExpiredProducts();
 			
 			if (deletedCount > 0) {
-				logger.info("✅ ĐÃ XÓA THÀNH CÔNG {} sản phẩm hết hạn", deletedCount);
+				String message = "✅ ĐÃ XÓA THÀNH CÔNG {} sản phẩm hết hạn";
+				if (totalOrderDetails > 0) {
+					message += " (bao gồm {} chi tiết đơn hàng)";
+					logger.info(message, deletedCount, totalOrderDetails);
+				} else {
+					logger.info(message, deletedCount);
+				}
 			} else {
 				logger.warn("⚠️ Không xóa được sản phẩm nào (có thể đã bị xóa bởi tiến trình khác)");
 			}

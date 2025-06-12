@@ -284,7 +284,7 @@ public class ProductManger {
 	}
 	
 	/**
-	 * Xóa vĩnh viễn sản phẩm khỏi hệ thống
+	 * Xóa vĩnh viễn sản phẩm khỏi hệ thống (bao gồm các đơn hàng liên quan)
 	 */
 	@PostMapping("/permanent-delete/{id}")
 	public String permanentDelete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
@@ -297,19 +297,24 @@ public class ProductManger {
 			
 			String productName = product.getName();
 			
-			// Kiểm tra ràng buộc đơn hàng
+			// Kiểm tra số đơn hàng liên quan
 			Long orderCount = productDAO.countOrdersByProduct(id);
+			
+			// Xóa các OrderDetails liên quan trước (nếu có)
 			if (orderCount > 0) {
-				redirectAttributes.addFlashAttribute("error", 
-					"Không thể xóa vĩnh viễn sản phẩm '" + productName + "' vì có " + orderCount + " đơn hàng liên quan");
-				return "redirect:/admin/product/trash";
+				int deletedOrderDetails = productDAO.deleteOrderDetailsByProduct(id);
+				System.out.println("Đã xóa " + deletedOrderDetails + " chi tiết đơn hàng liên quan đến sản phẩm ID: " + id);
 			}
 			
-			// Xóa vĩnh viễn
+			// Xóa vĩnh viễn sản phẩm
 			productDAO.permanentDelete(id);
 			
-			redirectAttributes.addFlashAttribute("message", 
-				"Đã xóa vĩnh viễn sản phẩm '" + productName + "'");
+			String message = "Đã xóa vĩnh viễn sản phẩm '" + productName + "'";
+			if (orderCount > 0) {
+				message += " (bao gồm " + orderCount + " đơn hàng liên quan)";
+			}
+			
+			redirectAttributes.addFlashAttribute("message", message);
 			return "redirect:/admin/product/trash";
 			
 		} catch (Exception e) {
@@ -321,7 +326,7 @@ public class ProductManger {
 	}
 	
 	/**
-	 * Dọn sạch toàn bộ thùng rác
+	 * Dọn sạch toàn bộ thùng rác (bao gồm các đơn hàng liên quan)
 	 */
 	@PostMapping("/empty-trash")
 	public String emptyTrash(RedirectAttributes redirectAttributes) {
@@ -334,21 +339,25 @@ public class ProductManger {
 			}
 			
 			int deletedCount = 0;
-			int skippedCount = 0;
+			int totalOrderDetails = 0;
 			
 			for (Product product : trashedProducts) {
 				Long orderCount = productDAO.countOrdersByProduct(product.getId());
-				if (orderCount == 0) {
-					productDAO.permanentDelete(product.getId());
-					deletedCount++;
-				} else {
-					skippedCount++;
+				
+				// Xóa OrderDetails liên quan (nếu có)
+				if (orderCount > 0) {
+					int deletedOrderDetails = productDAO.deleteOrderDetailsByProduct(product.getId());
+					totalOrderDetails += deletedOrderDetails;
 				}
+				
+				// Xóa vĩnh viễn sản phẩm
+				productDAO.permanentDelete(product.getId());
+				deletedCount++;
 			}
 			
 			String message = "Đã dọn sạch thùng rác: " + deletedCount + " sản phẩm đã xóa";
-			if (skippedCount > 0) {
-				message += ", " + skippedCount + " sản phẩm bỏ qua (có đơn hàng)";
+			if (totalOrderDetails > 0) {
+				message += " (bao gồm " + totalOrderDetails + " chi tiết đơn hàng)";
 			}
 			
 			redirectAttributes.addFlashAttribute("message", message);
