@@ -131,11 +131,11 @@ public class CategoryManger {
 	public String insert(RedirectAttributes redirectAttributes, @ModelAttribute("entity") Category entity) {
 		try {
 			dao.create(entity);
-			redirectAttributes.addAttribute("message", "Thêm mới loại sản phẩm thành công!");
-			redirectAttributes.addAttribute("messageType", "success");
+			redirectAttributes.addFlashAttribute("message", "Thêm mới loại sản phẩm thành công!");
+			redirectAttributes.addFlashAttribute("messageType", "success");
 		} catch (Exception e) {
-			redirectAttributes.addAttribute("error", "Có lỗi xảy ra khi thêm loại sản phẩm. Vui lòng thử lại!");
-			redirectAttributes.addAttribute("messageType", "error");
+			redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi thêm loại sản phẩm. Vui lòng thử lại!");
+			redirectAttributes.addFlashAttribute("messageType", "error");
 		}
 		return "redirect:/admin/category/index";
 	}
@@ -186,12 +186,12 @@ public class CategoryManger {
 				// createdAt and updatedAt will be handled by @PreUpdate
 				dao.update(existing);
 			}
-			model.addAttribute("message", "Cập nhật loại sản phẩm thành công!");
-			model.addAttribute("messageType", "success");
+			model.addFlashAttribute("message", "Cập nhật loại sản phẩm thành công!");
+			model.addFlashAttribute("messageType", "success");
 			return "redirect:/admin/category/index";
 		} catch (Exception e) {
-			model.addAttribute("error", "Có lỗi xảy ra khi cập nhật loại sản phẩm. Vui lòng thử lại!");
-			model.addAttribute("messageType", "error");
+			model.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật loại sản phẩm. Vui lòng thử lại!");
+			model.addFlashAttribute("messageType", "error");
 			return "redirect:/admin/category/edit/" + entity.getId();
 		}
 	}
@@ -212,7 +212,7 @@ public class CategoryManger {
 			
 			if (productCount > 0) {
 				Category category = dao.findById(id);
-				model.addAttribute("error", "Không thể xóa loại sản phẩm '" + category.getName() + 
+				model.addFlashAttribute("error", "Không thể xóa loại sản phẩm '" + category.getName() + 
 					"' vì còn " + productCount + " sản phẩm thuộc loại này. Vui lòng xóa hoặc chuyển các sản phẩm sang loại khác trước.");
 				return "redirect:/admin/category/index";
 			}
@@ -220,12 +220,12 @@ public class CategoryManger {
 			// Move to trash (soft delete)
 			Category category = dao.findById(id);
 			dao.softDelete(id);
-			model.addAttribute("message", "Đã chuyển loại sản phẩm '" + category.getName() + "' vào thùng rác. Có thể khôi phục trong vòng 30 ngày.");
-			model.addAttribute("messageType", "success");
+			model.addFlashAttribute("message", "Đã chuyển loại sản phẩm '" + category.getName() + "' vào thùng rác. Có thể khôi phục trong vòng 30 ngày.");
+			model.addFlashAttribute("messageType", "success");
 			
 		} catch (Exception e) {
-			model.addAttribute("error", "Có lỗi xảy ra khi xóa loại sản phẩm. Vui lòng thử lại!");
-			model.addAttribute("messageType", "error");
+			model.addFlashAttribute("error", "Có lỗi xảy ra khi xóa loại sản phẩm. Vui lòng thử lại!");
+			model.addFlashAttribute("messageType", "error");
 		}
 		
 		return "redirect:/admin/category/index";
@@ -244,11 +244,11 @@ public class CategoryManger {
 		try {
 			Category category = dao.findById(id);
 			dao.restore(id);
-			model.addAttribute("message", "Đã khôi phục loại sản phẩm '" + category.getName() + "' thành công!");
-			model.addAttribute("messageType", "success");
+			model.addFlashAttribute("message", "Đã khôi phục loại sản phẩm '" + category.getName() + "' thành công!");
+			model.addFlashAttribute("messageType", "success");
 		} catch (Exception e) {
-			model.addAttribute("error", "Có lỗi xảy ra khi khôi phục loại sản phẩm. Vui lòng thử lại!");
-			model.addAttribute("messageType", "error");
+			model.addFlashAttribute("error", "Có lỗi xảy ra khi khôi phục loại sản phẩm. Vui lòng thử lại!");
+			model.addFlashAttribute("messageType", "error");
 		}
 		
 		return "redirect:/admin/category/trash";
@@ -265,14 +265,14 @@ public class CategoryManger {
 		try {
 			Category category = dao.findById(id);
 			dao.permanentDelete(id);
-			model.addAttribute("message", "Đã xóa vĩnh viễn loại sản phẩm '" + category.getName() + "'!");
-			model.addAttribute("messageType", "success");
+			model.addFlashAttribute("message", "Đã xóa vĩnh viễn loại sản phẩm '" + category.getName() + "'!");
+			model.addFlashAttribute("messageType", "success");
 		} catch (DataIntegrityViolationException e) {
-			model.addAttribute("error", "Không thể xóa vĩnh viễn loại sản phẩm này vì vẫn còn dữ liệu liên quan.");
-			model.addAttribute("messageType", "error");
+			model.addFlashAttribute("error", "Không thể xóa vĩnh viễn loại sản phẩm này vì vẫn còn dữ liệu liên quan.");
+			model.addFlashAttribute("messageType", "error");
 		} catch (Exception e) {
-			model.addAttribute("error", "Có lỗi xảy ra khi xóa vĩnh viễn loại sản phẩm. Vui lòng thử lại!");
-			model.addAttribute("messageType", "error");
+			model.addFlashAttribute("error", "Có lỗi xảy ra khi xóa vĩnh viễn loại sản phẩm. Vui lòng thử lại!");
+			model.addFlashAttribute("messageType", "error");
 		}
 		
 		return "redirect:/admin/category/trash";
@@ -293,11 +293,11 @@ public class CategoryManger {
 				dao.permanentDelete(category.getId());
 			}
 			
-			model.addAttribute("message", "Đã dọn sạch thùng rác! Xóa vĩnh viễn " + count + " loại sản phẩm.");
-			model.addAttribute("messageType", "success");
+			model.addFlashAttribute("message", "Đã dọn sạch thùng rác! Xóa vĩnh viễn " + count + " loại sản phẩm.");
+			model.addFlashAttribute("messageType", "success");
 		} catch (Exception e) {
-			model.addAttribute("error", "Có lỗi xảy ra khi dọn sạch thùng rác. Vui lòng thử lại!");
-			model.addAttribute("messageType", "error");
+			model.addFlashAttribute("error", "Có lỗi xảy ra khi dọn sạch thùng rác. Vui lòng thử lại!");
+			model.addFlashAttribute("messageType", "error");
 		}
 		
 		return "redirect:/admin/category/trash";
