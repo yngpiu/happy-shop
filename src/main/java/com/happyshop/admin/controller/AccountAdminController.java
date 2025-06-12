@@ -113,7 +113,7 @@ public class AccountAdminController {
 		user.setActivated(true);
 		dao.update(user);
 		
-		return "redirect:/admin/account/login";
+		return "redirect:/admin/login";
 	}
 	
 	@GetMapping("/admin/profile")

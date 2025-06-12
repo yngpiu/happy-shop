@@ -34,7 +34,7 @@
 	<nav class="nav flex-column py-2">
 		<c:choose>
 			<c:when test="${empty sessionScope.user}">
-				<a class="nav-link" href="/admin/account/login">
+				<a class="nav-link" href="/admin/login">
 					<i class="bi bi-box-arrow-in-right me-2"></i>
 					Đăng nhập
 				</a>

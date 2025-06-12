@@ -485,7 +485,12 @@
     
     Array.from(forms).forEach(form => {
       form.addEventListener('submit', event => {
-        if (!form.checkValidity()) {
+        let isValid = true;
+        
+        // Custom validation checks
+        isValid = validateForm() && isValid;
+        
+        if (!form.checkValidity() || !isValid) {
           event.preventDefault();
           event.stopPropagation();
         } else {
@@ -498,6 +503,112 @@
         form.classList.add('was-validated');
       });
     });
+    
+    /**
+     * Custom validation function
+     */
+    function validateForm() {
+      let isValid = true;
+      
+      // Validate file size (only if new file is selected)
+      const fileInput = document.getElementById('imageFile');
+      if (fileInput && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (file.size > maxSize) {
+          showFieldError(fileInput, 'File quá lớn! Kích thước tối đa là 10MB.');
+          isValid = false;
+        } else {
+          clearFieldError(fileInput);
+        }
+        
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+          showFieldError(fileInput, 'Chỉ chấp nhận file ảnh (JPG, PNG, GIF)!');
+          isValid = false;
+        }
+      }
+      
+      // Validate price
+      const priceInput = document.getElementById('unitPrice');
+      const price = parseFloat(priceInput.value);
+      if (price <= 0) {
+        showFieldError(priceInput, 'Giá phải lớn hơn 0!');
+        isValid = false;
+      } else if (price > 1000000000) {
+        showFieldError(priceInput, 'Giá không được vượt quá 1 tỷ!');
+        isValid = false;
+      } else {
+        clearFieldError(priceInput);
+      }
+      
+      // Validate quantity
+      const quantityInput = document.getElementById('quantity');
+      const quantity = parseInt(quantityInput.value);
+      if (quantity < 0) {
+        showFieldError(quantityInput, 'Số lượng không được âm!');
+        isValid = false;
+      } else if (quantity > 100000) {
+        showFieldError(quantityInput, 'Số lượng không được vượt quá 100,000!');
+        isValid = false;
+      } else {
+        clearFieldError(quantityInput);
+      }
+      
+      // Validate discount
+      const discountInput = document.getElementById('discount');
+      const discount = parseFloat(discountInput.value);
+      if (discount < 0 || discount > 100) {
+        showFieldError(discountInput, 'Giảm giá phải từ 0% đến 100%!');
+        isValid = false;
+      } else {
+        clearFieldError(discountInput);
+      }
+      
+      // Validate product name length
+      const nameInput = document.getElementById('name');
+      if (nameInput.value.length > 100) {
+        showFieldError(nameInput, 'Tên sản phẩm không được vượt quá 100 ký tự!');
+        isValid = false;
+      } else {
+        clearFieldError(nameInput);
+      }
+      
+      return isValid;
+    }
+    
+    /**
+     * Show error for a field
+     */
+    function showFieldError(field, message) {
+      field.classList.add('is-invalid');
+      field.classList.remove('is-valid');
+      
+      // Remove existing error message
+      const existingError = field.parentNode.querySelector('.invalid-feedback.custom');
+      if (existingError) {
+        existingError.remove();
+      }
+      
+      // Add new error message
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'invalid-feedback custom d-block';
+      errorDiv.textContent = message;
+      field.parentNode.appendChild(errorDiv);
+    }
+    
+    /**
+     * Clear error for a field
+     */
+    function clearFieldError(field) {
+      field.classList.remove('is-invalid');
+      const errorDiv = field.parentNode.querySelector('.invalid-feedback.custom');
+      if (errorDiv) {
+        errorDiv.remove();
+      }
+    }
 
     // Real-time validation for required fields
     const requiredInputs = document.querySelectorAll('input[required], select[required]');

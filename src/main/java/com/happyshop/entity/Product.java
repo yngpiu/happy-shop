@@ -45,7 +45,7 @@ public class Product {
 	
 	@Column(name = "productDate")
 	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "MM/dd/yyyy")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	Date productDate;  // Ngày sản xuất
 	
 	@Column(name = "available")

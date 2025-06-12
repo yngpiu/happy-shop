@@ -207,7 +207,7 @@ public class ProductManger {
 			
 			redirectAttributes.addFlashAttribute("message", 
 				"Cập nhật sản phẩm '" + existingProduct.getName() + "' thành công!");
-			return "redirect:/admin/product/edit/" + id;
+			return "redirect:/admin/product/index";
 			
 		} catch (Exception e) {
 			e.printStackTrace();
