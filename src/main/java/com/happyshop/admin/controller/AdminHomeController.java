@@ -1,5 +1,9 @@
 package com.happyshop.admin.controller;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,36 +20,63 @@ import com.happyshop.entity.User;
 public class AdminHomeController {
 	
 	@Autowired
-	UserDAO dao;
+	UserDAO userDao;
 	
 	@Autowired
-	ProductDAO pdao;
+	ProductDAO productDao;
 	
 	@Autowired
-	OrderDAO odao;
+	OrderDAO orderDao;
 	
 	@RequestMapping("/admin/home/index")
 	public String index(Model model) {
 		
-		//Thống kê số lượng người dùng
-		User user = new User();
-		model.addAttribute("user", user);
-		model.addAttribute("user", dao.findAll());
+		// Thống kê tổng quan
+		List<User> allUsers = userDao.findAll();
+		List<Product> allProducts = productDao.findAll();
+		List<Order> allOrders = orderDao.findAll();
 		
-		//Thống kê số lượng sản phẩm
-		Product product = new Product();
-		model.addAttribute("product", product);
-		model.addAttribute("product", pdao.findAll());
+		// Thống kê người dùng
+		long totalUsers = allUsers.size();
+		long activeUsers = allUsers.stream().filter(u -> u.getActivated()).count();
 		
-		//Thống kê số đơn hàng
-		Order order = new Order();
-		model.addAttribute("order", order);
-		model.addAttribute("order", odao.findAll());
+		// Thống kê sản phẩm
+		long totalProducts = allProducts.size();
+		long activeProducts = allProducts.stream().filter(p -> p.getAvailable()).count();
+		
+		// Thống kê đơn hàng
+		long totalOrders = allOrders.size();
+		long completedOrders = allOrders.stream().filter(o -> "Hoàn thành".equals(o.getStatus())).count();
+		
+		// Tính tổng doanh thu (chỉ đơn hàng hoàn thành)
+		double totalRevenue = allOrders.stream()
+			.filter(o -> "Hoàn thành".equals(o.getStatus()))
+			.mapToDouble(o -> o.getAmount().doubleValue())
+			.sum();
+		
+		// 5 đơn hàng gần đây nhất
+		List<Order> recentOrders = allOrders.stream()
+			.sorted((o1, o2) -> o2.getOrderDate().compareTo(o1.getOrderDate()))
+			.limit(5)
+			.collect(Collectors.toList());
+		
+		// Sản phẩm sắp hết hàng (quantity <= 10)
+		List<Product> lowStockProducts = allProducts.stream()
+			.filter(p -> p.getQuantity() <= 10)
+			.sorted((p1, p2) -> Integer.compare(p1.getQuantity(), p2.getQuantity()))
+			.collect(Collectors.toList());
+		
+		// Đưa dữ liệu vào model
+		model.addAttribute("totalUsers", totalUsers);
+		model.addAttribute("activeUsers", activeUsers);
+		model.addAttribute("totalProducts", totalProducts);
+		model.addAttribute("activeProducts", activeProducts);
+		model.addAttribute("totalOrders", totalOrders);
+		model.addAttribute("completedOrders", completedOrders);
+		model.addAttribute("totalRevenue", totalRevenue);
+		model.addAttribute("recentOrders", recentOrders);
+		model.addAttribute("lowStockProducts", lowStockProducts);
 		
 		return "admin/home/index";
-		
 	}
-	
-
-	
 }

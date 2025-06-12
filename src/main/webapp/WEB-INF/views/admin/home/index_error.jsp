@@ -230,7 +230,17 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <span class="status-badge status-pending">${order.status}</span>
+                                    <c:choose>
+                                        <c:when test="${order.status eq 'Chờ xử lý'}">
+                                            <span class="status-badge status-pending">Chờ xử lý</span>
+                                        </c:when>
+                                        <c:when test="${order.status eq 'Hoàn thành'}">
+                                            <span class="status-badge status-completed">Hoàn thành</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="status-badge status-cancelled">${order.status}</span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                                 <td>
                                     <a href="/admin/order/detail/${order.id}" class="btn btn-outline-primary btn-sm">
@@ -286,7 +296,17 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="stock-low">${product.quantity}</span>
+                                    <c:choose>
+                                        <c:when test="${product.quantity <= 3}">
+                                            <span class="stock-low">${product.quantity}</span>
+                                        </c:when>
+                                        <c:when test="${product.quantity <= 6}">
+                                            <span class="stock-medium">${product.quantity}</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="stock-good">${product.quantity}</span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                                 <td>
                                     <a href="/admin/product/edit/${product.id}" class="btn btn-outline-warning btn-sm">
