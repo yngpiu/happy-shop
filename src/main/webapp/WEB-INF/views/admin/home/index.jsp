@@ -130,7 +130,7 @@
         </a>
       </div>
       <div class="col-12 col-md-2 mb-2">
-        <a href="/admin/account/profile" class="btn btn-outline-dark w-100">
+        <a href="/admin/profile" class="btn btn-outline-dark w-100">
           <i class="bi bi-gear me-2"></i>Cài đặt
         </a>
       </div>

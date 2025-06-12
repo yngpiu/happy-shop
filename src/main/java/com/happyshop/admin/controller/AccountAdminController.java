@@ -129,10 +129,35 @@ public class AccountAdminController {
 			return "admin/account/edit";
 		} 
 		if(!file.isEmpty()) {
-			String dir = app.getRealPath("static/images/admin");
-			File f = new File(dir, file.getOriginalFilename());
-			file.transferTo(f);
-			user.setPhoto(f.getName());
+			try {
+				// Kiểm tra định dạng file
+				String contentType = file.getContentType();
+				if (contentType == null || !contentType.startsWith("image/")) {
+					model.addAttribute("message", "Vui lòng chọn file ảnh hợp lệ!");
+					return "admin/account/edit";
+				}
+				
+				// Kiểm tra kích thước file (max 2MB)
+				if (file.getSize() > 2 * 1024 * 1024) {
+					model.addAttribute("message", "Kích thước ảnh không được vượt quá 2MB!");
+					return "admin/account/edit";
+				}
+				
+				String dir = app.getRealPath("static/images/customers");
+				File directory = new File(dir);
+				
+				// Tạo thư mục nếu không tồn tại
+				if (!directory.exists()) {
+					directory.mkdirs();
+				}
+				
+				File f = new File(dir, file.getOriginalFilename());
+				file.transferTo(f);
+				user.setPhoto(f.getName());
+			} catch (Exception e) {
+				model.addAttribute("message", "Lỗi khi upload ảnh: " + e.getMessage());
+				return "admin/account/edit";
+			}
 		}
 		dao.update(user);
 		session.setAttribute("user", user);
@@ -156,21 +181,37 @@ public class AccountAdminController {
 			@RequestParam("pw") String pw,
 			@RequestParam("pw1") String pw1, 
 			@RequestParam("pw2") String pw2) {
+		
+		// Kiểm tra mật khẩu mới có ít nhất 6 ký tự
+		if (pw1.length() < 6) {
+			model.addAttribute("message", "Mật khẩu mới phải có ít nhất 6 ký tự!");
+			return "admin/account/change";
+		}
+		
+		// Kiểm tra xác nhận mật khẩu
 		if (!pw1.equals(pw2)) {
 			model.addAttribute("message", "Xác nhận mật khẩu không trùng khớp!");
-		} else {
-			User user = dao.findById(id);
-			if (user == null) {
-				model.addAttribute("message", "Sai tài khoản!");
-			} else if (!pw.equals(user.getPassword())) {
-				model.addAttribute("message", "Mật khẩu hiện tại không đúng!");
-			} else {
-				user.setPassword(pw1);
-				dao.update(user);
-
-				model.addAttribute("message", "Thay đổi mật khẩu thành công!");
-			}
+			return "admin/account/change";
 		}
+		
+		User user = dao.findById(id);
+		if (user == null) {
+			model.addAttribute("message", "Tài khoản không tồn tại!");
+			return "admin/account/change";
+		}
+		
+		if (!pw.equals(user.getPassword())) {
+			model.addAttribute("message", "Mật khẩu hiện tại không đúng!");
+			return "admin/account/change";
+		}
+		
+		// Cập nhật mật khẩu mới
+		user.setPassword(pw1);
+		dao.update(user);
+		// Cập nhật session
+		session.setAttribute("user", user);
+
+		model.addAttribute("message", "Thay đổi mật khẩu thành công!");
 		return "admin/account/change";
 	}
 	
