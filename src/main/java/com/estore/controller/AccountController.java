@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.mail.MessagingException;
-import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 

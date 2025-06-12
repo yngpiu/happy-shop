@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.mail.MessagingException;
-import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
@@ -25,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.happyshop.bean.MailInfo;
 import com.happyshop.dao.UserDAO;
-import com.happyshop.entity.Order;
 import com.happyshop.entity.User;
 import com.happyshop.service.CookieService;
 import com.happyshop.service.MailService;

@@ -3,7 +3,6 @@ package com.happyshop.dao;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -12,7 +11,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.happyshop.entity.OrderDetail;
 import com.happyshop.entity.Product;
 
 /**
