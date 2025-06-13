@@ -16,8 +16,8 @@
 					<form action="/product/list-by-keywords" method="post">
 						<input style="width: 240px" class="form-control" value="${param.keywords}" name="keywords" placeholder="Tìm kiếm" />
 						<div class="input-group-append">
-							<button class="btn btn-secondary" value="${param.keywords}" type="submit" style="background-color: red; border: none; width: 50px; height: 34px">
-								<i class="fa fa-search"></i>
+							<button class="btn btn-danger" value="${param.keywords}" type="submit" style="border: none; width: 50px; height: 34px">
+								<i class="fas fa-search"></i>
 							</button>
 						</div>
 					</form>
@@ -32,7 +32,7 @@
 								<div class="card-sp">
 									<ul>
 										<li>
-											<i class="fa fa-shopping-cart" style="font-size: 30px"></i>
+											<i class="fas fa-shopping-cart" style="font-size: 30px"></i>
 											<p class="carts"><a href="/cart/view" style="text-decoration: none; color: #474c51">Giỏ hàng</a></p>
 											<ul>
 												<li>
@@ -100,7 +100,7 @@
 					</div>
 					<div class="col-sm-6">
 						<div class="header-menu">
-							<i class="glyphicon glyphicon-heart" style="font-size: 30px; padding: 0px 5px 0px 5x"></i> 
+							<i class="fas fa-heart" style="font-size: 30px; padding: 0px 5px 0px 5x; color: #e74c3c;"></i> 
 								<a class="splike" href="/product/favo" style="color: #474c51"> Sản phẩm đã thích</a>
 						</div>
 					</div>

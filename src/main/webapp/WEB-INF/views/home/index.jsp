@@ -4,21 +4,38 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 
 <c:set var="cart" value="${sessionScope['scopedTarget.cartService']}" />
 
-<!-- Slider Section -->
+<!-- Slider Section (Bootstrap 5) -->
 <div class="container" style="padding-top: 20px">
   <div
     id="carouselSlider"
-    class="carousel slide"
-    data-ride="carousel"
-    data-interval="4000"
+    class="carousel slide carousel-fade"
+    data-bs-ride="carousel"
+    data-bs-interval="4000"
   >
     <!-- Indicators -->
-    <ol class="carousel-indicators">
-      <li data-target="#carouselSlider" data-slide-to="0" class="active"></li>
-      <li data-target="#carouselSlider" data-slide-to="1"></li>
-      <li data-target="#carouselSlider" data-slide-to="2"></li>
-      <li data-target="#carouselSlider" data-slide-to="3"></li>
-    </ol>
+    <div class="carousel-indicators">
+      <button
+        type="button"
+        data-bs-target="#carouselSlider"
+        data-bs-slide-to="0"
+        class="active"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselSlider"
+        data-bs-slide-to="1"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselSlider"
+        data-bs-slide-to="2"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselSlider"
+        data-bs-slide-to="3"
+      ></button>
+    </div>
 
     <!-- Slides -->
     <div class="carousel-inner">
@@ -27,64 +44,88 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
           src="/static/images/slideshow/slide1.jpg"
           class="d-block w-100"
           alt="Slide 1"
-          style="height: 400px; object-fit: cover"
+          style="height: 400px; object-fit: cover; border-radius: 10px"
         />
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="fw-bold">Khuyến Mãi Đặc Biệt</h5>
+          <p>Giảm giá lên đến 50% cho tất cả sản phẩm</p>
+        </div>
       </div>
       <div class="carousel-item">
         <img
           src="/static/images/slideshow/slide2.jpg"
           class="d-block w-100"
           alt="Slide 2"
-          style="height: 400px; object-fit: cover"
+          style="height: 400px; object-fit: cover; border-radius: 10px"
         />
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="fw-bold">Sản Phẩm Mới Nhất</h5>
+          <p>Cập nhật những sản phẩm công nghệ mới nhất</p>
+        </div>
       </div>
       <div class="carousel-item">
         <img
           src="/static/images/slideshow/slide3.jpg"
           class="d-block w-100"
           alt="Slide 3"
-          style="height: 400px; object-fit: cover"
+          style="height: 400px; object-fit: cover; border-radius: 10px"
         />
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="fw-bold">Chất Lượng Đảm Bảo</h5>
+          <p>Bảo hành chính hãng, uy tín hàng đầu</p>
+        </div>
       </div>
       <div class="carousel-item">
         <img
           src="/static/images/slideshow/slide4.jpg"
           class="d-block w-100"
           alt="Slide 4"
-          style="height: 400px; object-fit: cover"
+          style="height: 400px; object-fit: cover; border-radius: 10px"
         />
+        <div class="carousel-caption d-none d-md-block">
+          <h5 class="fw-bold">Giao Hàng Toàn Quốc</h5>
+          <p>Miễn phí giao hàng cho đơn hàng trên 500k</p>
+        </div>
       </div>
     </div>
 
     <!-- Controls -->
-    <a
+    <button
       class="carousel-control-prev"
-      href="#carouselSlider"
-      role="button"
-      data-slide="prev"
+      type="button"
+      data-bs-target="#carouselSlider"
+      data-bs-slide="prev"
     >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a
+      <span class="carousel-control-prev-icon"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
       class="carousel-control-next"
-      href="#carouselSlider"
-      role="button"
-      data-slide="next"
+      type="button"
+      data-bs-target="#carouselSlider"
+      data-bs-slide="next"
     >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
+      <span class="carousel-control-next-icon"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
 </div>
 <!-- Banner Section -->
-<div class="container" style="margin: 30px auto">
-  <img
-    src="https://hoanghamobile.com/Uploads/2022/04/21/macbook-air-m1-gdn-hotsale.jpg"
-    alt="MacBook Sale Banner"
-    class="img-fluid"
-    style="width: 100%; border-radius: 8px"
-  />
+<div class="container my-5">
+  <div class="position-relative overflow-hidden rounded-3 shadow">
+    <img
+      src="https://hoanghamobile.com/Uploads/2022/04/21/macbook-air-m1-gdn-hotsale.jpg"
+      alt="MacBook Sale Banner"
+      class="img-fluid w-100"
+      style="height: 200px; object-fit: cover"
+    />
+    <div
+      class="position-absolute top-50 start-50 translate-middle text-white text-center"
+    >
+      <h3 class="fw-bold mb-2">FLASH SALE</h3>
+      <p class="mb-0">Giảm giá sốc đến 70%</p>
+    </div>
+  </div>
 </div>
 
 <!-- Featured Products Section -->
@@ -120,13 +161,15 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 </div>
 
 <!-- Second Banner -->
-<div class="container" style="margin: 30px auto">
-  <img
-    src="/static/images/banner2.png"
-    alt="Banner 2"
-    class="img-fluid"
-    style="width: 100%; border-radius: 8px"
-  />
+<div class="container my-5">
+  <div class="rounded-3 shadow overflow-hidden">
+    <img
+      src="/static/images/banner2.png"
+      alt="Banner 2"
+      class="img-fluid w-100"
+      style="max-height: 150px; object-fit: cover"
+    />
+  </div>
 </div>
 
 <!-- Latest Products Section -->
@@ -160,23 +203,27 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
   </div>
 </div>
 
-<!-- Slider JavaScript -->
+<!-- Slider JavaScript (Bootstrap 5) -->
 <script>
   $(document).ready(function () {
-    // Initialize carousel
-    $('#carouselSlider').carousel({
+    // Bootstrap 5 carousel initialization
+    const carousel = new bootstrap.Carousel('#carouselSlider', {
       interval: 4000,
       ride: 'carousel',
+      pause: 'hover',
+      wrap: true,
+      touch: true,
     });
 
-    // Add smooth transitions
+    // Add smooth scroll effect for carousel captions
     $('#carouselSlider').on('slide.bs.carousel', function (e) {
-      $(this).find('.carousel-item').removeClass('slideInRight slideInLeft');
-      if (e.direction === 'left') {
-        $(e.relatedTarget).addClass('slideInRight');
-      } else {
-        $(e.relatedTarget).addClass('slideInLeft');
-      }
+      // Add fade effect for captions
+      $('.carousel-caption').fadeOut(200);
+    });
+
+    $('#carouselSlider').on('slid.bs.carousel', function (e) {
+      // Fade in new caption
+      $(e.relatedTarget).find('.carousel-caption').fadeIn(300);
     });
   });
 </script>
@@ -193,11 +240,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
     font-style: normal;
   }
 
-  /* Slider Enhancements */
+  /* Slider Enhancements (Bootstrap 5) */
   #carouselSlider {
-    border-radius: 10px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 
   #carouselSlider .carousel-item img {
@@ -211,23 +258,52 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
   .carousel-control-prev,
   .carousel-control-next {
     width: 5%;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 0 5px 5px 0;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
   }
 
-  .carousel-control-next {
-    border-radius: 5px 0 0 5px;
+  .carousel-control-prev:hover,
+  .carousel-control-next:hover {
+    opacity: 1;
   }
 
-  .carousel-indicators li {
-    width: 12px;
-    height: 12px;
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .carousel-indicators button {
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
+    margin: 0 4px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
   }
 
-  .carousel-indicators .active {
-    background-color: #fff;
+  .carousel-indicators button.active {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    transform: scale(1.2);
+  }
+
+  .carousel-caption {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    border-radius: 10px;
+    padding: 20px;
+    bottom: 20px;
+  }
+
+  .carousel-caption h5 {
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .carousel-caption p {
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   }
 
   /* Needed for a fluid height: */

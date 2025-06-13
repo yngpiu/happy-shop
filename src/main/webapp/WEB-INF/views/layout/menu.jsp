@@ -88,7 +88,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
           data-toggle="collapse"
           href="#chungloai"
         >
-          <i class="fa fa-navicon"></i>&nbsp;&nbsp;
+          <i class="fas fa-bars"></i>&nbsp;&nbsp;
           <span class="danh_muc">DANH MỤC SẢN PHẨM</span>
         </a>
       </li>
