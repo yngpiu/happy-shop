@@ -105,13 +105,28 @@ public class ProductController {
 	/**
 	 * Hiển thị danh sách sản phẩm mới nhất
 	 * @param model Model để truyền dữ liệu
-	 * @param id Số lượng sản phẩm cần lấy
+	 * @param id Số lượng sản phẩm cần lấy (0 = tất cả)
 	 * @return String view name cho new products
 	 */
 	@RequestMapping("/product/list-by-new/{id}")
 	public String listByNews(Model model, @PathVariable("id") Integer id) {
 		// Lấy sản phẩm mới nhất với số lượng theo ID (limit)
-		List<Product> list = pdao.findActiveProducts(id);
+		// Nếu id = 0, lấy tất cả sản phẩm (không giới hạn)
+		List<Product> list;
+		if (id == 0) {
+			list = pdao.findActiveProducts(100); // Lấy 100 sản phẩm mới nhất
+		} else {
+			list = pdao.findActiveProducts(id);
+		}
+		
+		// Debug log
+		System.out.println("=== DEBUG: listByNews ===");
+		System.out.println("ID parameter: " + id);
+		System.out.println("Products found: " + (list != null ? list.size() : "null"));
+		if (list != null && !list.isEmpty()) {
+			System.out.println("First product: " + list.get(0).getName());
+		}
+		
 		model.addAttribute("list1", list);
 		return "product/list-by-new_full";
 	}
