@@ -33,48 +33,48 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * Version: 1.0 - User Management Entity
  */
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
 	
 	// ================= THUỘC TÍNH CHÍNH =================
 	
 	@Id
 	@NotEmpty
-	@Column(name = "Id")
+	@Column(name = "id")
 	String id;					// ID người dùng (username)
 	
 	@NotEmpty
 	@Length(min=6)
-	@Column(name = "Password")
+	@Column(name = "password")
 	String password;			// Mật khẩu (tối thiểu 6 ký tự)
 	
 	@NotEmpty
-	@Column(name = "Fullname")
+	@Column(name = "fullname")
 	String fullname;			// Họ và tên đầy đủ
 	
 	@NotEmpty
-	@Column(name = "Telephone", length = 50)
+	@Column(name = "telephone", length = 50)
 	String telephone;			// Số điện thoại liên hệ
 	
 	@NotEmpty
 	@Email
-	@Column(name = "Email")
+	@Column(name = "email")
 	String email;				// Địa chỉ email
 	
 	// ================= THUỘC TÍNH PROFILE =================
 	
-	@Column(name = "Photo")
+	@Column(name = "photo")
 	String photo;				// Đường dẫn ảnh đại diện
 	
 	// ================= THUỘC TÍNH QUYỀN =================
 	
-	@Column(name = "Activated")
+	@Column(name = "activated")
 	Boolean activated;			// Trạng thái kích hoạt tài khoản
 	
-	@Column(name = "Admin")
+	@Column(name = "admin")
 	Boolean admin;				// Phân quyền admin
 	
-	@Column(name = "isBanned")
+	@Column(name = "is_banned")
 	Boolean isBanned;			// Trạng thái cấm tài khoản
 
 	// ================= QUAN HỆ ENTITY =================

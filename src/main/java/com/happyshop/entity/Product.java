@@ -24,7 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  * Quản lý thông tin sản phẩm với tính năng soft delete
  */
 @Entity
-@Table(name = "Products")
+@Table(name = "products")
 public class Product {
 	
 	// ================= THUỘC TÍNH CHÍNH =================
@@ -36,13 +36,13 @@ public class Product {
 	@Column(name = "name")
 	String name;  // Tên sản phẩm
 	
-	@Column(name = "unitPrice")
+	@Column(name = "unit_price")
 	Double unitPrice;  // Giá bán
 	
 	@Column(name = "image")
 	String image;  // Đường dẫn hình ảnh
 	
-	@Column(name = "productDate")
+	@Column(name = "product_date")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	Date productDate;  // Ngày sản xuất
@@ -59,7 +59,7 @@ public class Product {
 	@Column(name = "discount")
 	Double discount;  // Phần trăm giảm giá
 	
-	@Column(name = "viewCount")
+	@Column(name = "view_count")
 	Integer viewCount;  // Số lượt xem
 	
 	@Column(name = "special")
@@ -82,7 +82,7 @@ public class Product {
 	// ================= QUAN HỆ VỚI ENTITY KHÁC =================
 	
 	@ManyToOne
-	@JoinColumn(name="categoryId")
+	@JoinColumn(name="category_id")
 	Category category;  // Thuộc loại sản phẩm nào
 	
 	@OneToMany(mappedBy = "product")

@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
  * Quản lý thông tin loại sản phẩm với tính năng soft delete
  */
 @Entity
-@Table(name = "Categories")
+@Table(name = "categories")
 public class Category {
 	
 	// ================= THUỘC TÍNH =================

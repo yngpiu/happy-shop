@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Column;
 
 /**
  * ===== ENTITY CHI TIẾT ĐƠN HÀNG =====
@@ -27,7 +28,7 @@ import javax.persistence.Table;
  * Version: 1.0 - Order Detail Management Entity
  */
 @Entity
-@Table(name = "OrderDetails")
+@Table(name = "order_details")
 public class OrderDetail {
 	
 	// ================= THUỘC TÍNH CHÍNH =================
@@ -38,18 +39,23 @@ public class OrderDetail {
 	
 	// ================= THÔNG TIN SẢN PHẨM =================
 	
+	@Column(name = "unit_price")
 	Double unitPrice;		// Giá đơn vị tại thời điểm mua
+	
+	@Column(name = "quantity")
 	Integer quantity;		// Số lượng sản phẩm
+	
+	@Column(name = "discount")
 	Double discount;		// Phần trăm giảm giá
 	
 	// ================= QUAN HỆ ENTITY =================
 	
 	@ManyToOne
-	@JoinColumn(name="orderId")
+	@JoinColumn(name="order_id")
 	Order order;			// Đơn hàng chứa chi tiết này
 	
 	@ManyToOne
-	@JoinColumn(name="productId")
+	@JoinColumn(name="product_id")
 	Product product;		// Sản phẩm trong chi tiết đơn hàng
 
 	// ================= GETTERS & SETTERS =================

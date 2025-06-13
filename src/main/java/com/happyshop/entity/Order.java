@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Column;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -35,7 +36,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  * Version: 1.0 - Order Management Entity
  */
 @Entity
-@Table(name = "Orders")
+@Table(name = "orders")
 public class Order {
 	
 	// ================= THUỘC TÍNH CHÍNH =================
@@ -44,25 +45,34 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer id;					// ID đơn hàng (tự động tăng)
 	
+	@Column(name = "order_date")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	Date orderDate;				// Ngày đặt hàng
 	
 	// ================= THÔNG TIN GIAO HÀNG =================
 	
+	@Column(name = "telephone")
 	String telephone;			// Số điện thoại nhận hàng
+	
+	@Column(name = "address")
 	String address;				// Địa chỉ giao hàng
 	
-	// ================= THÔNG TIN ĐỚN HÀNG =================
+	// ================= THÔNG TIN ĐƠN HÀNG =================
 	
+	@Column(name = "amount")
 	Double amount;				// Tổng giá trị đơn hàng
+	
+	@Column(name = "description")
 	String description;			// Ghi chú đơn hàng
+	
+	@Column(name = "status")
 	Integer status;				// Trạng thái đơn hàng (-1: Hủy, 0: Chờ, 1: Xử lý, 2: Giao, 3: Hoàn thành)
 	
 	// ================= QUAN HỆ ENTITY =================
 	
 	@ManyToOne
-	@JoinColumn(name="userId")
+	@JoinColumn(name="user_id")
 	User user;					// Người dùng đặt hàng
 	
 	@OneToMany(mappedBy = "order")
