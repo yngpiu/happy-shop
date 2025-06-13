@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.happyshop.dao.ProductDAO;
 import com.happyshop.entity.Product;
@@ -17,17 +16,15 @@ import com.happyshop.entity.Product;
  * Controller xử lý các trang chính của website:
  * - Trang chủ với sản phẩm nổi bật
  * - Các trang thông tin (About, Contact, FAQ)
- * - Xử lý thay đổi ngôn ngữ
  * - Hiển thị sản phẩm mới nhất
  * 
  * Tính năng:
  * - Homepage product showcase
  * - Static information pages
- * - Language switching support
  * - Featured products display
  * 
  * Author: Development Team
- * Version: 1.0 - Main Website Controller
+ * Version: 2.0 - Simplified Website Controller
  */
 @Controller
 public class HomeController {
@@ -90,14 +87,5 @@ public class HomeController {
 	
 	// ================= UTILITY OPERATIONS =================
 	
-	/**
-	 * Xử lý thay đổi ngôn ngữ (AJAX endpoint)
-	 * Endpoint này được gọi bởi LocaleChangeInterceptor
-	 */
-	@ResponseBody
-	@RequestMapping("/home/language")
-	public void language() {
-		// Method này chỉ để trigger LocaleChangeInterceptor
-		// Không cần logic xử lý, interceptor sẽ handle
-	}
+
 }
