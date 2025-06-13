@@ -29,14 +29,7 @@
 			<put-attribute name="body" value="/WEB-INF/views/admin/{1}/{2}.jsp"/>
 		</definition>
 		
-		<!-- layout admin -->
-		<definition name="admin.definition2" template="/WEB-INF/views/admin/layout-login.jsp">
-			<put-attribute name="content1"/>
-		</definition>
-		
-		<definition name="admin/login/login" extends="admin.definition2">
-			<put-attribute name="content1" value="/WEB-INF/views/admin/login/login.jsp"/>
-		</definition>
+
 		
 		
 </tiles-definitions>

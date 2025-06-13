@@ -98,23 +98,36 @@ public class AccountController {
 			model.addAttribute("message", "Sai tên đăng nhập hoặc mật khẩu!");
 		} else if (!pw.equals(user.getPassword())) { 
 			model.addAttribute("message", "Sai mật khẩu!"); 
-		} else if (user.getAdmin()) {
-			model.addAttribute("message", "Bạn không có quyền!");
+		} else if (!user.getActivated()) {
+			model.addAttribute("message", "Tài khoản chưa được kích hoạt!");
 		} else {
 			model.addAttribute("message", "Đăng nhập thành công!");
 			session.setAttribute("user", user); 
 			
 			// Xử lý remember me
 			if (rm == true) { 
+				cookie.create("userid", user.getId(), 30);
 				cookie.create("pass", user.getPassword(), 30); 
 			} else { 
 				cookie.delete("userid");
 				cookie.delete("pass");
 			}
 			
-			// Redirect về trang trước đó nếu có
+			// Kiểm tra nếu là admin thì chuyển đến admin panel
+			if (user.getAdmin()) {
+				// Redirect về trang admin trước đó nếu có
+				String backUrlAdmin = (String) session.getAttribute("back-url-admin");
+				if (backUrlAdmin != null) {
+					session.removeAttribute("back-url-admin");
+					return "redirect:" + backUrlAdmin;
+				}
+				return "redirect:/admin/home/index";
+			}
+			
+			// Redirect về trang user trước đó nếu có
 			String backUrl = (String) session.getAttribute("back-url");
 			if (backUrl != null) {
+				session.removeAttribute("back-url");
 				return "redirect:" + backUrl;
 			}
 			return "redirect:/home";

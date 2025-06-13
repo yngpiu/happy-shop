@@ -29,19 +29,20 @@ import com.happyshop.service.CookieService;
  * ===== CONTROLLER QUẢN LÝ TÀI KHOẢN ADMIN =====
  * 
  * Controller xử lý các chức năng tài khoản admin:
- * - Đăng nhập/đăng xuất admin
+ * - Đăng xuất admin
  * - Quản lý profile admin
  * - Đổi mật khẩu admin
  * - Kích hoạt tài khoản người dùng
  * 
+ * Note: Đăng nhập admin đã được tích hợp vào /account/login
+ * 
  * Tính năng:
- * - Admin authentication system
  * - Profile management với upload ảnh
  * - Password change với validation
- * - Remember login functionality
+ * - User account activation
  * 
  * Author: Development Team
- * Version: 1.0 - Admin Account Management System
+ * Version: 2.0 - Unified Login System
  */
 @Controller
 public class AccountAdminController {
@@ -63,61 +64,10 @@ public class AccountAdminController {
 	@Autowired
 	HttpServletRequest request;
 
-	@GetMapping("/admin/login")
-	public String login(Model model) {
-		Cookie ckid = cookie.read("userid");
-		Cookie ckpw = cookie.read("pass");
-		if (ckid != null) {
-			String uid = ckid.getValue();
-			String pwd = ckpw.getValue();
-			model.addAttribute("uid", uid);
-			model.addAttribute("pwd", pwd);
-		}
-		return "admin/login/login";
-	}
-	@PostMapping("/admin/login")
-	public String login(Model model,
-			@RequestParam("id") String id,
-			@RequestParam("pw") String pw,
-			@RequestParam(value = "rm", defaultValue = "false") boolean rm) {
-		User user = dao.findById(id);
-		
-		if (user == null) {
-			model.addAttribute("message", "Sai tài khoản hoặc mật khẩu");
-		} else if (!pw.equals(user.getPassword())) {
-			model.addAttribute("message", "Sai mật khẩu");
-			
-		} else if (!user.getActivated()) {
-			model.addAttribute("message", "Tài khoản chưa được kích hoạt!");
-		}else if (!user.getAdmin()) {
-			model.addAttribute("message", "Không có quyền!");
-			
-		} else {// thanh cong
-			model.addAttribute("message", "Login successfully!");
-			session.setAttribute("user", user);
-			// ghi nho tk
-			if (rm == true) {
-				cookie.create("userid", user.getId(), 30);
-				cookie.create("pass", user.getPassword(), 30);
-			} else {
-				cookie.delete("userid");
-				cookie.delete("pass");
-			}
-			//Quay lai trang bao ve(neu co)
-			String backUrl = (String) session.getAttribute("back-url-admin");
-			if(backUrl != null) {
-				return "redirect:" + backUrl;
-			}
-			return "redirect:/admin/home/index";
-		}
-		return "admin/login/login";
-	}
-
-	
 	@RequestMapping("/admin/logout")
 	public String logout(Model model) {
 		session.removeAttribute("user");
-		return "redirect:/admin/login";
+		return "redirect:/account/login";
 	}
 	
 	@GetMapping("/admin/account/activate/{id}")
@@ -126,7 +76,7 @@ public class AccountAdminController {
 		user.setActivated(true);
 		dao.update(user);
 		
-		return "redirect:/admin/login";
+		return "redirect:/account/login";
 	}
 	
 	@GetMapping("/admin/profile")
