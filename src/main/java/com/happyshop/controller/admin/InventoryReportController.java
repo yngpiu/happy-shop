@@ -1,4 +1,4 @@
-package com.happyshop.admin.controller;
+package com.happyshop.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ import com.happyshop.dao.ReportDAO;
  * Version: 1.0 - Admin Reporting System
  */
 @Controller
-public class InventoryReport {
+public class InventoryReportController {
 	
 	// ================= DEPENDENCY INJECTION =================
 	

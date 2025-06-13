@@ -1,4 +1,4 @@
-package com.happyshop.admin.controller;
+package com.happyshop.controller.admin;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.happyshop.admin.controller;
+package com.happyshop.controller.admin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +24,7 @@ import com.happyshop.entity.Category;
  */
 @Controller
 @RequestMapping("/admin/category")
-public class CategoryManger {
+public class CategoryMangerController {
 	
 	@Autowired
 	CategoryDAO dao;

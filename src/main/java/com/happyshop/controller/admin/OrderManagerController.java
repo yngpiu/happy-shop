@@ -1,4 +1,4 @@
-package com.happyshop.admin.controller;
+package com.happyshop.controller.admin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +37,7 @@ import com.happyshop.entity.Order;
  */
 @Controller
 @RequestMapping("/admin/order")
-public class OrderManager {
+public class OrderManagerController {
 
 	// ================= DEPENDENCY INJECTION =================
 	
