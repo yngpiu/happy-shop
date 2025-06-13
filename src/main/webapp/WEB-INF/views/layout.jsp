@@ -81,6 +81,61 @@ uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
       transform: translateY(-5px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
+
+    /* Wishlist Animation */
+    .wishlist-animation {
+      animation: heartbeat 0.6s ease-in-out;
+    }
+
+    @keyframes heartbeat {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Scroll to Top Button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: none;
+      z-index: 1000;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    .scroll-to-top:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    }
+
+    /* Loading Animation */
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 
   <body>
@@ -99,5 +154,9 @@ uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
     </main>
 
     <tiles:insertAttribute name="footer" />
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" title="Lên đầu trang">
+      <i class="bi bi-arrow-up"></i>
+    </button>
   </body>
 </html>

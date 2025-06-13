@@ -57,14 +57,14 @@
 			<div class="header-actions d-flex align-items-center">
 				<!-- Wishlist -->
 				<a href="/product/favo" class="btn btn-outline-danger me-3 position-relative">
-					<i class="bi bi-heart fs-5"></i>
+					<i class="fa-solid fa-heart"></i>
 					<span class="d-none d-md-inline ms-2">Yêu thích</span>
 				</a>
 
 				<!-- Cart -->
 				<div class="dropdown">
 					<button class="btn btn-primary position-relative" type="button" data-bs-toggle="dropdown">
-						<i class="bi bi-cart3 fs-5"></i>
+						<i class="fa-solid fa-cart-shopping"></i>
 						<span class="d-none d-md-inline ms-2">Giỏ hàng</span>
 						<c:if test="${cart.count > 0}">
 							<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

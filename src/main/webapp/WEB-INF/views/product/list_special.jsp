@@ -2,308 +2,309 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 
-
-<style>
-.thumbnail:hover {
-	-webkit-box-shadow: 1px 3px 27px 2px rgba(0, 0, 0, 0.42);
-	-moz-box-shadow: 1px 3px 27px 2px rgba(0, 0, 0, 0.42);
-	box-shadow: 1px 3px 27px 2px rgba(0, 0, 0, 0.42);
-}
-</style>
-
-<div class="row">
-
-	<div id="carousel-example" class="carousel slide hidden-xs"
-		data-ride="carousel">
-		<!-- Wrapper for slides -->
-		<div class="carousel-inner" >
-
-			<div class="item active"  >
-				<div class="row">
-					<div style="width: 50px;padding-left: 15px;">
-						<a style="font-size: 30px; margin-top: 180px"
-							class="glyphicon glyphicon-chevron-left" href="#carousel-example"
-							data-slide="prev"></a>
-					</div>
-					<c:forEach var="p" items="${list}" begin="0" end="3">
-						<div class="col" style="padding: 5px 5px 5px 5px;">
-							<div class="thumbnail">
-
-								<a href="/product/detail/${p.id}"> <c:choose>
-										<c:when test="${p.discount > 0 }">
-											<p
-												style="background-color: red; width: 30px; height: 30px; text-align: right; float: right; position: relative; border-radius: 30px">
-												<span
-													style="margin-left: -28px; margin-top: 5px; font-size: 14px; color: #fff; position: absolute;">
-													-${p.discount}%
-												</span>
-											</p>
-										</c:when>
-										<c:otherwise>
-
-										</c:otherwise>
-									</c:choose> <img style="margin-right: 30px; margin-top: 5px"
-									class="estore-prod" src="/static/images/products/${p.image}"
-									title="${p.name}">
-								</a>
-
-								<div class="caption">
-									<p style="padding: 3px; text-align: center; color: black">
-										<b>${p.name}</b>
-									</p>
-									<p
-										style="padding: 2px; font-size: 13px; text-align: center; font-weight: bold;">
-										<c:choose>
-											<c:when test="${p.discount <= 0 }">
-												<span
-													style="text-align: left; font-weight: bold; color: red"><f:formatNumber
-														value="${p.unitPrice}" pattern="#,###" />VNĐ </span>
-											</c:when>
-											<c:otherwise>
-												<span
-													style="text-decoration: line-through; color: Gray; font-weight: bold;">
-													<f:formatNumber value="${p.unitPrice}" pattern="#,###" />
-													VNĐ
-												</span>
-											</c:otherwise>
-										</c:choose>
-										<c:choose>
-											<c:when test="${p.discount > 0 }">
-												<span
-													style="margin-left: 5px; font-weight: bold; color: red">
-													<f:formatNumber value="${p.unitPrice * (1 - p.discount / 100)}"
-														pattern="#.###" /> VNĐ
-												</span>
-											</c:when>
-											<c:otherwise>
-
-											</c:otherwise>
-										</c:choose>
-
-									</p>
-									<br /> <br />
-									<div data-id="${p.id}" class="pull-center text-center">
-										<button class="btn btn-sm btn-danger btn-add-to-cart">
-											<i class="glyphicon glyphicon-shopping-cart"></i>
-										</button>
-										<button class="btn btn-sm btn-warning btn-star">
-											<i class="glyphicon glyphicon-star"></i>
-										</button>
-									</div>
-								</div>
-
-
-							</div>
-						</div>
-
-					</c:forEach>
-					<div style="width: 50px">
-						<a style="font-size: 30px; margin-top: 180px;margin-right:100px;"
-							class="glyphicon glyphicon-chevron-right"
-							href="#carousel-example" data-slide="next"></a>
-					</div>
+<!-- Special Products Section -->
+<div class="row g-3">
+	<c:forEach var="p" items="${list}" begin="0" end="7">
+		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+			<div class="simple-product-card h-100">
+				<!-- Special Badge -->
+				<div class="special-badge">
+					<i class="bi bi-star-fill"></i>
+					ĐẶC BIỆT
 				</div>
-			</div>
-
-
-			<div class="item"  >
-				<div class="row">
-					<div style="width: 50px;padding-left: 15px">
-						<a style="font-size: 30px; margin-top: 180px"
-							class="glyphicon glyphicon-chevron-left" href="#carousel-example"
-							data-slide="prev"></a>
-					</div>
-					<c:forEach var="p" items="${list}" begin="4" end="7">
-						<div class="col" style="padding: 5px 5px 5px 5px">
-							<div class="thumbnail">
-
-								<a href="/product/detail/${p.id}"> <c:choose>
-										<c:when test="${p.discount > 0 }">
-											<p
-												style="background-color: red; width: 30px; height: 30px; text-align: right; float: right; position: relative; border-radius: 30px">
-												<span
-													style="margin-left: -28px; margin-top: 5px; font-size: 14px; color: #fff; position: absolute;">
-													-${p.discount}%
-												</span>
-											</p>
-										</c:when>
-										<c:otherwise>
-
-										</c:otherwise>
-									</c:choose> <img style="margin-right: 30px; margin-top: 5px"
-									class="estore-prod" src="/static/images/products/${p.image}"
-									title="${p.name}">
-								</a>
-
-								<div class="caption">
-									<p style="padding: 3px; text-align: center; color: black">
-										<b>${p.name}</b>
-									</p>
-									<p
-										style="padding: 2px; font-size: 13px; text-align: center; font-weight: bold;">
-										<c:choose>
-											<c:when test="${p.discount <= 0 }">
-												<span
-													style="text-align: left; font-weight: bold; color: red"><f:formatNumber
-														value="${p.unitPrice}" pattern="#,###" />VNĐ </span>
-											</c:when>
-											<c:otherwise>
-												<span
-													style="text-decoration: line-through; color: Gray; font-weight: bold;">
-													<f:formatNumber value="${p.unitPrice}" pattern="#,###" />
-													VNĐ
-												</span>
-											</c:otherwise>
-										</c:choose>
-										<c:choose>
-											<c:when test="${p.discount > 0 }">
-												<span
-													style="margin-left: 5px; font-weight: bold; color: red">
-													<f:formatNumber value="${p.unitPrice * (1 - p.discount / 100)}"
-														pattern="#.###" /> VNĐ
-												</span>
-											</c:when>
-											<c:otherwise>
-
-											</c:otherwise>
-										</c:choose>
-
-									</p>
-									<br /> <br />
-									<div data-id="${p.id}" class="pull-center text-center">
-										<button class="btn btn-sm btn-danger btn-add-to-cart">
-											<i class="glyphicon glyphicon-shopping-cart"></i>
-										</button>
-										<button class="btn btn-sm btn-warning btn-star">
-											<i class="glyphicon glyphicon-star"></i>
-										</button>
-									</div>
-								</div>
-
-
+					
+					<!-- Product Image -->
+					<div class="product-image-container">
+						<a href="/product/detail/${p.id}">
+							<img src="/static/images/products/${p.image}" 
+								 alt="${p.name}" 
+								 class="product-image">
+						</a>
+						
+						<!-- Discount Badge -->
+						<c:if test="${p.discount > 0}">
+							<div class="discount-badge">
+								-<f:formatNumber value="${p.discount * 100}" pattern="#"/>%
 							</div>
+						</c:if>
+					</div>
+					
+					<!-- Product Info -->
+					<div class="product-info">
+						<!-- Product Name -->
+						<h6 class="product-name">
+							<a href="/product/detail/${p.id}">${p.name}</a>
+						</h6>
+						
+						<!-- Price -->
+						<div class="price-section">
+							<c:choose>
+								<c:when test="${p.discount > 0}">
+									<span class="original-price">
+										<f:formatNumber value="${p.unitPrice}" pattern="#,###"/>đ
+									</span>
+																<span class="sale-price">
+								<f:formatNumber value="${p.unitPrice * (1 - p.discount)}" pattern="#,###"/>đ
+							</span>
+						</c:when>
+						<c:otherwise>
+							<span class="current-price">
+								<f:formatNumber value="${p.unitPrice}" pattern="#,###"/>đ
+							</span>
+								</c:otherwise>
+							</c:choose>
 						</div>
-
-					</c:forEach>
-										<div style="width: 50px">
-						<a style="font-size: 30px; margin-top: 180px;"
-							class="glyphicon glyphicon-chevron-right"
-							href="#carousel-example" data-slide="next"></a>
+						
+											<!-- Action Buttons -->
+					<div class="action-buttons">
+						<c:choose>
+							<c:when test="${p.available && p.quantity > 0}">
+								<button class="btn btn-cart btn-add-to-cart" data-id="${p.id}">
+									<i class="bi bi-cart-plus me-1"></i>Thêm vào giỏ
+								</button>
+							</c:when>
+							<c:otherwise>
+								<button class="btn btn-cart" disabled>
+									<i class="bi bi-x-circle me-1"></i>Hết hàng
+								</button>
+							</c:otherwise>
+						</c:choose>
+						<button class="btn btn-heart btn-wishlist" data-id="${p.id}">
+							Yêu thích
+						</button>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</c:forEach>
 </div>
 
-
-
-
-
-
-
 <style>
-.pull-center {
-	margin-top: -30px;
+/* Simple Product Card - Unified Design */
+.simple-product-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  position: relative;
 }
 
-.caption {
-	height: 150px
+.simple-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
-@import
-	url(http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css)
-	;
-
-.col-item {
-	border: 1px solid #E1E1E1;
-	border-radius: 5px;
-	background: #FFF;
+/* Special Badge */
+.special-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ff6b6b;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
-.col-item .photo img {
-	margin: 0 auto;
-	width: 100%;
+.special-badge i {
+  margin-right: 2px;
+  font-size: 0.6rem;
 }
 
-.col-item .info {
-	padding: 10px;
-	border-radius: 0 0 5px 5px;
-	margin-top: 1px;
+/* Product Image */
+.product-image-container {
+  position: relative;
+  height: 200px;
+  background: #f8f9fa;
+  overflow: hidden;
 }
 
-.col-item:hover .info {
-	background-color: #F5F5DC;
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 15px;
+  transition: transform 0.3s ease;
 }
 
-.col-item .price {
-	/*width: 50%;*/
-	float: left;
-	margin-top: 5px;
+.simple-product-card:hover .product-image {
+  transform: scale(1.05);
 }
 
-.col-item .price h5 {
-	line-height: 20px;
-	margin: 0;
+/* Discount Badge */
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #dc3545;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
-.price-text-color {
-	color: #219FD1;
+/* Product Info */
+.product-info {
+  padding: 15px;
 }
 
-.col-item .info .rating {
-	color: #777;
+.product-name {
+  margin-bottom: 10px;
+  line-height: 1.3;
+  height: 2.6em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
-.col-item .rating {
-	/*width: 50%;*/
-	float: left;
-	font-size: 17px;
-	text-align: right;
-	line-height: 52px;
-	margin-bottom: 10px;
-	height: 52px;
+.product-name a {
+  color: #2c3e50;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
-.col-item .separator {
-	border-top: 1px solid #E1E1E1;
+.product-name a:hover {
+  color: #007bff;
 }
 
-.clear-left {
-	clear: left;
+/* Price */
+.price-section {
+  margin-bottom: 15px;
+  text-align: center;
 }
 
-.col-item .separator p {
-	line-height: 20px;
-	margin-bottom: 0;
-	margin-top: 10px;
-	text-align: center;
+.original-price {
+  color: #999;
+  text-decoration: line-through;
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 2px;
 }
 
-.col-item .separator p i {
-	margin-right: 5px;
+.sale-price {
+  color: #dc3545;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
-.col-item .btn-add {
-	width: 50%;
-	float: left;
+.current-price {
+  color: #dc3545;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
-.col-item .btn-add {
-	border-right: 1px solid #E1E1E1;
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
 }
 
-.col-item .btn-details {
-	width: 50%;
-	float: left;
-	padding-left: 10px;
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
 }
 
-.controls {
-	margin-top: 20px;
+.btn-cart {
+  flex: 2;
+  background: #007bff;
+  color: white;
 }
 
-[data-slide="prev"] {
-	margin-right: 10px;
+.btn-cart:hover:not(:disabled) {
+  background: #0056b3;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-cart:disabled {
+  background: #6c757d;
+  color: white;
+  cursor: not-allowed;
+}
+
+.btn-heart {
+  flex: 1;
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.btn-heart:hover {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.btn-heart.wishlist-active {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.btn-heart.wishlist-active i {
+  animation: heartbeat 0.6s ease-in-out;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+  .product-image-container {
+    height: 180px;
+  }
+  
+  .product-info {
+    padding: 12px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .btn-cart,
+  .btn-heart {
+    flex: 1;
+  }
+}
+
+
+
+/* Loading state */
+.simple-product-card.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Success animation */
+.btn-cart.success {
+  background: #28a745 !important;
+  animation: successPulse 0.6s ease;
+}
+
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 </style>
+

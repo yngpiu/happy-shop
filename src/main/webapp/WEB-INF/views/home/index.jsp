@@ -129,33 +129,31 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 </div>
 
 <!-- Featured Products Section -->
-<div class="container">
-  <div class="gia-soc" style="margin-top: 30px">
-    <div
-      style="
-        background-color: rgb(206, 18, 18);
-        width: 100%;
-        height: 65px;
-        font-weight: bold;
-        padding: 13px;
-        border-radius: 8px 8px 0 0;
-      "
-    >
-      <span style="color: #fff; text-align: left; font-size: 26px">
+<div class="container my-5">
+  <div class="products-section">
+    <div class="section-header text-center mb-4">
+      <h3 class="section-title">
+        <i class="bi bi-star-fill text-warning me-2"></i>
         SẢN PHẨM NỔI BẬT
-      </span>
-      <span style="color: #fff; float: right; font-size: 16px; padding: 8px">
-        <a
-          href="/product/list-by-special/4"
-          style="color: #fff; text-decoration: none"
-        >
-          Xem tất cả
-        </a>
-      </span>
+      </h3>
+      <p class="section-subtitle text-muted">
+        Những sản phẩm được lựa chọn đặc biệt với ưu đãi hấp dẫn
+      </p>
     </div>
 
-    <div style="padding: 20px; background: #f8f9fa; border-radius: 0 0 8px 8px">
+    <div class="products-container">
       <jsp:include page="../product/list_special.jsp" />
+    </div>
+
+    <div class="text-center mt-4">
+      <a
+        href="/product/list-by-special/4"
+        class="btn btn-lg btn-primary-outline"
+      >
+        <i class="bi bi-grid-3x3-gap me-2"></i>
+        Xem tất cả sản phẩm nổi bật
+        <i class="bi bi-arrow-right ms-2"></i>
+      </a>
     </div>
   </div>
 </div>
@@ -173,32 +171,28 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 </div>
 
 <!-- Latest Products Section -->
-<div class="container">
-  <div class="gia-soc" style="margin-top: 30px">
-    <div
-      style="
-        background-color: rgb(206, 18, 18);
-        width: 100%;
-        height: 65px;
-        font-weight: bold;
-        padding: 13px;
-        border-radius: 8px 8px 0 0;
-      "
-    >
-      <span style="color: #fff; text-align: left; font-size: 26px">
+<div class="container my-5">
+  <div class="products-section">
+    <div class="section-header text-center mb-4">
+      <h3 class="section-title">
+        <i class="bi bi-lightning-fill text-warning me-2"></i>
         SẢN PHẨM MỚI NHẤT
-      </span>
-      <span style="color: #fff; float: right; font-size: 16px; padding: 8px">
-        <a
-          href="/product/list-by-new/0"
-          style="color: #fff; text-decoration: none"
-        >
-          Xem tất cả
-        </a>
-      </span>
+      </h3>
+      <p class="section-subtitle text-muted">
+        Khám phá những sản phẩm mới nhất với công nghệ tiên tiến
+      </p>
     </div>
-    <div style="padding: 20px; background: #f8f9fa; border-radius: 0 0 8px 8px">
+
+    <div class="products-container">
       <jsp:include page="../product/list-by-new.jsp" />
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="/product/list-by-new/0" class="btn btn-lg btn-primary-outline">
+        <i class="bi bi-grid-3x3-gap me-2"></i>
+        Xem tất cả sản phẩm mới
+        <i class="bi bi-arrow-right ms-2"></i>
+      </a>
     </div>
   </div>
 </div>
@@ -229,6 +223,75 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 </script>
 
 <style>
+  /* Unified Products Section Styling */
+  .products-section {
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    margin: 2rem 0;
+  }
+
+  .section-header {
+    position: relative;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .products-container {
+    padding: 0 1rem;
+  }
+
+  /* View All Button */
+  .btn-primary-outline {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .btn-primary-outline:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+    color: white;
+    text-decoration: none;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 767.98px) {
+    .products-section {
+      padding: 1.5rem 1rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .products-container {
+      padding: 0 0.5rem;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .products-section {
+      margin: 1rem 0;
+    }
+  }
   @font-face {
     font-family: 'icomoon';
     src: url('../fonts/icomoon.eot');
