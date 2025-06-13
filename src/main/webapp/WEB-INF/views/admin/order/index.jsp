@@ -326,7 +326,7 @@
                       <strong class="text-success">
                         <fmt:formatNumber value="${order.amount}" type="currency" currencySymbol="₫" groupingUsed="true"/>
                       </strong>
-                    </div>
+	</div>
                     
                     <div class="mb-2">
                       <small class="text-muted">
@@ -334,8 +334,8 @@
                         Ngày đặt: <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/><br>
                         Số SP: ${itemCounts[order.id]} sản phẩm
                       </small>
-                    </div>
-                    
+	</div>
+
                     <div class="d-flex gap-1">
                       <a href="${base}/details/${order.id}" class="btn btn-outline-info btn-sm w-100">
                         <i class="bi bi-eye me-1"></i>Xem chi tiết
