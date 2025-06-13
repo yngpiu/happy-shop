@@ -58,7 +58,7 @@
 								style="background-color: red; width: 30px; height: 30px; text-align: right; float: right; position: relative; border-radius: 30px">
 								<span
 									style="margin-left: -28px; margin-top: 5px; font-size: 14px; color: #fff; position: absolute;">
-									-<f:formatNumber value="${p.discount}" type="percent" />
+									-${p.discount}%
 								</span>
 							</p>
 						</c:when>
@@ -89,9 +89,8 @@
 						</c:choose>
 						<c:choose>
 							<c:when test="${p.discount > 0 }">
-								<span style="margin-left: 5px; font-weight: bold;color:red"> <f:formatNumber
-										value="${p.unitPrice * (1 - p.discount)}" pattern="#,###" />
-									VNĐ
+								<span style="margin-left: 5px; font-weight: bold;color:red">
+									<f:formatNumber value="${p.unitPrice * (1 - p.discount / 100)}" pattern="#.###" /> VNĐ
 								</span>
 							</c:when>
 							<c:otherwise>

@@ -4,6 +4,12 @@
 
 <c:set var="cart" value="${sessionScope['scopedTarget.cartService']}" />
 
+<!-- jQuery (nếu chưa có) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 
 	<h3 class="title">
 		<b>GIỎ HÀNG</b>
@@ -37,7 +43,7 @@
 
 				<c:choose>
 
-					<c:when test="${cart.amount > 0}">
+					<c:when test="${cart.count > 0}">
 						<c:forEach var="p"
 							items="${sessionScope['scopedTarget.cartService'].items}">
 							<tr data-id="${p.id}" data-price="${p.unitPrice}"
@@ -61,14 +67,14 @@
 												<span style="text-decoration: line-through; color: Gray;"><f:formatNumber
 														value="${p.unitPrice}" pattern="#,###" /> VNĐ</span> <span
 													style="vertical-align: super; background-color: red; border-radius: 15%; padding: 2px">
-													- <f:formatNumber value="${p.discount}" type="percent" />
+													- ${p.discount}%
 												</span>
 											</p>
 										</c:otherwise>
 									</c:choose> <c:choose>
 										<c:when test="${p.discount > 0 }">
 											<p style="font-weight: bold; color: #474c51">
-												<f:formatNumber value="${p.unitPrice * (1 - p.discount)}" pattern="#,###" />
+												<f:formatNumber value="${p.unitPrice * (1 - p.discount / 100)}" pattern="#,###" />
 												VNĐ
 											</p>
 										</c:when>
@@ -83,7 +89,7 @@
 
 								</td>
 								<td class="amt" style="padding: 55px 0px 40px 0px; font-weight: bold; font-size: 16px">
-									<f:formatNumber value="${p.quantity * p.unitPrice * (1 - p.discount)}" pattern="#,###" /> VNĐ
+									<f:formatNumber value="${p.quantity * p.unitPrice * (1 - p.discount / 100)}" pattern="#,###" /> VNĐ
 								</td>
 								<td style="padding: 50px 0px 40px 0px;">
 									<button class="btn btn-sm btn-warning btn-cart-remove">

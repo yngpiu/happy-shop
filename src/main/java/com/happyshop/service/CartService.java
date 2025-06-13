@@ -57,7 +57,7 @@ public class CartService {
 		Collection<Product> ps = this.getItems();
 		double amount = 0;
 		for (Product p : ps) {
-			amount += p.getQuantity() * p.getUnitPrice() * (1 - p.getDiscount());
+			amount += p.getQuantity() * p.getUnitPrice() * (1 - p.getDiscount() / 100.0);
 		}
 		return amount;
 	}

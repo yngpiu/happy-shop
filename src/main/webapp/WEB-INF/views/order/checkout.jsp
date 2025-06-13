@@ -37,11 +37,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
               <td>
                 <f:formatNumber value="${p.unitPrice}" pattern="#,###" /> VNĐ
               </td>
-              <td><f:formatNumber value="${p.discount}" type="percent" /></td>
+              <td>${p.discount}%</td>
               <td>${p.quantity}</td>
               <td>
                 <f:formatNumber
-                  value="${p.quantity * p.unitPrice * (1 - p.discount)}"
+                  value="${p.quantity * p.unitPrice * (1 - p.discount / 100)}"
                   pattern="#,###"
                 />
                 VNĐ
