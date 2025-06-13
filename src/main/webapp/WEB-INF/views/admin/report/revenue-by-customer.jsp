@@ -221,7 +221,7 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f" %>
         width="100%"
         cellspacing="0"
       >
-        <thead class="table-dark">
+        <thead class="table">
           <tr>
             <th>ID Khách hàng</th>
             <th>Tổng số lượng mua</th>

@@ -174,7 +174,7 @@ uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
         width="100%"
         cellspacing="0"
       >
-        <thead class="table-dark">
+        <thead class="table">
           <tr>
             <th>Tháng</th>
             <th>Số lượng bán</th>

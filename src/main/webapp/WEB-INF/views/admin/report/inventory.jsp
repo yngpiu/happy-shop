@@ -259,7 +259,7 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
         width="100%"
         cellspacing="0"
       >
-        <thead class="table-dark">
+        <thead class="table">
           <tr>
             <th><i class="fas fa-tag me-1"></i>Loại sản phẩm</th>
             <th><i class="fas fa-boxes me-1"></i>Số lượng</th>
