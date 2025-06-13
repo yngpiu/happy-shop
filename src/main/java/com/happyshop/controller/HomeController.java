@@ -11,13 +11,39 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.happyshop.dao.ProductDAO;
 import com.happyshop.entity.Product;
 
-
-
+/**
+ * ===== CONTROLLER TRANG CHỦ USER =====
+ * 
+ * Controller xử lý các trang chính của website:
+ * - Trang chủ với sản phẩm nổi bật
+ * - Các trang thông tin (About, Contact, FAQ)
+ * - Xử lý thay đổi ngôn ngữ
+ * - Hiển thị sản phẩm mới nhất
+ * 
+ * Tính năng:
+ * - Homepage product showcase
+ * - Static information pages
+ * - Language switching support
+ * - Featured products display
+ * 
+ * Author: Development Team
+ * Version: 1.0 - Main Website Controller
+ */
 @Controller
 public class HomeController {
+	
+	// ================= DEPENDENCY INJECTION =================
+	
 	@Autowired
 	ProductDAO pdao;
 	
+	// ================= MAIN OPERATIONS =================
+	
+	/**
+	 * Hiển thị trang chủ với sản phẩm nổi bật và mới nhất
+	 * @param model Model để truyền dữ liệu sản phẩm
+	 * @return String view name cho homepage
+	 */
 	@RequestMapping(value = {"", "/home"})
 	public String index(Model model) {
 		// Lấy 4 sản phẩm đặc biệt (special = true)
@@ -30,26 +56,55 @@ public class HomeController {
 		
 		return "home/index";
 	}
+	
+	// ================= STATIC PAGES =================
+	
+	/**
+	 * Hiển thị trang giới thiệu về cửa hàng
+	 * @return String view name cho about page
+	 */
 	@RequestMapping("/about")
 	public String about() {
 		return "home/about";
 	}
+	
+	/**
+	 * Hiển thị trang thông tin liên hệ
+	 * @return String view name cho contact page
+	 */
 	@RequestMapping("/contact")
 	public String contact() {
 		return "home/contact";
 	}
+	
+	/**
+	 * Hiển thị trang feedback khách hàng
+	 * @return String view name cho feedback page
+	 */
 	@RequestMapping("/feedback")
 	public String feedback() {
 		return "home/feedback";
 	}
+	
+	/**
+	 * Hiển thị trang FAQ (Frequently Asked Questions)
+	 * @return String view name cho FAQ page
+	 */
 	@RequestMapping("/faq")
 	public String faq() {
 		return "home/faq";
 	}
 	
+	// ================= UTILITY OPERATIONS =================
+	
+	/**
+	 * Xử lý thay đổi ngôn ngữ (AJAX endpoint)
+	 * Endpoint này được gọi bởi LocaleChangeInterceptor
+	 */
 	@ResponseBody
 	@RequestMapping("/home/language")
 	public void language() {
-
+		// Method này chỉ để trigger LocaleChangeInterceptor
+		// Không cần logic xử lý, interceptor sẽ handle
 	}
 }

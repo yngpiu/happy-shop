@@ -16,8 +16,28 @@ import com.happyshop.entity.Order;
 import com.happyshop.entity.Product;
 import com.happyshop.entity.User;
 
+/**
+ * ===== CONTROLLER TRANG CHỦ ADMIN =====
+ * 
+ * Controller xử lý trang chủ admin dashboard:
+ * - Hiển thị thống kê tổng quan hệ thống
+ * - Thống kê người dùng, sản phẩm, đơn hàng
+ * - Tính toán doanh thu tổng
+ * - Hiển thị đơn hàng gần đây
+ * 
+ * Tính năng:
+ * - Dashboard overview với key metrics
+ * - Real-time statistics display
+ * - Recent orders monitoring
+ * - Low stock alerts
+ * 
+ * Author: Development Team
+ * Version: 1.0 - Admin Dashboard System
+ */
 @Controller
 public class AdminHomeController {
+	
+	// ================= DEPENDENCY INJECTION =================
 	
 	@Autowired
 	UserDAO userDao;
@@ -28,10 +48,17 @@ public class AdminHomeController {
 	@Autowired
 	OrderDAO orderDao;
 	
+	// ================= MAIN OPERATIONS =================
+	
+	/**
+	 * Hiển thị trang dashboard admin với thống kê tổng quan
+	 * @param model Model để truyền dữ liệu ra view
+	 * @return String view name cho admin dashboard
+	 */
 	@RequestMapping("/admin/home/index")
 	public String index(Model model) {
 		
-		// Thống kê tổng quan
+		// Lấy dữ liệu từ database
 		List<User> allUsers = userDao.findAll();
 		List<Product> allProducts = productDao.findAll();
 		List<Order> allOrders = orderDao.findAll();

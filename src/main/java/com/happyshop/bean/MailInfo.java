@@ -1,19 +1,54 @@
 package com.happyshop.bean;
 
+/**
+ * ===== BEAN THÔNG TIN EMAIL =====
+ * 
+ * Class bean lưu trữ thông tin email:
+ * - Thông tin người gửi, người nhận
+ * - Thông tin CC, BCC recipients
+ * - Nội dung email (subject, body)
+ * - Danh sách file đính kèm
+ * 
+ * Tính năng:
+ * - Support multiple constructors
+ * - Full getter/setter methods
+ * - File attachments support
+ * - Email template data container
+ * 
+ * Author: Development Team
+ * Version: 1.0 - Email Data Transfer Object
+ */
 public class MailInfo {
-	String  from;
-	String to;
-	String cc;
-	String bcc;
-	String subject;
-	String body;
-	String files;
 	
+	// ================= THUỘC TÍNH EMAIL =================
 	
+	String  from;		// Địa chỉ email người gửi
+	String to;			// Địa chỉ email người nhận
+	String cc;			// Địa chỉ email CC (Carbon Copy)
+	String bcc;			// Địa chỉ email BCC (Blind Carbon Copy)
+	String subject;		// Tiêu đề email
+	String body;		// Nội dung email (HTML)
+	String files;		// Đường dẫn file đính kèm (phân cách bởi dấu ;)
+	
+	// ================= CONSTRUCTORS =================
+	
+	/**
+	 * Constructor mặc định
+	 */
 	public MailInfo() {
 		super();
 	}
 	
+	/**
+	 * Constructor đầy đủ tham số
+	 * @param from địa chỉ email người gửi
+	 * @param to địa chỉ email người nhận
+	 * @param cc địa chỉ email CC
+	 * @param bcc địa chỉ email BCC
+	 * @param subject tiêu đề email
+	 * @param body nội dung email
+	 * @param files file đính kèm
+	 */
 	public MailInfo(String from, String to, String cc, String bcc, String subject, String body, String files) {
 		super();
 		this.from = from;
@@ -25,7 +60,13 @@ public class MailInfo {
 		this.files = files;
 	}
 	
-
+	/**
+	 * Constructor đơn giản (từ, đến, tiêu đề, nội dung)
+	 * @param from địa chỉ email người gửi
+	 * @param to địa chỉ email người nhận
+	 * @param subject tiêu đề email
+	 * @param body nội dung email
+	 */
 	public MailInfo(String from, String to, String subject, String body) {
 		super();
 		this.from = from;
@@ -33,6 +74,8 @@ public class MailInfo {
 		this.subject = subject;
 		this.body = body;
 	}
+
+	// ================= GETTERS & SETTERS =================
 
 	public String getFrom() {
 		return from;
@@ -76,5 +119,4 @@ public class MailInfo {
 	public void setFiles(String files) {
 		this.files = files;
 	}
-	
 }

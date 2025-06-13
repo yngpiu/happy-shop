@@ -26,8 +26,28 @@ import com.happyshop.entity.User;
 import com.happyshop.service.CookieService;
 import com.happyshop.service.MailService;
 
+/**
+ * ===== CONTROLLER QUẢN LÝ TÀI KHOẢN ADMIN =====
+ * 
+ * Controller xử lý các chức năng tài khoản admin:
+ * - Đăng nhập/đăng xuất admin
+ * - Quản lý profile admin
+ * - Đổi mật khẩu admin
+ * - Kích hoạt tài khoản người dùng
+ * 
+ * Tính năng:
+ * - Admin authentication system
+ * - Profile management với upload ảnh
+ * - Password change với validation
+ * - Remember login functionality
+ * 
+ * Author: Development Team
+ * Version: 1.0 - Admin Account Management System
+ */
 @Controller
 public class AccountAdminController {
+
+	// ================= DEPENDENCY INJECTION =================
 
 	@Autowired
 	UserDAO dao;

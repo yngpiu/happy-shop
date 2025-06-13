@@ -1,9 +1,5 @@
 package com.happyshop;
 
-
-
-
-
 import java.io.IOException;
 import java.util.Properties;
 
@@ -19,13 +15,39 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
-
+/**
+ * ===== CẤU HÌNH HIBERNATE =====
+ * 
+ * Class cấu hình Hibernate và Database:
+ * - Cấu hình DataSource connection
+ * - Cấu hình Hibernate SessionFactory
+ * - Cấu hình Transaction Manager
+ * - Load properties từ file cấu hình
+ * 
+ * Tính năng:
+ * - Tự động tạo SessionFactory từ properties
+ * - Quản lý transaction với HibernateTransactionManager
+ * - Scan entity package tự động
+ * - Cấu hình dialect và session context
+ * 
+ * Author: Development Team
+ * Version: 1.0 - Database Configuration System
+ */
 @Configuration
 @PropertySource("classpath:datasource.properties")
 public class HibernateConfig {
+	
+	// ================= DEPENDENCY INJECTION =================
+	
 	@Autowired
 	Environment env;
 
+	// ================= DATASOURCE CONFIGURATION =================
+	
+	/**
+	 * Cấu hình DataSource từ properties file
+	 * @return DataSource đã cấu hình
+	 */
 	@Bean
 	public DataSource getDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -35,6 +57,15 @@ public class HibernateConfig {
 		dataSource.setPassword(env.getProperty("db.password"));
 		return dataSource;
 	}
+	
+	// ================= HIBERNATE CONFIGURATION =================
+	
+	/**
+	 * Cấu hình Hibernate SessionFactory
+	 * @param dataSource DataSource để kết nối database
+	 * @return SessionFactory đã cấu hình
+	 * @throws IOException nếu có lỗi đọc properties
+	 */
 	@Bean
 	@Autowired
 	public SessionFactory getSessionFactory(DataSource dataSource) throws IOException{
@@ -49,6 +80,14 @@ public class HibernateConfig {
 		SessionFactory sessionFactory=factoryBean.getObject();
 		return sessionFactory;
 	}
+	
+	// ================= TRANSACTION MANAGEMENT =================
+	
+	/**
+	 * Cấu hình Hibernate Transaction Manager
+	 * @param sessionFactory SessionFactory để quản lý transaction
+	 * @return HibernateTransactionManager đã cấu hình
+	 */
 	@Bean
 	@Autowired
 	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {

@@ -14,39 +14,76 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * ===== ENTITY NGƯỜI DÙNG =====
+ * 
+ * Entity đại diện cho bảng Users trong database:
+ * - Thông tin cá nhân người dùng
+ * - Thông tin đăng nhập và phân quyền
+ * - Validation dữ liệu đầu vào
+ * - Liên kết với đơn hàng của người dùng
+ * 
+ * Tính năng:
+ * - Quản lý thông tin tài khoản
+ * - Phân quyền admin/user
+ * - Tính năng kích hoạt/cấm tài khoản
+ * - Lưu trữ thông tin liên hệ
+ * 
+ * Author: Development Team
+ * Version: 1.0 - User Management Entity
+ */
 @Entity
 @Table(name = "Users")
 public class User {
+	
+	// ================= THUỘC TÍNH CHÍNH =================
+	
 	@Id
 	@NotEmpty
 	@Column(name = "Id")
-	String id;
+	String id;					// ID người dùng (username)
+	
 	@NotEmpty
 	@Length(min=6)
 	@Column(name = "Password")
-	String password;
+	String password;			// Mật khẩu (tối thiểu 6 ký tự)
+	
 	@NotEmpty
 	@Column(name = "Fullname")
-	String fullname;
+	String fullname;			// Họ và tên đầy đủ
+	
 	@NotEmpty
 	@Column(name = "Telephone", length = 50)
-	String telephone;
+	String telephone;			// Số điện thoại liên hệ
+	
 	@NotEmpty
 	@Email
 	@Column(name = "Email")
-	String email;
+	String email;				// Địa chỉ email
+	
+	// ================= THUỘC TÍNH PROFILE =================
+	
 	@Column(name = "Photo")
-	String photo;
+	String photo;				// Đường dẫn ảnh đại diện
+	
+	// ================= THUỘC TÍNH QUYỀN =================
+	
 	@Column(name = "Activated")
-	Boolean activated;
+	Boolean activated;			// Trạng thái kích hoạt tài khoản
+	
 	@Column(name = "Admin")
-	Boolean admin;
+	Boolean admin;				// Phân quyền admin
+	
 	@Column(name = "isBanned")
-	Boolean isBanned;
+	Boolean isBanned;			// Trạng thái cấm tài khoản
 
+	// ================= QUAN HỆ ENTITY =================
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	List<Order> orders;
+	List<Order> orders;			// Danh sách đơn hàng của người dùng
+
+	// ================= GETTERS & SETTERS =================
 
 	public String getId() {
 		return id;
@@ -127,5 +164,4 @@ public class User {
 	public void setIsBanned(Boolean isBanned) {
 		this.isBanned = isBanned;
 	}
-
 }

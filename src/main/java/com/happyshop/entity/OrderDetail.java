@@ -8,25 +8,51 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * ===== ENTITY CHI TIẾT ĐƠN HÀNG =====
+ * 
+ * Entity đại diện cho bảng OrderDetails trong database:
+ * - Thông tin chi tiết sản phẩm trong đơn hàng
+ * - Liên kết giữa Order và Product
+ * - Lưu trữ giá, số lượng, giảm giá
+ * - Tính toán thành tiền cho từng item
+ * 
+ * Tính năng:
+ * - Quản lý chi tiết đơn hàng
+ * - Lưu trữ thông tin giá tại thời điểm mua
+ * - Tính toán discount và thành tiền
+ * - Liên kết với Order và Product
+ * 
+ * Author: Development Team
+ * Version: 1.0 - Order Detail Management Entity
+ */
 @Entity
 @Table(name = "OrderDetails")
 public class OrderDetail {
+	
+	// ================= THUỘC TÍNH CHÍNH =================
+	
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer id;
-	//Integer orderId;
-	//Integer productId;
-	Double unitPrice;
-	Integer quantity;
-	Double discount;
+	Integer id;				// ID chi tiết đơn hàng (tự động tăng)
+	
+	// ================= THÔNG TIN SẢN PHẨM =================
+	
+	Double unitPrice;		// Giá đơn vị tại thời điểm mua
+	Integer quantity;		// Số lượng sản phẩm
+	Double discount;		// Phần trăm giảm giá
+	
+	// ================= QUAN HỆ ENTITY =================
 	
 	@ManyToOne
 	@JoinColumn(name="orderId")
-	Order order;
+	Order order;			// Đơn hàng chứa chi tiết này
 	
 	@ManyToOne
 	@JoinColumn(name="productId")
-	Product product;
+	Product product;		// Sản phẩm trong chi tiết đơn hàng
+
+	// ================= GETTERS & SETTERS =================
 
 	public Integer getId() {
 		return id;
@@ -75,6 +101,4 @@ public class OrderDetail {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	
-	
 }
