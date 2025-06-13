@@ -46,12 +46,12 @@ public class AdminHomeController {
 		
 		// Thống kê đơn hàng
 		long totalOrders = allOrders.size();
-		long completedOrders = allOrders.stream().filter(o -> "Hoàn thành".equals(o.getStatus())).count();
+		long completedOrders = allOrders.stream().filter(o -> o.getStatus() != null && o.getStatus() == 3).count();
 		
 		// Tính tổng doanh thu (chỉ đơn hàng hoàn thành)
 		double totalRevenue = allOrders.stream()
-			.filter(o -> "Hoàn thành".equals(o.getStatus()))
-			.mapToDouble(o -> o.getAmount().doubleValue())
+			.filter(o -> o.getStatus() != null && o.getStatus() == 3)
+			.mapToDouble(o -> o.getAmount() != null ? o.getAmount() : 0.0)
 			.sum();
 		
 		// 5 đơn hàng gần đây nhất
