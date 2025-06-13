@@ -47,7 +47,7 @@
 							   style="border-radius: 25px 0 0 25px;">
 						<button class="btn btn-primary px-4" type="submit" 
 								style="border-radius: 0 25px 25px 0;">
-							<i class="bi bi-search"></i>
+								<i class="fa-solid fa-magnifying-glass"></i>
 						</button>
 					</div>
 				</form>
@@ -132,7 +132,7 @@
 							<input type="text" class="form-control" name="keywords" 
 								   value="${param.keywords}" placeholder="Tìm kiếm sản phẩm...">
 							<button class="btn btn-primary" type="submit">
-								<i class="bi bi-search"></i>
+								<i class="fa-solid fa-magnifying-glass"></i>
 							</button>
 						</div>
 					</form>
