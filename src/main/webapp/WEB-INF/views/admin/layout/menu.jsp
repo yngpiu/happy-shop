@@ -100,7 +100,7 @@
 								Doanh thu theo quý
 							</a>
 							<a class="nav-link py-2" href="/admin/revenue/year">
-								<i class="bi bi-calendar-year me-2"></i>
+								<i class="bi bi-calendar me-2"></i>
 								Doanh thu theo năm
 							</a>
 						</div>

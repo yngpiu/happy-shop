@@ -319,10 +319,9 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f" %>
                   <div
                     class="progress-bar bg-success"
                     role="progressbar"
-                    style="width: ${percentage}%"
+                    style="width: 0%"
+                    data-width="${percentage}"
                     aria-valuenow="${percentage}"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
                   >
                     <f:formatNumber value="${percentage}" pattern="##.#" />%
                   </div>
@@ -574,5 +573,13 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f" %>
       dom: 'Bfrtip',
       buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
     });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document
+      .querySelectorAll('.progress-bar[data-width]')
+      .forEach(function (bar) {
+        bar.style.width = bar.dataset.width + '%';
+      });
   });
 </script>
