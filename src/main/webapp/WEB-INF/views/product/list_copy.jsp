@@ -10,6 +10,35 @@
 	-moz-box-shadow: 1px 3px 27px 2px rgba(0, 0, 0, 0.42);
 	box-shadow: 1px 3px 27px 2px rgba(0, 0, 0, 0.42);
 }
+
+.thumbnail {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.thumbnail img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 180px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    background: #fff;
+}
+
+.caption {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.pull-center {
+    margin-top: auto;
+}
 </style>
 
 
@@ -36,8 +65,7 @@
 						<c:otherwise>
 
 						</c:otherwise>
-					</c:choose> <img style="margin-right: 57px; margin-top: 5px"
-					class="estore-prod" src="/static/images/products/${p.image}"
+					</c:choose> <img class="estore-prod" src="/static/images/products/${p.image}"
 					title="${p.name}">
 				</a>
 

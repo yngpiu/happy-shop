@@ -1,52 +1,51 @@
-<%@ page pageEncoding="utf-8"%>
-
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ page pageEncoding="utf-8"%> <%@ taglib
+uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<title>HappyShop - Điện thoại di động giá rẻ - uy tín - chất lượng</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<tiles:insertAttribute name="head" />
-<!-- DataTables CSS -->
-<link href="/static/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+  <head>
+    <title>HappyShop - Điện thoại di động giá rẻ - uy tín - chất lượng</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <tiles:insertAttribute name="head" />
+    <!-- DataTables CSS -->
+    <link
+      href="/static/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css"
+      rel="stylesheet"
+    />
 
-<!-- DataTables Responsive CSS -->
-<link href="/static/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+    <!-- DataTables Responsive CSS -->
+    <link
+      href="/static/bower_components/datatables-responsive/css/dataTables.responsive.css"
+      rel="stylesheet"
+    />
+  </head>
 
+  <script>
+    $(document).ready(function () {
+      $('#dataTables-example').DataTable({
+        responsive: true,
+      });
+    });
+  </script>
 
-</head>
+  <body>
+    <tiles:insertAttribute name="header" />
 
-<script>
-        $(document).ready(function() {
-            $('#dataTables-example').DataTable({
-                responsive: true
-            });
-        });
-</script>
+    <tiles:insertAttribute name="menu" />
 
-<body>
+    <div
+      class="container-fluid"
+      style="margin-top: -15px; padding: 0px 80px 0px 80px"
+    >
+      <tiles:insertAttribute name="body" />
+    </div>
+    <div class="row">
+      <tiles:insertAttribute name="aside" />
+    </div>
 
-
-
-	<tiles:insertAttribute name="header" />
-
-
-	<tiles:insertAttribute name="menu" />
-
-<div class="container-fluid" style="margin-top: -15px; padding: 0px 80px 0px 80px">
-		<tiles:insertAttribute name="body" />
-</div>
-	<div class="row">
-		<tiles:insertAttribute name="aside" />
-	</div>
-
-
-	<tiles:insertAttribute name="footer" />
-
-
-</body>
+    <tiles:insertAttribute name="footer" />
+  </body>
 </html>

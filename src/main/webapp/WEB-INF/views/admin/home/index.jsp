@@ -335,3 +335,81 @@ function updateTime() {
 updateTime();
 setInterval(updateTime, 1000);
 </script> 
+
+<style>
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 16px 12px 12px 12px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s;
+  height: 100%;
+}
+.product-card:hover {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.16);
+}
+.product-image-wrapper {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+.product-image {
+  max-width: 100%;
+  max-height: 180px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #f8f8f8;
+}
+.discount-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #e53935;
+  color: #fff;
+  border-radius: 50%;
+  padding: 7px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 2;
+}
+.product-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 12px 0 6px 0;
+  text-align: center;
+  color: #222;
+}
+.product-price {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.old-price {
+  text-decoration: line-through;
+  color: #888;
+  margin-right: 8px;
+  font-size: 0.95em;
+}
+.new-price {
+  color: #e53935;
+  font-weight: bold;
+  font-size: 1.05em;
+}
+.product-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-circle {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
