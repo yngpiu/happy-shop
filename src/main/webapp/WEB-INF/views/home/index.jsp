@@ -4,133 +4,182 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 
 <c:set var="cart" value="${sessionScope['scopedTarget.cartService']}" />
 
-<div
-  style="
-    padding: 10px 0px 15px;
-    margin-top: -10px;
-    position: relative;
-    margin-left: 300px;
-  "
->
-  <div id="demo" class="carousel slide" data-ride="carousel">
+<!-- Slider Section -->
+<div class="container" style="padding-top: 20px">
+  <div
+    id="carouselSlider"
+    class="carousel slide"
+    data-ride="carousel"
+    data-interval="4000"
+  >
     <!-- Indicators -->
-    <ul class="carousel-indicators">
-      <li data-target="#demo" data-slide-to="0" class="active"></li>
-      <li data-target="#demo" data-slide-to="1"></li>
-      <li data-target="#demo" data-slide-to="2"></li>
-      <li data-target="#demo" data-slide-to="3"></li>
-    </ul>
+    <ol class="carousel-indicators">
+      <li data-target="#carouselSlider" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselSlider" data-slide-to="1"></li>
+      <li data-target="#carouselSlider" data-slide-to="2"></li>
+      <li data-target="#carouselSlider" data-slide-to="3"></li>
+    </ol>
 
+    <!-- Slides -->
     <div class="carousel-inner">
       <div class="carousel-item active">
         <img
           src="/static/images/slideshow/slide1.jpg"
-          alt="Los Angeles"
-          width="100%"
-          height="342px"
+          class="d-block w-100"
+          alt="Slide 1"
+          style="height: 400px; object-fit: cover"
         />
       </div>
       <div class="carousel-item">
         <img
           src="/static/images/slideshow/slide2.jpg"
-          alt="Los Angeles"
-          width="100%"
-          height="342px"
+          class="d-block w-100"
+          alt="Slide 2"
+          style="height: 400px; object-fit: cover"
         />
       </div>
       <div class="carousel-item">
         <img
           src="/static/images/slideshow/slide3.jpg"
-          alt="Los Angeles"
-          width="100%"
-          height="342px"
+          class="d-block w-100"
+          alt="Slide 3"
+          style="height: 400px; object-fit: cover"
         />
       </div>
       <div class="carousel-item">
         <img
           src="/static/images/slideshow/slide4.jpg"
-          alt="Los Angeles"
-          width="100%"
-          height="342px"
+          class="d-block w-100"
+          alt="Slide 4"
+          style="height: 400px; object-fit: cover"
         />
       </div>
     </div>
+
+    <!-- Controls -->
+    <a
+      class="carousel-control-prev"
+      href="#carouselSlider"
+      role="button"
+      data-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a
+      class="carousel-control-next"
+      href="#carouselSlider"
+      role="button"
+      data-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
   </div>
 </div>
-<!-- slide -->
-<br />
-<img
-  src="https://hoanghamobile.com/Uploads/2022/04/21/macbook-air-m1-gdn-hotsale.jpg"
-  alt=""
-  width="100%"
-/>
-
-<br />
-
-<div class="gia-soc" style="margin-top: 30px">
-  <div
-    style="
-      background-color: rgb(206, 18, 18);
-      width: 100.1%;
-      margin-left: -1px;
-      height: 65px;
-      margin-top: -10px;
-      font-weight: bold;
-      padding: 13px;
-    "
-  >
-    <span style="color: #fff; text-align: left; font-size: 26px"
-      >SẢN PHẨM NỔI BẬT</span
-    >
-    <span style="color: #fff; float: right; font-size: 16px; padding: 8px">
-      <a
-        href="/product/list-by-special/4"
-        style="color: #fff; text-decoration: none"
-      >
-        Xem tất cả</a
-      ></span
-    >
-  </div>
-
-  <div style="padding: 20px 0px 0px 10px; margin-top: -10px; height: 420px">
-    <jsp:include page="../product/list_special.jsp" />
-  </div>
+<!-- Banner Section -->
+<div class="container" style="margin: 30px auto">
+  <img
+    src="https://hoanghamobile.com/Uploads/2022/04/21/macbook-air-m1-gdn-hotsale.jpg"
+    alt="MacBook Sale Banner"
+    class="img-fluid"
+    style="width: 100%; border-radius: 8px"
+  />
 </div>
 
-<br />
-<img src="/static/images/banner2.png" width="100%" />
+<!-- Featured Products Section -->
+<div class="container">
+  <div class="gia-soc" style="margin-top: 30px">
+    <div
+      style="
+        background-color: rgb(206, 18, 18);
+        width: 100%;
+        height: 65px;
+        font-weight: bold;
+        padding: 13px;
+        border-radius: 8px 8px 0 0;
+      "
+    >
+      <span style="color: #fff; text-align: left; font-size: 26px">
+        SẢN PHẨM NỔI BẬT
+      </span>
+      <span style="color: #fff; float: right; font-size: 16px; padding: 8px">
+        <a
+          href="/product/list-by-special/4"
+          style="color: #fff; text-decoration: none"
+        >
+          Xem tất cả
+        </a>
+      </span>
+    </div>
 
-<div class="gia-soc" style="margin-top: 30px">
-  <div
-    style="
-      background-color: rgb(206, 18, 18);
-      width: 100%;
-      height: 65px;
-      margin-top: -10px;
-      font-weight: bold;
-      padding: 13px;
-    "
-  >
-    <span style="color: #fff; text-align: left; font-size: 26px"
-      >SẢN PHẨM MỚI NHẤT</span
-    >
-    <span style="color: #fff; float: right; font-size: 16px; padding: 8px">
-      <a
-        href="/product/list-by-new/0"
-        style="color: #fff; text-decoration: none"
-      >
-        Xem tất cả</a
-      ></span
-    >
-  </div>
-  <div class="row" style="padding: 20px; margin-top: -10px; height: 840px">
-    <jsp:include page="../product/list-by-new.jsp" />
+    <div style="padding: 20px; background: #f8f9fa; border-radius: 0 0 8px 8px">
+      <jsp:include page="../product/list_special.jsp" />
+    </div>
   </div>
 </div>
 
-<br />
+<!-- Second Banner -->
+<div class="container" style="margin: 30px auto">
+  <img
+    src="/static/images/banner2.png"
+    alt="Banner 2"
+    class="img-fluid"
+    style="width: 100%; border-radius: 8px"
+  />
+</div>
 
-<br />
+<!-- Latest Products Section -->
+<div class="container">
+  <div class="gia-soc" style="margin-top: 30px">
+    <div
+      style="
+        background-color: rgb(206, 18, 18);
+        width: 100%;
+        height: 65px;
+        font-weight: bold;
+        padding: 13px;
+        border-radius: 8px 8px 0 0;
+      "
+    >
+      <span style="color: #fff; text-align: left; font-size: 26px">
+        SẢN PHẨM MỚI NHẤT
+      </span>
+      <span style="color: #fff; float: right; font-size: 16px; padding: 8px">
+        <a
+          href="/product/list-by-new/0"
+          style="color: #fff; text-decoration: none"
+        >
+          Xem tất cả
+        </a>
+      </span>
+    </div>
+    <div style="padding: 20px; background: #f8f9fa; border-radius: 0 0 8px 8px">
+      <jsp:include page="../product/list-by-new.jsp" />
+    </div>
+  </div>
+</div>
+
+<!-- Slider JavaScript -->
+<script>
+  $(document).ready(function () {
+    // Initialize carousel
+    $('#carouselSlider').carousel({
+      interval: 4000,
+      ride: 'carousel',
+    });
+
+    // Add smooth transitions
+    $('#carouselSlider').on('slide.bs.carousel', function (e) {
+      $(this).find('.carousel-item').removeClass('slideInRight slideInLeft');
+      if (e.direction === 'left') {
+        $(e.relatedTarget).addClass('slideInRight');
+      } else {
+        $(e.relatedTarget).addClass('slideInLeft');
+      }
+    });
+  });
+</script>
 
 <style>
   @font-face {
@@ -142,6 +191,43 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
       url('../fonts/icomoon.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+  }
+
+  /* Slider Enhancements */
+  #carouselSlider {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  #carouselSlider .carousel-item img {
+    transition: transform 0.3s ease;
+  }
+
+  #carouselSlider:hover .carousel-item img {
+    transform: scale(1.02);
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0 5px 5px 0;
+  }
+
+  .carousel-control-next {
+    border-radius: 5px 0 0 5px;
+  }
+
+  .carousel-indicators li {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .carousel-indicators .active {
+    background-color: #fff;
   }
 
   /* Needed for a fluid height: */
