@@ -3,7 +3,6 @@ package com.happyshop.controller;
 import java.io.File;
 import java.io.IOException;
 
-import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
@@ -22,11 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.happyshop.bean.MailInfo;
 import com.happyshop.dao.UserDAO;
 import com.happyshop.entity.User;
 import com.happyshop.service.CookieService;
-import com.happyshop.service.MailService;
 
 /**
  * ===== CONTROLLER TÀI KHOẢN USER =====
@@ -34,14 +31,12 @@ import com.happyshop.service.MailService;
  * Controller xử lý các chức năng tài khoản người dùng:
  * - Đăng nhập và đăng xuất
  * - Đăng ký tài khoản mới
- * - Quên mật khẩu và gửi email khôi phục
  * - Thay đổi mật khẩu
  * - Chỉnh sửa thông tin cá nhân
  * 
  * Tính năng:
  * - Authentication với session và cookie
  * - User registration với file upload
- * - Password recovery qua email
  * - Profile management
  * 
  * Author: Development Team
@@ -63,9 +58,6 @@ public class AccountController {
 
 	@Autowired
 	ServletContext app;
-
-	@Autowired
-	MailService mailer;
 
 	// ================= AUTHENTICATION OPERATIONS =================
 
@@ -164,12 +156,11 @@ public class AccountController {
 	 * @return String view name sau khi xử lý
 	 * @throws IllegalStateException File upload exception
 	 * @throws IOException File I/O exception
-	 * @throws MessagingException Email sending exception
 	 */
 	@PostMapping("/account/register")
 	public String register(Model model, @Validated @ModelAttribute("form") User user, BindingResult errors,
 			@RequestParam("photo_file") MultipartFile file)
-			throws IllegalStateException, IOException, MessagingException {
+			throws IllegalStateException, IOException {
 		
 		// Validation check
 		if (errors.hasErrors()) {
@@ -202,48 +193,7 @@ public class AccountController {
 		return "account/register";
 	}
 
-	// ================= PASSWORD RECOVERY OPERATIONS =================
 
-	/**
-	 * Hiển thị form quên mật khẩu
-	 * @param model Model object
-	 * @return String view name cho forgot password form
-	 */
-	@GetMapping("/account/forgot")
-	public String forgot(Model model) {
-		return "account/forgot";
-	}
-
-	/**
-	 * Xử lý khôi phục mật khẩu và gửi email
-	 * @param model Model để truyền thông báo
-	 * @param id Username cần khôi phục
-	 * @param email Email của user
-	 * @return String view name sau khi xử lý
-	 * @throws MessagingException Email sending exception
-	 */
-	@PostMapping("/account/forgot")
-	public String forgot(Model model, 
-			@RequestParam("id") String id, 
-			@RequestParam("email") String email)
-			throws MessagingException {
-		User user = dao.findById(id);
-		if (user == null) {
-			model.addAttribute("message", "Tên tài khoản không đúng!");
-		} else if (!email.equals(user.getEmail())) {
-			model.addAttribute("message", "Email không đúng!");
-		} else {
-			// Gửi email khôi phục mật khẩu
-			String from = "happyshopsuport2022@gmail.com";
-			String to = user.getEmail();
-			String subject = "Quên mật khẩu!";
-			String body = "Happy Shop xin chào! Mật khẩu của bạn là: " + user.getPassword();
-			MailInfo mail = new MailInfo(from, to, subject, body);
-			mailer.send(mail);
-			model.addAttribute("message", "Mật khẩu đã được gửi đến mail của bạn!");
-		}
-		return "account/forgot";
-	}
 
 	// ================= PASSWORD CHANGE OPERATIONS =================
 
@@ -316,11 +266,10 @@ public class AccountController {
 	 * @return String view name sau khi xử lý
 	 * @throws IllegalStateException File upload exception
 	 * @throws IOException File I/O exception
-	 * @throws MessagingException Messaging exception
 	 */
 	@PostMapping("/account/edit")
 	public String edit(Model model, @ModelAttribute("form") User user,BindingResult errors,
-			@RequestParam("photo_file") MultipartFile file) throws IllegalStateException, IOException, MessagingException {
+			@RequestParam("photo_file") MultipartFile file) throws IllegalStateException, IOException {
 		if (errors.hasErrors()) {
 			model.addAttribute("message", "Vui lòng sửa các lỗi sau đây!");
 			return "account/edit";

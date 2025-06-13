@@ -3,7 +3,7 @@ package com.happyshop.controller.admin;
 import java.io.File;
 import java.io.IOException;
 
-import javax.mail.MessagingException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.happyshop.dao.UserDAO;
 import com.happyshop.entity.User;
 import com.happyshop.service.CookieService;
-import com.happyshop.service.MailService;
 
 /**
  * ===== CONTROLLER QUẢN LÝ TÀI KHOẢN ADMIN =====
@@ -60,9 +59,6 @@ public class AccountAdminController {
 
 	@Autowired
 	ServletContext app;
-	
-	@Autowired
-	MailService mailer;	
 	
 	@Autowired
 	HttpServletRequest request;
@@ -143,7 +139,7 @@ public class AccountAdminController {
 
 	@PostMapping("/admin/profile")
 	public String edit(Model model, @ModelAttribute("form") User user,BindingResult errors,
-			@RequestParam("photo_file") MultipartFile file) throws IllegalStateException, IOException, MessagingException {
+			@RequestParam("photo_file") MultipartFile file) throws IllegalStateException, IOException {
 		if (errors.hasErrors()) {
 			model.addAttribute("message", "Vui lòng sửa các lỗi sau đây!");
 			return "admin/account/edit";

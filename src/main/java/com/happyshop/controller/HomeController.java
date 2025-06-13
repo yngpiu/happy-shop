@@ -77,14 +77,7 @@ public class HomeController {
 		return "home/contact";
 	}
 	
-	/**
-	 * Hiển thị trang feedback khách hàng
-	 * @return String view name cho feedback page
-	 */
-	@RequestMapping("/feedback")
-	public String feedback() {
-		return "home/feedback";
-	}
+
 	
 	/**
 	 * Hiển thị trang FAQ (Frequently Asked Questions)

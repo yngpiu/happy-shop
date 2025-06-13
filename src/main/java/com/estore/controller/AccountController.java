@@ -3,7 +3,7 @@ package com.estore.controller;
 import java.io.File;
 import java.io.IOException;
 
-import javax.mail.MessagingException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
@@ -22,12 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.happyshop.bean.MailInfo;
 import com.happyshop.dao.UserDAO;
 import com.happyshop.entity.Order;
 import com.happyshop.entity.User;
 import com.happyshop.service.CookieService;
-import com.happyshop.service.MailService;
 
 @Controller
 public class AccountController {
@@ -44,8 +42,7 @@ public class AccountController {
 	@Autowired
 	ServletContext app;
 
-	@Autowired
-	MailService mailer;
+
 
 
 
@@ -122,7 +119,7 @@ public class AccountController {
 			//nhận thông tin KH bằng cái Customer user
 			//nếu gặp lỗi thì hiển thị ra @ModelAttribute
 			@RequestParam("photo_file") MultipartFile file)
-			throws IllegalStateException, IOException, MessagingException {
+			throws IllegalStateException, IOException {
 		if (errors.hasErrors()) {
 			model.addAttribute("message", "Error");
 			return "account/register";
@@ -152,34 +149,7 @@ public class AccountController {
 
 
 
-	@GetMapping("/account/forgot")
-	public String forgot(Model model) {
-		return "account/forgot";
-	}
 
-	@PostMapping("/account/forgot")
-	public String forgot(Model model, 
-			@RequestParam("id") String id, 
-			@RequestParam("email") String email)
-			throws MessagingException {
-		User user = dao.findById(id);
-		if (user == null) {
-			model.addAttribute("message", "Tên tài khoản không đúng!");
-		} else if (!email.equals(user.getEmail())) {
-			model.addAttribute("message", "Email không đúng!");
-		} else {
-			String from = "happyshopsuport2022@gmail.com";
-			String to = user.getEmail();
-			String subject = "Forgot Password!";
-			String body = "Your password is: " + user.getPassword();
-			MailInfo mail = new MailInfo(from, to, subject, body);
-			mailer.send(mail);
-
-			model.addAttribute("message", "Mật khẩu được gửi tới email của bạn!");
-			
-		}
-		return "account/forgot";
-	}
 
 	@GetMapping("/account/change")
 	public String change(Model model) {
@@ -226,7 +196,7 @@ public class AccountController {
 
 	@PostMapping("/account/edit")
 	public String edit(Model model, @ModelAttribute("form") User user,BindingResult errors,
-			@RequestParam("photo_file") MultipartFile file) throws IllegalStateException, IOException, MessagingException {
+			@RequestParam("photo_file") MultipartFile file) throws IllegalStateException, IOException {
 		if (errors.hasErrors()) {
 			model.addAttribute("message", "Vui lòng sửa các lỗi sau đây!");
 			return "account/edit";

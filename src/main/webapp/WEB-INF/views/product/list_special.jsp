@@ -89,10 +89,6 @@
 										<button class="btn btn-sm btn-warning btn-star">
 											<i class="glyphicon glyphicon-star"></i>
 										</button>
-										<button class="btn btn-sm btn-success btn-open-dialog"
-											data-toggle="modal" data-target="#myModal">
-											<i class="glyphicon glyphicon-envelope"></i>
-										</button>
 									</div>
 								</div>
 
@@ -181,10 +177,6 @@
 										<button class="btn btn-sm btn-warning btn-star">
 											<i class="glyphicon glyphicon-star"></i>
 										</button>
-										<button class="btn btn-sm btn-success btn-open-dialog"
-											data-toggle="modal" data-target="#myModal">
-											<i class="glyphicon glyphicon-envelope"></i>
-										</button>
 									</div>
 								</div>
 
@@ -208,7 +200,7 @@
 
 
 
-<jsp:include page="dialog.jsp" />
+
 
 <style>
 .pull-center {

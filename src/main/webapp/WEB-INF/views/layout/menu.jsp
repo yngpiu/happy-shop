@@ -13,7 +13,7 @@ uri="http://www.springframework.org/tags" prefix="s"%>
 		<ul class="nav navbar-nav">
 			<li><a href="/home/about"><s:message code="lyt.menu.about"/></a></li>
 			<li><a href="/home/contact"><s:message code="lyt.menu.contact"/></a></li>
-			<li><a href="/home/feedback"><s:message code="lyt.menu.feedback"/></a></li>
+			
 			<li><a href="/home/faq"><s:message code="lyt.menu.faqs"/></a></li>
 			<li class="dropdown">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><s:message code="lyt.menu.account"/> <span class="caret"></span></a>
@@ -103,9 +103,7 @@ uri="http://www.springframework.org/tags" prefix="s"%>
       <li class="nav-item">
         <a class="nav-link" style="color: white" href="/contact">LIÊN HỆ</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" style="color: white" href="/feedback">PHẢN HỒI</a>
-      </li>
+
       <li class="nav-item">
         <a class="nav-link" style="color: white" href="/faq">HỎI ĐÁP</a>
       </li>
@@ -125,7 +123,6 @@ uri="http://www.springframework.org/tags" prefix="s"%>
             <ul class="dropdown-menu">
               <li><a href="/account/login">Đăng nhập</a></li>
               <li><a href="/account/register">Đăng ký</a></li>
-              <li><a href="/account/forgot">Quên mật khẩu?</a></li>
             </ul>
           </c:when>
           <c:otherwise>

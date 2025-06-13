@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.happyshop.bean.MailInfo;
 import com.happyshop.dao.ProductDAO;
 import com.happyshop.entity.Product;
 import com.happyshop.service.CookieService;
-import com.happyshop.service.MailService;
 
 /**
  * ===== CONTROLLER SẢN PHẨM USER =====
@@ -48,8 +46,7 @@ public class ProductController {
 	@Autowired
 	CookieService cookie;
 
-	@Autowired
-	MailService mail;
+
 	
 	// ================= PRODUCT LISTING OPERATIONS =================
 	
@@ -205,29 +202,5 @@ public class ProductController {
 		return "product/favo";
 	}
 	
-	// ================= SHARING OPERATIONS =================
 
-	/**
-	 * Gửi thông tin sản phẩm cho bạn bè qua email (AJAX)
-	 * @param model Model object
-	 * @param info MailInfo chứa thông tin email
-	 * @param req HttpServletRequest để lấy product ID
-	 * @return String "true" nếu gửi thành công, "false" nếu lỗi
-	 */
-	@ResponseBody
-	@RequestMapping("/product/send-to-friend")
-	public String sendToFriend(Model model,MailInfo info,HttpServletRequest req) {
-		//send mail
-		info.setSubject("Thông tin hàng hóa");
-		try {
-			String id=req.getParameter("id");
-			String link=req.getRequestURL().toString().replace("send-to-friend", "detail/"+id);
-			info.setBody(info.getBody()+"<hr><a href='"+link+"'>Xem chi tiết...</a>");
-			mail.send(info);
-			return "true";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "false";
-		}
-	}
 }
