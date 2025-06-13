@@ -20,6 +20,12 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />
 
+<!-- Bootstrap Icons -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css"
+/>
+
 <!-- Google Fonts -->
 <link
   href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap"
@@ -41,6 +47,7 @@
 <!-- Custom JS -->
 <script src="/static/js/index.js"></script>
 <script src="/static/js/scoll.js"></script>
+<script src="/static/js/estores.js"></script>
 
 <script>
   $(document).ready(function () {

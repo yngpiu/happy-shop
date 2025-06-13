@@ -12,7 +12,22 @@ $(document).ready(function () {
   $(document).on('click', '.btn-add-to-cart, .btn-add-cart', function (e) {
     e.preventDefault();
     const button = $(this);
-    const productId = button.data('id');
+
+    // Try multiple ways to get product ID
+    let productId = button.data('id');
+    if (!productId) {
+      productId = button.attr('data-id');
+    }
+    if (!productId) {
+      productId = this.getAttribute('data-id');
+    }
+
+    // Stop if no product ID found
+    if (!productId) {
+      console.error('No product ID found!');
+      showToast('Lỗi!', 'Không tìm thấy ID sản phẩm', 'error');
+      return;
+    }
 
     // Disable button and show loading
     button.prop('disabled', true);
@@ -105,7 +120,22 @@ $(document).ready(function () {
   $(document).on('click', '.btn-wishlist', function (e) {
     e.preventDefault();
     const button = $(this);
-    const productId = button.data('id');
+
+    // Try multiple ways to get product ID
+    let productId = button.data('id');
+    if (!productId) {
+      productId = button.attr('data-id');
+    }
+    if (!productId) {
+      productId = this.getAttribute('data-id');
+    }
+
+    if (!productId) {
+      console.error('No product ID found for wishlist!');
+      showToast('Lỗi!', 'Không tìm thấy ID sản phẩm', 'error');
+      return;
+    }
+
     const icon = button.find('i');
 
     // Toggle heart icon

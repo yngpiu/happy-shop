@@ -119,17 +119,13 @@ public class ProductController {
 			list = pdao.findActiveProducts(id);
 		}
 		
-		// Debug log
-		System.out.println("=== DEBUG: listByNews ===");
-		System.out.println("ID parameter: " + id);
-		System.out.println("Products found: " + (list != null ? list.size() : "null"));
-		if (list != null && !list.isEmpty()) {
-			System.out.println("First product: " + list.get(0).getName());
-		}
+		// Products loaded successfully
 		
 		model.addAttribute("list1", list);
 		return "product/list-by-new_full";
 	}
+	
+
 
 	// ================= PRODUCT DETAIL OPERATIONS =================
 

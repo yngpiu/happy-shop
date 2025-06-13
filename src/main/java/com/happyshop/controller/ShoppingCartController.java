@@ -76,6 +76,16 @@ public class ShoppingCartController {
 		return info;
 	}
 	
+	/**
+	 * Lấy số lượng sản phẩm trong giỏ hàng (AJAX)
+	 * @return Integer số lượng sản phẩm trong giỏ hàng
+	 */
+	@ResponseBody
+	@RequestMapping("/cart/count")
+	public Integer getCount() {
+		return cart.getCount();
+	}
+	
 	// ================= VIEW OPERATIONS =================
 	
 	/**

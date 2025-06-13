@@ -136,6 +136,38 @@ uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
         transform: rotate(360deg);
       }
     }
+
+    /* Button States */
+    .btn-cart {
+      transition: all 0.3s ease;
+    }
+
+    .btn-cart.success {
+      background-color: #28a745 !important;
+      border-color: #28a745 !important;
+    }
+
+    .btn-cart.loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    /* Product Card Loading */
+    .simple-product-card.loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    /* Toast Container */
+    .toast-container {
+      z-index: 1055;
+    }
+
+    .toast {
+      background-color: white;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
   </style>
 
   <body>
@@ -158,5 +190,25 @@ uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
     <button class="scroll-to-top" title="Lên đầu trang">
       <i class="bi bi-arrow-up"></i>
     </button>
+
+    <!-- Scroll to Top JavaScript -->
+    <script>
+      $(document).ready(function () {
+        // Show/hide scroll to top button
+        $(window).scroll(function () {
+          if ($(this).scrollTop() > 300) {
+            $('.scroll-to-top').fadeIn();
+          } else {
+            $('.scroll-to-top').fadeOut();
+          }
+        });
+
+        // Scroll to top functionality
+        $('.scroll-to-top').click(function () {
+          $('html, body').animate({ scrollTop: 0 }, 600);
+          return false;
+        });
+      });
+    </script>
   </body>
 </html>

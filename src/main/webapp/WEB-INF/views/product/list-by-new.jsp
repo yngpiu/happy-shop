@@ -18,7 +18,14 @@
 					<!-- Discount Badge -->
 					<c:if test="${p.discount > 0}">
 						<div class="discount-badge">
-							-<f:formatNumber value="${p.discount * 100}" pattern="#"/>%
+							<c:choose>
+								<c:when test="${p.discount < 1}">
+									-<f:formatNumber value="${p.discount * 100}" pattern="#"/>%
+								</c:when>
+								<c:otherwise>
+									-<f:formatNumber value="${p.discount}" pattern="#"/>%
+								</c:otherwise>
+							</c:choose>
 						</div>
 					</c:if>
 				</div>
@@ -38,7 +45,14 @@
 									<f:formatNumber value="${p.unitPrice}" pattern="#,###"/>đ
 								</span>
 								<span class="sale-price">
-									<f:formatNumber value="${p.unitPrice * (1 - p.discount)}" pattern="#,###"/>đ
+									<c:choose>
+										<c:when test="${p.discount < 1}">
+											<f:formatNumber value="${p.unitPrice * (1 - p.discount)}" pattern="#,###"/>đ
+										</c:when>
+										<c:otherwise>
+											<f:formatNumber value="${p.unitPrice * (1 - p.discount/100)}" pattern="#,###"/>đ
+										</c:otherwise>
+									</c:choose>
 								</span>
 							</c:when>
 							<c:otherwise>
@@ -51,11 +65,11 @@
 					
 					<!-- Action Buttons -->
 					<div class="action-buttons">
-						<button class="btn btn-cart btn-add-to-cart" data-id="${p.id}">
+						<button class="btn btn-cart btn-add-to-cart" data-id="${p.id}" onclick="testAddToCart(${p.id}); return false;">
 							<i class="bi bi-cart-plus me-1"></i>Thêm vào giỏ
 						</button>
-						<button class="btn btn-heart btn-wishlist" data-id="${p.id}">
-							Yêu thích
+						<button class="btn btn-heart btn-wishlist" data-id="${p.id}" onclick="testWishlist(${p.id}); return false;">
+							<i class="bi bi-heart me-1"></i>Yêu thích
 						</button>
 					</div>
 				</div>

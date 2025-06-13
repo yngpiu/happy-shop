@@ -110,23 +110,6 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
     </button>
   </div>
 </div>
-<!-- Banner Section -->
-<div class="container my-5">
-  <div class="position-relative overflow-hidden rounded-3 shadow">
-    <img
-      src="https://hoanghamobile.com/Uploads/2022/04/21/macbook-air-m1-gdn-hotsale.jpg"
-      alt="MacBook Sale Banner"
-      class="img-fluid w-100"
-      style="height: 200px; object-fit: cover"
-    />
-    <div
-      class="position-absolute top-50 start-50 translate-middle text-white text-center"
-    >
-      <h3 class="fw-bold mb-2">FLASH SALE</h3>
-      <p class="mb-0">Giảm giá sốc đến 70%</p>
-    </div>
-  </div>
-</div>
 
 <!-- Featured Products Section -->
 <div class="container my-5">
@@ -220,6 +203,141 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
       $(e.relatedTarget).find('.carousel-caption').fadeIn(300);
     });
   });
+
+  // Working cart and wishlist functions for home page
+  window.testAddToCart = function (productId) {
+    const button = event.target;
+    addToCartWorking(productId, button);
+    return false;
+  };
+
+  window.testWishlist = function (productId) {
+    const button = event.target;
+    addToWishlistWorking(productId, button);
+    return false;
+  };
+
+  window.addToCartWorking = function (productId, button) {
+    console.log('Adding to cart, Product ID:', productId);
+
+    // Disable button and show loading
+    $(button).prop('disabled', true);
+    const originalText = $(button).html();
+    $(button).html('<i class="bi bi-arrow-repeat spin me-1"></i>Đang thêm...');
+
+    // AJAX call to add to cart
+    $.ajax({
+      url: '/cart/add/' + productId,
+      type: 'GET',
+      success: function (response) {
+        console.log('Cart add success:', response);
+
+        // Success animation
+        $(button).removeClass('btn-primary').addClass('btn-success');
+        $(button).html(
+          '<i class="bi bi-check-circle me-1"></i>Đã thêm vào giỏ'
+        );
+
+        // Show toast notification
+        showToast(
+          'Thành công!',
+          'Sản phẩm đã được thêm vào giỏ hàng',
+          'success'
+        );
+
+        // Reset button after 2 seconds
+        setTimeout(function () {
+          $(button).addClass('btn-primary').removeClass('btn-success');
+          $(button).html(originalText);
+          $(button).prop('disabled', false);
+        }, 2000);
+      },
+      error: function (xhr, status, error) {
+        console.log('Cart add error:', xhr, status, error);
+
+        // Error handling
+        $(button).removeClass('btn-primary').addClass('btn-danger');
+        $(button).html('<i class="bi bi-x-circle me-1"></i>Lỗi');
+
+        showToast('Lỗi!', 'Không thể thêm sản phẩm vào giỏ hàng', 'error');
+
+        // Reset button
+        setTimeout(function () {
+          $(button).addClass('btn-primary').removeClass('btn-danger');
+          $(button).html(originalText);
+          $(button).prop('disabled', false);
+        }, 2000);
+      },
+    });
+  };
+
+  window.addToWishlistWorking = function (productId, button) {
+    console.log('Adding to wishlist, Product ID:', productId);
+
+    const icon = $(button).find('i');
+
+    $.ajax({
+      url: '/product/add-to-favo/' + productId,
+      type: 'GET',
+      success: function (response) {
+        console.log('Wishlist success:', response);
+
+        if (response === 'true') {
+          // Change icon only, keep button style
+          if (icon.length > 0) {
+            icon.removeClass('bi-heart').addClass('bi-heart-fill');
+            icon.css('color', '#dc3545'); // Red color for filled heart
+          }
+
+          // Animation
+          $(button).addClass('wishlist-animation');
+          setTimeout(function () {
+            $(button).removeClass('wishlist-animation');
+          }, 600);
+
+          showToast('Yêu thích!', 'Đã thêm vào danh sách yêu thích', 'success');
+        } else {
+          showToast(
+            'Thông báo',
+            'Sản phẩm đã có trong danh sách yêu thích',
+            'info'
+          );
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log('Wishlist error:', xhr, status, error);
+        showToast('Lỗi!', 'Không thể thêm vào danh sách yêu thích', 'error');
+      },
+    });
+  };
+
+  // Toast notification function (simple version)
+  window.showToast = function (title, message, type) {
+    const alertClass =
+      {
+        success: 'alert-success',
+        error: 'alert-danger',
+        info: 'alert-info',
+        warning: 'alert-warning',
+      }[type] || 'alert-info';
+
+    const toastHtml = `
+      <div class="alert ${alertClass} alert-dismissible fade show position-fixed" 
+           style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+        <strong>${title}</strong> ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    `;
+
+    $('body').append(toastHtml);
+
+    // Auto remove after 3 seconds
+    setTimeout(function () {
+      $('.alert').fadeOut(function () {
+        $(this).remove();
+      });
+    }, 3000);
+  };
 </script>
 
 <style>

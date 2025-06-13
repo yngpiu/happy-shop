@@ -51,7 +51,14 @@
                     <!-- Discount Badge -->
                     <c:if test="${p.discount > 0}">
                       <div class="discount-badge">
-                        -<f:formatNumber value="${p.discount * 100}" pattern="#"/>%
+                        <c:choose>
+                          <c:when test="${p.discount < 1}">
+                            -<f:formatNumber value="${p.discount * 100}" pattern="#"/>%
+                          </c:when>
+                          <c:otherwise>
+                            -<f:formatNumber value="${p.discount}" pattern="#"/>%
+                          </c:otherwise>
+                        </c:choose>
                       </div>
                     </c:if>
                   </div>
@@ -71,7 +78,14 @@
                             <f:formatNumber value="${p.unitPrice}" pattern="#,###"/>đ
                           </span>
                           <span class="sale-price">
-                            <f:formatNumber value="${p.unitPrice * (1 - p.discount)}" pattern="#,###"/>đ
+                            <c:choose>
+                              <c:when test="${p.discount < 1}">
+                                <f:formatNumber value="${p.unitPrice * (1 - p.discount)}" pattern="#,###"/>đ
+                              </c:when>
+                              <c:otherwise>
+                                <f:formatNumber value="${p.unitPrice * (1 - p.discount/100)}" pattern="#,###"/>đ
+                              </c:otherwise>
+                            </c:choose>
                           </span>
                         </c:when>
                         <c:otherwise>
@@ -86,7 +100,7 @@
                     <div class="action-buttons">
                       <c:choose>
                         <c:when test="${p.available && p.quantity > 0}">
-                          <button class="btn btn-cart btn-add-to-cart" data-id="${p.id}">
+                          <button class="btn btn-cart btn-add-to-cart" data-id="${p.id}" onclick="testAddToCart(${p.id}); return false;">
                             <i class="bi bi-cart-plus me-1"></i>Thêm vào giỏ
                           </button>
                         </c:when>
@@ -96,8 +110,8 @@
                           </button>
                         </c:otherwise>
                       </c:choose>
-                      <button class="btn btn-heart btn-wishlist" data-id="${p.id}">
-                        Yêu thích
+                      <button class="btn btn-heart btn-wishlist" data-id="${p.id}" onclick="testWishlist(${p.id}); return false;">
+                        <i class="bi bi-heart me-1"></i>Yêu thích
                       </button>
                     </div>
                   </div>
@@ -374,3 +388,130 @@
   100% { transform: scale(1); }
 }
 </style>
+
+<script>
+// Working cart and wishlist functions
+function addToCartWorking(productId, button) {
+  console.log('Adding to cart, Product ID:', productId);
+  
+  // Disable button and show loading
+  $(button).prop('disabled', true);
+  const originalText = $(button).html();
+  $(button).html('<i class="bi bi-arrow-repeat spin me-1"></i>Đang thêm...');
+  
+  // AJAX call to add to cart
+  $.ajax({
+    url: '/cart/add/' + productId,
+    type: 'GET',
+    success: function(response) {
+      console.log('Cart add success:', response);
+      
+      // Success animation
+      $(button).removeClass('btn-primary').addClass('btn-success');
+      $(button).html('<i class="bi bi-check-circle me-1"></i>Đã thêm vào giỏ');
+      
+      // Show toast notification
+      showToast('Thành công!', 'Sản phẩm đã được thêm vào giỏ hàng', 'success');
+      
+      // Reset button after 2 seconds
+      setTimeout(function() {
+        $(button).addClass('btn-primary').removeClass('btn-success');
+        $(button).html(originalText);
+        $(button).prop('disabled', false);
+      }, 2000);
+    },
+    error: function(xhr, status, error) {
+      console.log('Cart add error:', xhr, status, error);
+      
+      // Error handling
+      $(button).removeClass('btn-primary').addClass('btn-danger');
+      $(button).html('<i class="bi bi-x-circle me-1"></i>Lỗi');
+      
+      showToast('Lỗi!', 'Không thể thêm sản phẩm vào giỏ hàng', 'error');
+      
+      // Reset button
+      setTimeout(function() {
+        $(button).addClass('btn-primary').removeClass('btn-danger');
+        $(button).html(originalText);
+        $(button).prop('disabled', false);
+      }, 2000);
+    }
+  });
+}
+
+function addToWishlistWorking(productId, button) {
+  console.log('Adding to wishlist, Product ID:', productId);
+  
+  const icon = $(button).find('i');
+  
+  $.ajax({
+    url: '/product/add-to-favo/' + productId,
+    type: 'GET',
+    success: function(response) {
+      console.log('Wishlist success:', response);
+      
+      if (response === 'true') {
+        // Change icon only, keep button style
+        if (icon.length > 0) {
+          icon.removeClass('bi-heart').addClass('bi-heart-fill');
+          icon.css('color', '#dc3545'); // Red color for filled heart
+        }
+        
+        // Animation
+        $(button).addClass('wishlist-animation');
+        setTimeout(function() {
+          $(button).removeClass('wishlist-animation');
+        }, 600);
+        
+        showToast('Yêu thích!', 'Đã thêm vào danh sách yêu thích', 'success');
+      } else {
+        showToast('Thông báo', 'Sản phẩm đã có trong danh sách yêu thích', 'info');
+      }
+    },
+    error: function(xhr, status, error) {
+      console.log('Wishlist error:', xhr, status, error);
+      showToast('Lỗi!', 'Không thể thêm vào danh sách yêu thích', 'error');
+    }
+  });
+}
+
+// Test functions for debugging
+function testAddToCart(productId) {
+  const button = event.target;
+  addToCartWorking(productId, button);
+  return false;
+}
+
+function testWishlist(productId) {
+  const button = event.target;
+  addToWishlistWorking(productId, button);
+  return false;
+}
+
+// Toast notification function (simple version)
+function showToast(title, message, type) {
+  const alertClass = {
+    'success': 'alert-success',
+    'error': 'alert-danger', 
+    'info': 'alert-info',
+    'warning': 'alert-warning'
+  }[type] || 'alert-info';
+  
+  const toastHtml = `
+    <div class="alert ${alertClass} alert-dismissible fade show position-fixed" 
+         style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+      <strong>${title}</strong> ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `;
+  
+  $('body').append(toastHtml);
+  
+  // Auto remove after 3 seconds
+  setTimeout(function() {
+    $('.alert').fadeOut(function() {
+      $(this).remove();
+    });
+  }, 3000);
+}
+</script>
