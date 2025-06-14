@@ -431,12 +431,13 @@
 
 /* Cart Summary */
 .cart-summary {
-	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	background: #2c3e50;
 	color: white;
 	border-radius: 15px;
 	padding: 2rem;
 	position: sticky;
 	top: 2rem;
+	border: 1px solid #34495e;
 }
 
 .summary-title {
