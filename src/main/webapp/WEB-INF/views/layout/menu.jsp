@@ -25,10 +25,10 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                   ${category.name}
                   <i class="bi bi-chevron-right ms-auto"></i>
                 </a>
-              </li>
+			</li>
             </c:forEach>
-          </ul>
-        </div>
+		</ul>
+	</div>
       </div>
 
       <!-- Main Menu -->
@@ -38,36 +38,36 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
             <a class="nav-link text-white fw-bold" href="/">
               <i class="bi bi-house me-1"></i>
               TRANG CHỦ
-            </a>
-          </li>
+        </a>
+      </li>
           <li class="nav-item me-4">
             <a class="nav-link text-white fw-bold" href="/about">
               <i class="bi bi-info-circle me-1"></i>
               GIỚI THIỆU
             </a>
-          </li>
+      </li>
           <li class="nav-item me-4">
             <a class="nav-link text-white fw-bold" href="/contact">
               <i class="bi bi-telephone me-1"></i>
               LIÊN HỆ
             </a>
-          </li>
+      </li>
           <li class="nav-item me-4">
             <a class="nav-link text-white fw-bold" href="/faq">
               <i class="bi bi-question-circle me-1"></i>
               HỎI ĐÁP
             </a>
-          </li>
-          
+      </li>
+
           <!-- Account Dropdown -->
-          <li class="nav-item dropdown">
+      <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-white fw-bold" href="#" 
                data-bs-toggle="dropdown">
               <i class="bi bi-person me-1"></i>
-              TÀI KHOẢN
-            </a>
+          TÀI KHOẢN
+        </a>
             <ul class="dropdown-menu account-menu shadow-lg">
-              <c:choose>
+        <c:choose>
                 <c:when test="${empty sessionScope.user}">
                   <li>
                     <a class="dropdown-item" href="/account/login">
@@ -81,8 +81,8 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                       Đăng ký
                     </a>
                   </li>
-                </c:when>
-                <c:otherwise>
+          </c:when>
+          <c:otherwise>
                   <li class="dropdown-header">
                     <i class="bi bi-person-circle me-2"></i>
                     Xin chào, ${sessionScope.user.id}
@@ -99,31 +99,31 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                       <i class="bi bi-key me-2 text-warning"></i>
                       Thay đổi mật khẩu
                     </a>
-                  </li>
+              </li>
                   <li>
                     <a class="dropdown-item" href="/order/list">
                       <i class="bi bi-bag-check me-2 text-success"></i>
                       Lịch sử đơn hàng
                     </a>
-                  </li>
+              </li>
                   <li>
                     <a class="dropdown-item" href="/order/items">
                       <i class="bi bi-box-seam me-2 text-primary"></i>
                       Sản phẩm đã mua
                     </a>
-                  </li>
+              </li>
                   <li><hr class="dropdown-divider"></li>
                   <li>
                     <a class="dropdown-item text-danger" href="/account/logout">
                       <i class="bi bi-box-arrow-right me-2"></i>
                       Đăng xuất
                     </a>
-                  </li>
+              </li>
                 </c:otherwise>
               </c:choose>
             </ul>
-          </li>
-        </ul>
+      </li>
+    </ul>
       </div>
     </div>
   </div>
@@ -160,12 +160,12 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                            class="list-group-item list-group-item-action">
                           <i class="bi bi-tag me-2 text-primary"></i>
                           ${category.name}
-                        </a>
-                      </c:forEach>
+    </a>
+  </c:forEach>
                     </div>
                   </div>
                 </div>
-              </div>
+</div>
               
               <!-- Main Menu Items -->
               <div class="list-group list-group-flush">
@@ -264,7 +264,7 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
   border-radius: 12px;
   padding: 0.5rem 0;
   min-width: 250px;
-}
+  }
 
 .account-menu .dropdown-item {
   padding: 0.75rem 1.25rem;
@@ -340,5 +340,5 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 
 .categories-menu::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
-}
+  }
 </style>

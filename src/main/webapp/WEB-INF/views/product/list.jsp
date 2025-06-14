@@ -9,7 +9,7 @@
       <h3 class="section-title">
         <i class="bi bi-search text-primary me-2"></i>
         KẾT QUẢ TÌM KIẾM
-      </h3>
+	</h3>
       <p class="section-subtitle text-muted">
         <c:choose>
           <c:when test="${not empty param.keywords}">
@@ -40,8 +40,8 @@
               </button>
             </div>
           </div>
-        </c:when>
-        <c:otherwise>
+						</c:when>
+						<c:otherwise>
           <!-- Search Results Count -->
           <div class="row mb-3">
             <div class="col-md-6">
@@ -82,11 +82,11 @@
                     <!-- Discount Badge -->
                     <c:if test="${p.discount > 0}">
                       <div class="discount-badge">
-                        <c:choose>
+						<c:choose>
                           <c:when test="${p.discount < 1}">
                             -<f:formatNumber value="${p.discount * 100}" pattern="#"/>%
-                          </c:when>
-                          <c:otherwise>
+							</c:when>
+							<c:otherwise>
                             -<f:formatNumber value="${p.discount}" pattern="#"/>%
                           </c:otherwise>
                         </c:choose>
@@ -107,7 +107,7 @@
                         <c:when test="${p.discount > 0}">
                           <span class="original-price">
                             <f:formatNumber value="${p.unitPrice}" pattern="#,###"/>đ
-                          </span>
+								</span>
                           <span class="sale-price">
                             <c:choose>
                               <c:when test="${p.discount < 1}">
@@ -115,16 +115,16 @@
                               </c:when>
                               <c:otherwise>
                                 <f:formatNumber value="${p.unitPrice * (1 - p.discount/100)}" pattern="#,###"/>đ
-                              </c:otherwise>
-                            </c:choose>
-                          </span>
-                        </c:when>
-                        <c:otherwise>
+							</c:otherwise>
+						</c:choose>
+								</span>
+							</c:when>
+							<c:otherwise>
                           <span class="current-price">
                             <f:formatNumber value="${p.unitPrice}" pattern="#,###"/>đ
                           </span>
-                        </c:otherwise>
-                      </c:choose>
+							</c:otherwise>
+						</c:choose>
                     </div>
                     
                     <!-- Action Buttons -->
@@ -133,19 +133,19 @@
                         <c:when test="${p.available && p.quantity > 0}">
                           <button class="btn btn-cart btn-add-to-cart" data-id="${p.id}" onclick="testAddToCart(${p.id}); return false;">
                             <i class="bi bi-cart-plus me-1"></i>Thêm vào giỏ
-                          </button>
+						</button>
                         </c:when>
                         <c:otherwise>
                           <button class="btn btn-cart" disabled>
                             <i class="bi bi-x-circle me-1"></i>Hết hàng
-                          </button>
+						</button>
                         </c:otherwise>
                       </c:choose>
                       <button class="btn btn-heart btn-wishlist" data-id="${p.id}" onclick="testWishlist(${p.id}); return false;">
                         <i class="bi bi-heart me-1"></i>Yêu thích
-                      </button>
-                    </div>
-                  </div>
+						</button>
+					</div>
+				</div>
                 </div>
               </div>
             </c:forEach>
@@ -153,8 +153,8 @@
         </c:otherwise>
       </c:choose>
     </div>
-  </div>
-</div>
+			</div>
+		</div>
 
 <style>
 /* Unified Products Section Styling */
