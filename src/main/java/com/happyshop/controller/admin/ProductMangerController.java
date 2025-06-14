@@ -300,10 +300,10 @@ public class ProductMangerController {
 			// Kiểm tra số đơn hàng liên quan
 			Long orderCount = productDAO.countOrdersByProduct(id);
 			
-			// Xóa các OrderDetails liên quan trước (nếu có)
+			// Xóa các OrderDetails và Orders liên quan trước (nếu có)
 			if (orderCount > 0) {
 				int deletedOrderDetails = productDAO.deleteOrderDetailsByProduct(id);
-				System.out.println("Đã xóa " + deletedOrderDetails + " chi tiết đơn hàng liên quan đến sản phẩm ID: " + id);
+				System.out.println("Đã xóa OrderDetails và Orders liên quan đến sản phẩm ID: " + id);
 			}
 			
 			// Xóa vĩnh viễn sản phẩm
@@ -311,7 +311,7 @@ public class ProductMangerController {
 			
 			String message = "Đã xóa vĩnh viễn sản phẩm '" + productName + "'";
 			if (orderCount > 0) {
-				message += " (bao gồm " + orderCount + " đơn hàng liên quan)";
+				message += " (bao gồm " + orderCount + " đơn hàng và chi tiết đơn hàng liên quan)";
 			}
 			
 			redirectAttributes.addFlashAttribute("message", message);
@@ -344,7 +344,7 @@ public class ProductMangerController {
 			for (Product product : trashedProducts) {
 				Long orderCount = productDAO.countOrdersByProduct(product.getId());
 				
-				// Xóa OrderDetails liên quan (nếu có)
+				// Xóa OrderDetails và Orders liên quan (nếu có)
 				if (orderCount > 0) {
 					int deletedOrderDetails = productDAO.deleteOrderDetailsByProduct(product.getId());
 					totalOrderDetails += deletedOrderDetails;
@@ -357,7 +357,7 @@ public class ProductMangerController {
 			
 			String message = "Đã dọn sạch thùng rác: " + deletedCount + " sản phẩm đã xóa";
 			if (totalOrderDetails > 0) {
-				message += " (bao gồm " + totalOrderDetails + " chi tiết đơn hàng)";
+				message += " (bao gồm các đơn hàng và chi tiết đơn hàng liên quan)";
 			}
 			
 			redirectAttributes.addFlashAttribute("message", message);

@@ -203,15 +203,45 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	/**
-	 * Xóa tất cả OrderDetails liên quan đến sản phẩm
+	 * Xóa tất cả OrderDetails liên quan đến sản phẩm và các Order trống
 	 */
 	@Override
 	public int deleteOrderDetailsByProduct(Integer productId) {
 		Session session = factory.getCurrentSession();
-		String hql = "DELETE FROM OrderDetail WHERE product.id = :productId";
-		Query<?> query = session.createQuery(hql);
-		query.setParameter("productId", productId);
-		return query.executeUpdate();
+		
+		// Lấy danh sách Order IDs có chứa sản phẩm này
+		String getOrdersHql = "SELECT DISTINCT od.order.id FROM OrderDetail od WHERE od.product.id = :productId";
+		Query<Integer> getOrdersQuery = session.createQuery(getOrdersHql, Integer.class);
+		getOrdersQuery.setParameter("productId", productId);
+		List<Integer> affectedOrderIds = getOrdersQuery.getResultList();
+		
+		// Xóa OrderDetails liên quan đến sản phẩm
+		String deleteDetailsHql = "DELETE FROM OrderDetail WHERE product.id = :productId";
+		Query<?> deleteDetailsQuery = session.createQuery(deleteDetailsHql);
+		deleteDetailsQuery.setParameter("productId", productId);
+		int deletedDetails = deleteDetailsQuery.executeUpdate();
+		
+		// Xóa các Order không còn OrderDetails nào
+		int deletedOrders = 0;
+		for (Integer orderId : affectedOrderIds) {
+			// Kiểm tra xem Order còn OrderDetails nào không
+			String countDetailsHql = "SELECT COUNT(*) FROM OrderDetail WHERE order.id = :orderId";
+			Query<Long> countQuery = session.createQuery(countDetailsHql, Long.class);
+			countQuery.setParameter("orderId", orderId);
+			Long remainingDetails = countQuery.getSingleResult();
+			
+			// Nếu không còn OrderDetails nào, xóa Order
+			if (remainingDetails == 0) {
+				String deleteOrderHql = "DELETE FROM Order WHERE id = :orderId";
+				Query<?> deleteOrderQuery = session.createQuery(deleteOrderHql);
+				deleteOrderQuery.setParameter("orderId", orderId);
+				deleteOrderQuery.executeUpdate();
+				deletedOrders++;
+			}
+		}
+		
+		System.out.println("Đã xóa " + deletedDetails + " OrderDetails và " + deletedOrders + " Orders cho sản phẩm ID: " + productId);
+		return deletedDetails;
 	}
 
 	// ================= FILTER BY CATEGORY =================
