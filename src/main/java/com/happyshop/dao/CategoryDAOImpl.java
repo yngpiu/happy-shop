@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -184,7 +185,7 @@ public class CategoryDAOImpl implements CategoryDAO{
 		
 		// Xóa vĩnh viễn các category hết hạn
 		String hql = "DELETE FROM Category WHERE deletedAt IS NOT NULL AND deletedAt <= :cutoffDate";
-		org.hibernate.query.Query query = session.createQuery(hql);
+		Query query = session.createQuery(hql);
 		query.setParameter("cutoffDate", cutoffDate);
 		
 		int deletedCount = query.executeUpdate();

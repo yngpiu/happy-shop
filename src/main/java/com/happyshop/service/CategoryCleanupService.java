@@ -31,6 +31,8 @@ public class CategoryCleanupService {
 	 * Chạy mỗi ngày lúc 2:00 AM
 	 * Cron pattern: giây phút giờ ngày tháng thứ
 	 */
+
+	 //giây phút giờ ngày tháng thứ
 	@Scheduled(cron = "0 0 2 * * ?")
 	public void cleanupExpiredCategories() {
 		logger.info("=== BẮT ĐẦU DỌNG DẸP TỰ ĐỘNG ===");
