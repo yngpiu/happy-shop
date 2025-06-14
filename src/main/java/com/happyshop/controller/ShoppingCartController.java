@@ -4,7 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.ResponseEntity;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.happyshop.service.CartService;
 
@@ -84,6 +89,58 @@ public class ShoppingCartController {
 	@RequestMapping("/cart/count")
 	public Integer getCount() {
 		return cart.getCount();
+	}
+	
+	/**
+	 * Cập nhật số lượng sản phẩm trong giỏ hàng (POST method)
+	 * @param id ID của sản phẩm
+	 * @param quantity Số lượng mới từ form data
+	 * @return ResponseEntity với thông tin cart
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/cart/update/{id}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> updateQuantity(
+			@PathVariable("id") Integer id, 
+			@RequestParam("quantity") Integer quantity) {
+		
+		try {
+			cart.update(id, quantity);
+			
+			Map<String, Object> response = new HashMap<>();
+			response.put("success", true);
+			response.put("count", cart.getCount());
+			response.put("amount", cart.getAmount());
+			response.put("message", "Cập nhật thành công");
+			
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("success", false);
+			response.put("message", "Lỗi khi cập nhật giỏ hàng");
+			
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+	
+	/**
+	 * Lấy thông tin tóm tắt giỏ hàng (AJAX)
+	 * @return Map chứa thông tin tóm tắt giỏ hàng
+	 */
+	@ResponseBody
+	@RequestMapping("/cart/summary")
+	public Map<String, Object> getSummary() {
+		Map<String, Object> summary = new HashMap<>();
+		summary.put("count", cart.getCount());
+		summary.put("subtotal", cart.getAmount());
+		
+		// Calculate total with shipping
+		double total = cart.getAmount();
+		if (total > 0 && total < 500000) {
+			total += 30000; // Add shipping fee
+		}
+		summary.put("total", total);
+		
+		return summary;
 	}
 	
 	// ================= VIEW OPERATIONS =================
