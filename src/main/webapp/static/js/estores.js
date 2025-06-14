@@ -44,38 +44,70 @@ $(document).ready(function () {
       url: '/cart/add/' + productId,
       type: 'GET',
       success: function (response) {
-        // Success animation
-        button.removeClass('btn-primary btn-special').addClass('btn-success');
-        button.html('<i class="bi bi-check-circle me-2"></i>Đã thêm vào giỏ');
+        if (response.success) {
+          // Success animation
+          button.removeClass('btn-primary btn-special').addClass('btn-success');
+          button.html('<i class="bi bi-check-circle me-2"></i>Đã thêm vào giỏ');
 
-        // Update cart count in header
-        updateCartCount();
+          // Update cart count in header
+          updateCartCount();
 
-        // Show success toast
-        showToast(
-          'Thành công!',
-          'Sản phẩm đã được thêm vào giỏ hàng',
-          'success'
-        );
+          // Show success toast
+          showToast(
+            'Thành công!',
+            response.message || 'Sản phẩm đã được thêm vào giỏ hàng',
+            'success'
+          );
 
-        // Reset button after 2 seconds
-        setTimeout(function () {
-          button.addClass('btn-primary').removeClass('btn-success');
-          button.html(originalText);
-          button.prop('disabled', false);
-          button
-            .closest(
-              '.product-card, .special-product-card, .simple-product-card'
-            )
-            .removeClass('loading');
-        }, 2000);
+          // Reset button after 2 seconds
+          setTimeout(function () {
+            button.addClass('btn-primary').removeClass('btn-success');
+            button.html(originalText);
+            button.prop('disabled', false);
+            button
+              .closest(
+                '.product-card, .special-product-card, .simple-product-card'
+              )
+              .removeClass('loading');
+          }, 2000);
+        } else {
+          // Handle server-side validation error
+          button.removeClass('btn-primary btn-special').addClass('btn-warning');
+          button.html(
+            '<i class="bi bi-exclamation-triangle me-2"></i>Không đủ hàng'
+          );
+
+          showToast(
+            'Cảnh báo!',
+            response.message || 'Không thể thêm sản phẩm vào giỏ hàng',
+            'warning'
+          );
+
+          // Reset button
+          setTimeout(function () {
+            button.addClass('btn-primary').removeClass('btn-warning');
+            button.html(originalText);
+            button.prop('disabled', false);
+            button
+              .closest(
+                '.product-card, .special-product-card, .simple-product-card'
+              )
+              .removeClass('loading');
+          }, 3000);
+        }
       },
-      error: function () {
+      error: function (xhr) {
+        let errorMessage = 'Không thể thêm sản phẩm vào giỏ hàng';
+
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+          errorMessage = xhr.responseJSON.message;
+        }
+
         // Error handling
         button.removeClass('btn-primary btn-special').addClass('btn-danger');
         button.html('<i class="bi bi-x-circle me-2"></i>Lỗi');
 
-        showToast('Lỗi!', 'Không thể thêm sản phẩm vào giỏ hàng', 'error');
+        showToast('Lỗi!', errorMessage, 'error');
 
         // Reset button
         setTimeout(function () {
@@ -87,7 +119,7 @@ $(document).ready(function () {
               '.product-card, .special-product-card, .simple-product-card'
             )
             .removeClass('loading');
-        }, 2000);
+        }, 3000);
       },
     });
   });

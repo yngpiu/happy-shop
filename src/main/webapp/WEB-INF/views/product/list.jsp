@@ -84,7 +84,7 @@
                       <div class="discount-badge">
 						<c:choose>
                           <c:when test="${p.discount < 1}">
-                            -<f:formatNumber value="${p.discount * 100}" pattern="#"/>%
+                            -<f:formatNumber value="${p.discount}" pattern="#"/>%
 							</c:when>
 							<c:otherwise>
                             -<f:formatNumber value="${p.discount}" pattern="#"/>%
@@ -111,7 +111,7 @@
                           <span class="sale-price">
                             <c:choose>
                               <c:when test="${p.discount < 1}">
-                                <f:formatNumber value="${p.unitPrice * (1 - p.discount)}" pattern="#,###"/>đ
+                                <f:formatNumber value="${p.unitPrice * (1 - p.discount/100)}" pattern="#,###"/>đ
                               </c:when>
                               <c:otherwise>
                                 <f:formatNumber value="${p.unitPrice * (1 - p.discount/100)}" pattern="#,###"/>đ

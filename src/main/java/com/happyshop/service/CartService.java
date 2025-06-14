@@ -48,15 +48,50 @@ public class CartService {
 	 * Thêm sản phẩm vào giỏ hàng
 	 * Nếu sản phẩm đã có, tăng số lượng lên 1
 	 * @param id ID của sản phẩm cần thêm
+	 * @throws RuntimeException nếu không đủ hàng trong kho
 	 */
 	public void add(Integer id) {
-		Product p = map.get(id);
-		if (p == null) {
-			p = dao.findById(id);
-			p.setQuantity(1);
-			map.put(id, p);
+		// Lấy thông tin sản phẩm từ database để kiểm tra tồn kho
+		Product dbProduct = dao.findById(id);
+		if (dbProduct == null) {
+			throw new RuntimeException("Sản phẩm không tồn tại!");
+		}
+		
+		if (!dbProduct.getAvailable()) {
+			throw new RuntimeException("Sản phẩm hiện không còn hàng!");
+		}
+		
+		Product cartProduct = map.get(id);
+		int requestedQuantity = 1;
+		
+		if (cartProduct != null) {
+			// Sản phẩm đã có trong giỏ, tăng số lượng lên 1
+			requestedQuantity = cartProduct.getQuantity() + 1;
+		}
+		
+		// Kiểm tra số lượng tồn kho
+		if (dbProduct.getQuantity() == null || dbProduct.getQuantity() < requestedQuantity) {
+			throw new RuntimeException("Sản phẩm chỉ còn " + 
+				(dbProduct.getQuantity() != null ? dbProduct.getQuantity() : 0) + 
+				" sản phẩm trong kho!");
+		}
+		
+		if (cartProduct == null) {
+			// Thêm sản phẩm mới vào giỏ hàng
+			Product p = dao.findById(id);
+			// Tạo một bản sao của sản phẩm để không ảnh hưởng đến object gốc
+			Product cartCopy = new Product();
+			cartCopy.setId(p.getId());
+			cartCopy.setName(p.getName());
+			cartCopy.setUnitPrice(p.getUnitPrice());
+			cartCopy.setImage(p.getImage());
+			cartCopy.setDiscount(p.getDiscount());
+			cartCopy.setCategory(p.getCategory());
+			cartCopy.setQuantity(1); // Số lượng trong giỏ hàng
+			map.put(id, cartCopy);
 		} else {
-			p.setQuantity(p.getQuantity() + 1);
+			// Tăng số lượng sản phẩm đã có
+			cartProduct.setQuantity(requestedQuantity);
 		}
 	}
 
@@ -72,10 +107,29 @@ public class CartService {
 	 * Cập nhật số lượng sản phẩm trong giỏ hàng
 	 * @param id ID của sản phẩm
 	 * @param qty Số lượng mới
+	 * @throws RuntimeException nếu không đủ hàng trong kho
 	 */
 	public void update(Integer id, int qty) {
+		// Kiểm tra số lượng tồn kho trước khi cập nhật
+		Product dbProduct = dao.findById(id);
+		if (dbProduct == null) {
+			throw new RuntimeException("Sản phẩm không tồn tại!");
+		}
+		
+		if (!dbProduct.getAvailable()) {
+			throw new RuntimeException("Sản phẩm hiện không còn hàng!");
+		}
+		
+		if (dbProduct.getQuantity() == null || dbProduct.getQuantity() < qty) {
+			throw new RuntimeException("Sản phẩm chỉ còn " + 
+				(dbProduct.getQuantity() != null ? dbProduct.getQuantity() : 0) + 
+				" sản phẩm trong kho!");
+		}
+		
 		Product p = map.get(id);
-		p.setQuantity(qty);
+		if (p != null) {
+			p.setQuantity(qty);
+		}
 	}
 
 	/**

@@ -713,16 +713,29 @@ $(document).ready(function() {
 			type: 'POST',
 			data: { quantity: quantity },
 			success: function(response) {
-				// Update cart summary
-				updateCartSummary();
-				cartItem.removeClass('updating');
+				if (response.success) {
+					// Update cart summary
+					updateCartSummary();
+					cartItem.removeClass('updating');
+				} else {
+					// Handle server-side validation error
+					cartItem.find('.quantity-input').val(cartItem.data('original-quantity') || 1);
+					cartItem.removeClass('updating');
+					
+					showToast('Cảnh báo', response.message || 'Không thể cập nhật số lượng sản phẩm', 'warning');
+				}
 			},
-			error: function() {
+			error: function(xhr) {
+				let errorMessage = 'Không thể cập nhật số lượng sản phẩm';
+				if (xhr.responseJSON && xhr.responseJSON.message) {
+					errorMessage = xhr.responseJSON.message;
+				}
+				
 				// Revert quantity on error
 				cartItem.find('.quantity-input').val(cartItem.data('original-quantity') || 1);
 				cartItem.removeClass('updating');
 				
-				showToast('Lỗi', 'Không thể cập nhật số lượng sản phẩm', 'error');
+				showToast('Lỗi', errorMessage, 'error');
 			}
 		});
 	}

@@ -70,6 +70,12 @@
 							<i class="bi ${prod.available ? 'bi-check-circle' : 'bi-x-circle'} me-2"></i>
 							${prod.available ? 'Còn hàng' : 'Hết hàng'}
 						</span>
+						<c:if test="${prod.available && prod.quantity != null}">
+							<span class="stock-quantity">
+								<i class="bi bi-box me-2"></i>
+								Còn lại: <strong>${prod.quantity}</strong> sản phẩm
+							</span>
+						</c:if>
 					</div>
 					
 					<!-- Action Buttons -->
@@ -490,6 +496,13 @@
 .status-badge.out-of-stock {
 	background: #f8d7da;
 	color: #721c24;
+}
+
+.stock-quantity {
+	display: block;
+	margin-top: 0.5rem;
+	color: #6c757d;
+	font-size: 0.9rem;
 }
 
 /* Action Buttons */

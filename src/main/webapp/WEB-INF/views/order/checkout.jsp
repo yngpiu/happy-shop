@@ -136,6 +136,13 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 							</div>
 						</c:if>
 						
+						<c:if test="${not empty error}">
+							<div class="alert alert-danger">
+								<i class="bi bi-exclamation-triangle me-2"></i>
+								${error}
+							</div>
+						</c:if>
+						
 						<form:form action="/order/checkout" modelAttribute="order" method="post" class="checkout-form">
 							<form:hidden path="user.id" />
 							<form:hidden path="status" />
@@ -548,6 +555,11 @@ uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 .alert-info {
 	background: #e3f2fd;
 	color: #1976d2;
+}
+
+.alert-danger {
+	background: #ffebee;
+	color: #c62828;
 }
 
 /* Responsive Design */

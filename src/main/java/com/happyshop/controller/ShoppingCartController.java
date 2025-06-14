@@ -45,27 +45,55 @@ public class ShoppingCartController {
 	 * Cập nhật số lượng sản phẩm trong giỏ hàng (AJAX)
 	 * @param id ID của sản phẩm
 	 * @param qty Số lượng mới
-	 * @return Object[] chứa [count, amount] của giỏ hàng
+	 * @return ResponseEntity với thông tin cart hoặc lỗi
 	 */
 	@ResponseBody
 	@RequestMapping("/cart/update/{id}/{qty}")
-	public Object[] update(@PathVariable("id") Integer id, @PathVariable("qty") Integer qty) {
-		cart.update(id,qty);
-		Object[] info= {cart.getCount(), cart.getAmount()};
-		return info;
+	public ResponseEntity<Map<String, Object>> update(@PathVariable("id") Integer id, @PathVariable("qty") Integer qty) {
+		try {
+			cart.update(id, qty);
+			
+			Map<String, Object> response = new HashMap<>();
+			response.put("success", true);
+			response.put("count", cart.getCount());
+			response.put("amount", cart.getAmount());
+			response.put("message", "Cập nhật số lượng thành công");
+			
+			return ResponseEntity.ok(response);
+		} catch (RuntimeException e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("success", false);
+			response.put("message", e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+		}
 	}
 	
 	/**
 	 * Thêm sản phẩm vào giỏ hàng (AJAX)
 	 * @param id ID của sản phẩm cần thêm
-	 * @return Object[] chứa [count, amount] của giỏ hàng sau khi thêm
+	 * @return ResponseEntity với thông tin cart hoặc lỗi
 	 */
 	@ResponseBody
 	@RequestMapping("/cart/add/{id}")
-	public Object[] add(@PathVariable("id") Integer id) {
-		cart.add(id);
-		Object[] info= {cart.getCount(), cart.getAmount()};
-		return info;
+	public ResponseEntity<Map<String, Object>> add(@PathVariable("id") Integer id) {
+		try {
+			cart.add(id);
+			
+			Map<String, Object> response = new HashMap<>();
+			response.put("success", true);
+			response.put("count", cart.getCount());
+			response.put("amount", cart.getAmount());
+			response.put("message", "Thêm sản phẩm vào giỏ hàng thành công");
+			
+			return ResponseEntity.ok(response);
+		} catch (RuntimeException e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("success", false);
+			response.put("message", e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
+		}
 	}
 	
 	/**
@@ -113,10 +141,16 @@ public class ShoppingCartController {
 			response.put("message", "Cập nhật thành công");
 			
 			return ResponseEntity.ok(response);
+		} catch (RuntimeException e) {
+			Map<String, Object> response = new HashMap<>();
+			response.put("success", false);
+			response.put("message", e.getMessage());
+			
+			return ResponseEntity.badRequest().body(response);
 		} catch (Exception e) {
 			Map<String, Object> response = new HashMap<>();
 			response.put("success", false);
-			response.put("message", "Lỗi khi cập nhật giỏ hàng");
+			response.put("message", "Lỗi khi cập nhật giỏ hàng: " + e.getMessage());
 			
 			return ResponseEntity.badRequest().body(response);
 		}

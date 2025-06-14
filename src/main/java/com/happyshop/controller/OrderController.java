@@ -92,14 +92,39 @@ public class OrderController {
 		Collection<Product> list = cart.getItems();
 		List<OrderDetail> details = new  ArrayList<>();
 		
+		// Kiểm tra số lượng tồn kho trước khi đặt hàng
+		for(Product cartProduct : list) {
+			Product dbProduct = pdao.findById(cartProduct.getId());
+			if (dbProduct == null) {
+				model.addAttribute("error", "Sản phẩm '" + cartProduct.getName() + "' không tồn tại!");
+				return "order/checkout";
+			}
+			
+			if (dbProduct.getQuantity() == null || dbProduct.getQuantity() < cartProduct.getQuantity()) {
+				String errorMsg = "Sản phẩm '" + cartProduct.getName() + "' chỉ còn " + 
+					(dbProduct.getQuantity() != null ? dbProduct.getQuantity() : 0) + 
+					" sản phẩm trong kho, không đủ để đáp ứng yêu cầu " + cartProduct.getQuantity() + " sản phẩm!";
+				model.addAttribute("error", errorMsg);
+				return "order/checkout";
+			}
+			
+			if (!dbProduct.getAvailable()) {
+				model.addAttribute("error", "Sản phẩm '" + cartProduct.getName() + "' hiện không còn hàng!");
+				return "order/checkout";
+			}
+		}
+		
 		// Tạo order details từ cart items
-		for(Product product:list) {
-			OrderDetail detail =new OrderDetail();
+		for(Product cartProduct : list) {
+			// Lấy sản phẩm từ database để tạo reference đúng
+			Product dbProduct = pdao.findById(cartProduct.getId());
+			
+			OrderDetail detail = new OrderDetail();
 			detail.setOrder(order);
-			detail.setProduct(product);
-			detail.setUnitPrice(product.getUnitPrice());
-			detail.setQuantity(product.getQuantity());
-			detail.setDiscount(product.getDiscount());
+			detail.setProduct(dbProduct); // Sử dụng product từ database
+			detail.setUnitPrice(cartProduct.getUnitPrice());
+			detail.setQuantity(cartProduct.getQuantity()); // Số lượng từ giỏ hàng
+			detail.setDiscount(cartProduct.getDiscount());
 			details.add(detail);
 		}
 		

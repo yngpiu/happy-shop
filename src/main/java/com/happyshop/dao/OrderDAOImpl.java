@@ -66,7 +66,43 @@ public class OrderDAOImpl implements OrderDAO{
 		session.save(order);
 		for(OrderDetail detail : details) {
 			session.save(detail);
-
+			
+			// Cập nhật số lượng tồn kho của sản phẩm
+			Product cartProduct = detail.getProduct();
+			if (cartProduct != null) {
+				// Lấy sản phẩm từ database để có số lượng tồn kho chính xác
+				Product dbProduct = session.find(Product.class, cartProduct.getId());
+				if (dbProduct != null && dbProduct.getQuantity() != null) {
+					int currentQuantity = dbProduct.getQuantity();
+					int orderedQuantity = detail.getQuantity();
+					
+					System.out.println("=== INVENTORY UPDATE DEBUG ===");
+					System.out.println("Product ID: " + dbProduct.getId());
+					System.out.println("Product Name: " + dbProduct.getName());
+					System.out.println("Current Stock: " + currentQuantity);
+					System.out.println("Ordered Quantity: " + orderedQuantity);
+					
+					// Giảm số lượng tồn kho
+					int newQuantity = currentQuantity - orderedQuantity;
+					
+					// Đảm bảo số lượng không âm
+					if (newQuantity < 0) {
+						newQuantity = 0;
+					}
+					
+					System.out.println("New Stock: " + newQuantity);
+					System.out.println("===============================");
+					
+					dbProduct.setQuantity(newQuantity);
+					
+					// Nếu hết hàng, đánh dấu không còn available
+					if (newQuantity == 0) {
+						dbProduct.setAvailable(false);
+					}
+					
+					session.update(dbProduct);
+				}
+			}
 		}
 	}
 
