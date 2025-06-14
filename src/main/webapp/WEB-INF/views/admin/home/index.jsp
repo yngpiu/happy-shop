@@ -105,7 +105,7 @@
   <div class="card-body">
     <div class="row">
       <div class="col-12 col-md-2 mb-2">
-        <a href="/admin/user" class="btn btn-outline-primary w-100">
+        <a href="/admin/user/index" class="btn btn-outline-primary w-100">
           <i class="bi bi-people me-2"></i>Quản lý Users
         </a>
       </div>
@@ -115,17 +115,17 @@
         </a>
       </div>
       <div class="col-12 col-md-2 mb-2">
-        <a href="/admin/order" class="btn btn-outline-info w-100">
+        <a href="/admin/order/index" class="btn btn-outline-info w-100">
           <i class="bi bi-cart me-2"></i>Quản lý Đơn hàng
         </a>
       </div>
       <div class="col-12 col-md-2 mb-2">
-        <a href="/admin/category" class="btn btn-outline-secondary w-100">
+        <a href="/admin/category/index" class="btn btn-outline-secondary w-100">
           <i class="bi bi-tags me-2"></i>Quản lý Danh mục
         </a>
       </div>
       <div class="col-12 col-md-2 mb-2">
-        <a href="/admin/report" class="btn btn-outline-warning w-100">
+        <a href="/admin/inventory/index" class="btn btn-outline-warning w-100">
           <i class="bi bi-graph-up me-2"></i>Báo cáo
         </a>
       </div>
