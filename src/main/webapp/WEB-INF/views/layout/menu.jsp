@@ -88,6 +88,14 @@ uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
                     Xin chào, ${sessionScope.user.id}
                   </li>
                   <li><hr class="dropdown-divider"></li>
+                  <c:if test="${sessionScope.user.admin}">
+                    <li>
+                      <a class="dropdown-item" href="/admin/home/index">
+                        <i class="bi bi-speedometer2 me-2 text-primary"></i>
+                        Dashboard
+                      </a>
+                    </li>
+                  </c:if>
                   <li>
                     <a class="dropdown-item" href="/account/edit">
                       <i class="bi bi-person-gear me-2 text-info"></i>
