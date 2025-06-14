@@ -1,4 +1,4 @@
-package com.happyshop;
+package com.happyshop.config;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -35,7 +35,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
  */
 @Configuration
 @PropertySource("classpath:datasource.properties")
-public class HibernateConfig {
+public class DatabaseConfig {
 	
 	// ================= DEPENDENCY INJECTION =================
 	

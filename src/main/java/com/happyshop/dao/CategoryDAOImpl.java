@@ -174,6 +174,7 @@ public class CategoryDAOImpl implements CategoryDAO{
 	 * Tự động xóa vĩnh viễn các category đã ở thùng rác quá 30 ngày
 	 * @return int số lượng category đã bị xóa
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public int autoDeleteExpiredCategories() {
 		Session session = factory.getCurrentSession();

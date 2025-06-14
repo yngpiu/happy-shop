@@ -1,4 +1,4 @@
-package com.happyshop;
+package com.happyshop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 
 /**
- * ===== CẤU HÌNH APACHE TILES =====
+ * ===== CẤU HÌNH VIEW & TEMPLATE =====
  * 
  * Class cấu hình Apache Tiles framework:
  * - Cấu hình ViewResolver cho Tiles
@@ -23,10 +23,10 @@ import org.springframework.web.servlet.view.tiles3.TilesView;
  * - Dynamic template resolution
  * 
  * Author: Development Team
- * Version: 1.0 - View Template Configuration
+ * Version: 2.0 - View Template Configuration
  */
 @Configuration
-public class TilesConfig {
+public class ViewConfig {
 	
 	// ================= VIEW RESOLVER CONFIGURATION =================
 	

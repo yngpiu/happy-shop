@@ -1,7 +1,9 @@
-package com.happyshop;
+package com.happyshop.config;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+import com.happyshop.JavaWebApplication;
 
 /**
  * ===== CẤU HÌNH SERVLET INITIALIZER =====
